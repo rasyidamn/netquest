@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ENUMS
+enum RoleEnum {
+  ADMIN
+  MAHASISWA
+}
+
+enum LessonTypeEnum {
+  THEORY
+  QUIZ
+}
+
+enum ProgressStatusEnum {
+  LOCKED
+  ACTIVE
+  COMPLETED
+}
+
+// MODELS
+model User {
+  id              String   @id @default(uuid()) @db.Uuid
+  nim             String   @unique
+  name            String
+  password        String
+  role            RoleEnum @default(MAHASISWA)
+  xp              Int      @default(0)
+  level           Int      @default(1)
+  hearts          Int      @default(3)
+  heartsUpdatedAt DateTime @default(now()) @map("hearts_updated_at")
+  createdAt       DateTime @default(now())
+
+  // relasi
+  progress UserProgress[]
+
+  @@map("users")
+}
+
+model Module {
+  id       String @id @default(uuid()) @db.Uuid
+  title    String
+  sequence Int //urutan modul
+
+  // relasi
+  lessons  Lesson[]
+  progress UserProgress[]
+
+  @@map("modules")
+}
+
+model Lesson {
+  id             String         @id @default(uuid()) @db.Uuid
+  moduleId       String         @map("module_id") @db.Uuid
+  title          String
+  lessonSequence Int            @map("lesson_sequence")
+  type           LessonTypeEnum
+  xp_reward      Int
+
+  // relasi
+  module       Module         @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  material     Material?
+  questions    Question[]
+  userProgress UserProgress[]
+
+  @@map("lessons")
+}
+
+model Material {
+  id       String  @id @default(uuid()) @db.Uuid
+  lessonId String  @unique @map("lesson_id") @db.Uuid
+  content  String  @db.Text
+  mediaUrl String? @map("media_url")
+
+  // relasi 
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@map("materials")
+}
+
+model Question {
+  id           String @id @default(uuid()) @db.Uuid
+  lessonId     String @map("lesson_id") @db.Uuid
+  questionText String @map("question_text") @db.Text
+
+  // relasi
+  lesson  Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  options Option[]
+
+  @@map("questions")
+}
+
+model Option {
+  id         String  @id @default(uuid()) @db.Uuid
+  questionId String  @map("question_id") @db.Uuid
+  optionText String  @map("option_text")
+  isCorrect  Boolean @map("is_correct")
+
+  // relasi
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("options")
+}
+
+model UserProgress {
+  id              String             @id @default(uuid()) @db.Uuid
+  userId          String             @map("user_id") @db.Uuid
+  moduleId        String             @map("module_id") @db.Uuid
+  currentLessonId String             @map("current_lesson_id") @db.Uuid
+  status          ProgressStatusEnum @default(LOCKED)
+  bestScore       Int                @default(0) @map("best_score")
+
+  // relation
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  module        Module  @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  currentLesson Lesson? @relation(fields: [currentLessonId], references: [id], onDelete: Cascade)
+
+  @@map("user_progress")
+}
