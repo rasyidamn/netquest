@@ -1,7 +1,6 @@
 import { prisma } from "../configs/database.config.js";
 import {
 	UserSchema,
-	type GetProfileRequest,
 	type GetProfileResponse,
 	type LoginRequest,
 	type LoginResponse,
@@ -14,7 +13,7 @@ import bcrypt from "bcrypt";
 import { generateToken } from "../utils/generateJWT.util.js";
 
 export class AuthService {
-	static readonly register = async (
+	static register = async (
 		validatedData: RegisterRequest,
 	): Promise<RegisterResponse> => {
 		const nimExisting = await prisma.user.findUnique({
@@ -41,7 +40,7 @@ export class AuthService {
 		return responseData;
 	};
 
-	static readonly login = async (
+	static login = async (
 		validatedData: LoginRequest,
 	): Promise<LoginResponse> => {
 		// nim
@@ -86,12 +85,10 @@ export class AuthService {
 		return responseData;
 	};
 
-	static readonly getProfile = async (
-		validatedData: GetProfileRequest,
-	): Promise<GetProfileResponse> => {
+	static getProfile = async (userId: string): Promise<GetProfileResponse> => {
 		const user = await prisma.user.findUnique({
 			where: {
-				id: validatedData.id,
+				id: userId,
 			},
 			omit: {
 				password: true,
@@ -101,6 +98,8 @@ export class AuthService {
 			throw new ApiError(StatusCodes.NOT_FOUND, "User tidak ditemukan!");
 		}
 
-		return user;
+		const responseData: GetProfileResponse = UserSchema.GET_PROFILE_RESPONSE.parse(user)
+
+		return responseData;
 	};
 }

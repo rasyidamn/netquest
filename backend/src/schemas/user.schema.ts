@@ -39,9 +39,6 @@ export class UserSchema {
 		accessToken: z.string(),
 	});
 
-	static readonly GET_PROFILE_REQUEST = this.USER_MODEL.pick({
-		id: true,
-	}).strict();
 
 	static readonly GET_PROFILE_RESPONSE = this.REGISTER_RESPONSE;
 }
@@ -50,7 +47,6 @@ export type RegisterRequest = z.infer<typeof UserSchema.REGISTER_REQUEST>;
 export type RegisterResponse = z.infer<typeof UserSchema.REGISTER_RESPONSE>;
 export type LoginRequest = z.infer<typeof UserSchema.LOGIN_REQUEST>;
 export type LoginResponse = z.infer<typeof UserSchema.LOGIN_RESPONSE>;
-export type GetProfileRequest = z.infer<typeof UserSchema.GET_PROFILE_REQUEST>;
 export type GetProfileResponse = z.infer<
 	typeof UserSchema.GET_PROFILE_RESPONSE
 >;

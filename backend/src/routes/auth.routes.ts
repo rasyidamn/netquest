@@ -8,7 +8,7 @@ export const authRouter = Router();
 authRouter.post("/register", AuthController.register);
 authRouter.post("/login", AuthController.login);
 
-// PRIVATE
+// AUTH
 authRouter.use(authMiddleware);
 
 authRouter.get("/profile", AuthController.getProfile);

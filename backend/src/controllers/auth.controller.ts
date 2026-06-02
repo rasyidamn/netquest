@@ -24,9 +24,7 @@ export class AuthController {
 	});
 
 	static getProfile = catchAsync(async (req: Request, res: Response) => {
-		const validatedData = UserSchema.GET_PROFILE_REQUEST.parse({
-			id: req.user?.id,
-		});
+		const validatedData = req.user?.id as string
 		const responseData = await AuthService.getProfile(validatedData);
 		sendSuccess(
 			res,
