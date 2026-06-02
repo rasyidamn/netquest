@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import logger from "../../../../../../ROADMAP.SH/express/belajar-typescript-restful-api/src/utils/logger.util.js";
+import logger from "../utils/logger.util.js";
 
 export const requestLogger = (
 	req: Request,
