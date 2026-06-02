@@ -11,10 +11,10 @@ async function main() {
 
 	// Gunakan upsert agar jika skrip dijalankan 2x, admin tidak terduplikasi
 	const adminUser = await prisma.user.upsert({
-		where: { nim: "ADMIN001" },
+		where: { nim: "A710220052" },
 		update: {}, // Jika sudah ada, jangan lakukan apa-apa
 		create: {
-			nim: "ADMIN001",
+			nim: "A710220052",
 			name: "Super Admin",
 			password: hashedPassword,
 			role: RoleEnum.ADMIN, // Memakai RoleEnum
