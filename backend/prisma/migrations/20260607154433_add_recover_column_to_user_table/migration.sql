@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "users" ADD COLUMN     "last_recovery_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "recovery_count" INTEGER NOT NULL DEFAULT 0;

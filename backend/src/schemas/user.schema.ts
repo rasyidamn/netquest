@@ -7,7 +7,7 @@ extendZodWithOpenApi(z);
 export class UserSchema {
 	static readonly USER_MODEL = z.object({
 		id: z
-			.string()
+			.uuid()
 			.openapi({ example: "cc0f6a91-95dd-498e-b148-dd231d2664fb" }),
 		nim: z.string().length(10).openapi({ example: "A710220052" }),
 		name: z.string().min(3).openapi({ example: "Ilham Rasyidan" }),
@@ -17,6 +17,8 @@ export class UserSchema {
 		level: z.number().int().openapi({ example: 1 }),
 		hearts: z.number().int().openapi({ example: 3 }),
 		heartsUpdatedAt: z.date(),
+		recoveryCount: z.number().int().openapi({ example: 0 }),
+		lastRecoveryDate: z.date(),
 		createdAt: z.date(),
 	});
 
@@ -39,8 +41,9 @@ export class UserSchema {
 		accessToken: z.string(),
 	});
 
-
-	static readonly GET_PROFILE_RESPONSE = this.REGISTER_RESPONSE;
+	static readonly GET_PROFILE_RESPONSE = this.USER_MODEL.omit({
+		password: true,
+	});
 }
 
 export type RegisterRequest = z.infer<typeof UserSchema.REGISTER_REQUEST>;

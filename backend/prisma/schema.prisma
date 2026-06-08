@@ -31,16 +31,18 @@ enum ProgressStatusEnum {
 
 // MODELS
 model User {
-  id              String   @id @default(uuid()) @db.Uuid
-  nim             String   @unique
-  name            String
-  password        String
-  role            RoleEnum @default(MAHASISWA)
-  xp              Int      @default(0)
-  level           Int      @default(1)
-  hearts          Int      @default(3)
-  heartsUpdatedAt DateTime @default(now()) @map("hearts_updated_at")
-  createdAt       DateTime @default(now())
+  id               String   @id @default(uuid()) @db.Uuid
+  nim              String   @unique
+  name             String
+  password         String
+  role             RoleEnum @default(MAHASISWA)
+  xp               Int      @default(0)
+  level            Int      @default(1)
+  hearts           Int      @default(3)
+  heartsUpdatedAt  DateTime @default(now()) @map("hearts_updated_at")
+  recoveryCount    Int      @default(0) @map("recovery_count")
+  lastRecoveryDate DateTime @default(now()) @map("last_recovery_date")
+  createdAt        DateTime @default(now())
 
   // relasi
   progress UserProgress[]
@@ -54,8 +56,7 @@ model Module {
   sequence Int //urutan modul
 
   // relasi
-  lessons  Lesson[]
-  progress UserProgress[]
+  lessons Lesson[]
 
   @@map("modules")
 }
@@ -66,7 +67,7 @@ model Lesson {
   title          String
   lessonSequence Int            @map("lesson_sequence")
   type           LessonTypeEnum
-  xp_reward      Int
+  xpReward       Int            @map("xp_reward")
 
   // relasi
   module       Module         @relation(fields: [moduleId], references: [id], onDelete: Cascade)
@@ -93,6 +94,7 @@ model Question {
   id           String @id @default(uuid()) @db.Uuid
   lessonId     String @map("lesson_id") @db.Uuid
   questionText String @map("question_text") @db.Text
+  xpReward     Int    @default(15) @map("xp_reward")
 
   // relasi
   lesson  Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
@@ -114,17 +116,18 @@ model Option {
 }
 
 model UserProgress {
-  id              String             @id @default(uuid()) @db.Uuid
-  userId          String             @map("user_id") @db.Uuid
-  moduleId        String             @map("module_id") @db.Uuid
-  currentLessonId String             @map("current_lesson_id") @db.Uuid
-  status          ProgressStatusEnum @default(LOCKED)
-  bestScore       Int                @default(0) @map("best_score")
+  id        String             @id @default(uuid()) @db.Uuid
+  userId    String             @map("user_id") @db.Uuid
+  lessonId  String             @map("lesson_id") @db.Uuid // GANTI moduleId menjadi lessonId
+  status    ProgressStatusEnum @default(LOCKED)
+  bestScore Int                @default(0) @map("best_score")
+  createdAt DateTime           @default(now()) @map("created_at")
 
   // relation
-  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  module        Module  @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  currentLesson Lesson? @relation(fields: [currentLessonId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
+  // MENCEGAH DUPLIKASI DATA: 1 Mahasiswa hanya punya 1 record per materi/kuis
+  @@unique([userId, lessonId])
   @@map("user_progress")
 }

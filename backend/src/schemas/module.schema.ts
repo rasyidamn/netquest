@@ -6,7 +6,7 @@ extendZodWithOpenApi(z);
 export class ModuleSchema {
 	static readonly MODULE_MODEL = z.object({
 		id: z
-			.string()
+			.uuid()
 			.openapi({ example: "550e8400-e29b-41d4-a716-446655440000" }),
 		title: z
 			.string()
@@ -21,6 +21,10 @@ export class ModuleSchema {
 			.openapi({ example: 1 }),
 	});
 
+	static readonly MODULE_ID_PARAM = this.MODULE_MODEL.pick({
+		id: true,
+	}).strict();
+
 	static readonly CREATE_MODULE_REQUEST = this.MODULE_MODEL.omit({
 		id: true,
 	}).strict();
@@ -29,6 +33,7 @@ export class ModuleSchema {
 		this.CREATE_MODULE_REQUEST.partial().strict();
 }
 
+export type ModuleIdParam = z.infer<typeof ModuleSchema.MODULE_ID_PARAM>;
 export type CreateModuleRequest = z.infer<
 	typeof ModuleSchema.CREATE_MODULE_REQUEST
 >;
