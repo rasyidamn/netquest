@@ -1,5 +1,3 @@
-import { level } from "winston";
-
 type GetProgressStatsType = {
 	currentLevel: number;
 	nextLevelMinXp: number;
