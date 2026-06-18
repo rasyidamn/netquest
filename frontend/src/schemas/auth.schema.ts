@@ -1,14 +1,14 @@
 import z from "zod";
-import { userModel } from "./models/user.model";
+import { UserModel } from "./models/user.model";
 
-export const loginSchema = userModel
+export const loginSchema = UserModel
 	.pick({
 		nim: true,
 		password: true,
 	})
 	.strict();
 
-export const registerSchema = userModel
+export const registerSchema = UserModel
 	.pick({
 		nim: true,
 		name: true,
@@ -22,5 +22,5 @@ export const registerSchema = userModel
 		path: ["passwordConfirm"],
 	});
 
-export type loginInput = z.infer<typeof loginSchema>;
-export type registerInput = z.infer<typeof registerSchema>;
+export type LoginInput = z.infer<typeof loginSchema>;
+export type RegisterInput = z.infer<typeof registerSchema>;

@@ -30,7 +30,7 @@ export default function NavBar({
 	return (
 		<div
 			className={cn(
-				"navbar bg-base-100 px-4 lg:px-6 min-h-16",
+				"navbar bg-base-200 px-4 lg:px-6 min-h-16",
 				className,
 			)}
 		>

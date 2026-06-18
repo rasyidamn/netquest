@@ -5,7 +5,7 @@ const LessonTypeEnum = {
 	QUIZ: "QUIZ",
 };
 
-export const lessonModel = z.object({
+export const LessonModel = z.object({
 	id: z.uuid(),
 	moduleId: z.string(),
 	title: z.string().min(3),

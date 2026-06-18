@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const materialModel = z.object({
+export const MaterialModel = z.object({
 	id: z.uuid(),
 	lessonId: z.string(),
 	content: z.string().min(10),

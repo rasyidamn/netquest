@@ -1,18 +1,28 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./QueryProvider";
-import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { RouterProvider } from "@tanstack/react-router";
 import ThemeProvider from "./ThemeProvider";
-import { routeTree } from "@/routeTree.gen";
 
-const router = createRouter({
-	routeTree: routeTree,
-});
+import { Toaster } from "react-hot-toast";
+import { router } from "@/config/router";
+import { useAuthStore } from "@/stores/auth.store";
 
 function AppProvider() {
+	const auth = useAuthStore();
 	return (
 		<QueryClientProvider client={queryClient}>
 			<ThemeProvider>
-				<RouterProvider router={router} />
+				<RouterProvider
+					router={router}
+					context={{
+						queryClient,
+						auth: {
+							isAuthenticated: auth.isAuthenticated,
+							role: auth.role,
+						},
+					}}
+				/>
+				<Toaster position="top-center" />
 			</ThemeProvider>
 		</QueryClientProvider>
 	);

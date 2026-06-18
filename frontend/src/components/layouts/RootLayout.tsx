@@ -7,7 +7,7 @@ interface RootLayoutProps {
 export default function RootLayout({children}: RootLayoutProps) {
 	return (
 		<ErrorBoundary>
-			<div className="min-h-screen bg-base-200 text-foreground">
+			<div className="min-h-screen bg-base-300 text-foreground font-oxanium">
 				{children}
 			</div>
 		</ErrorBoundary>

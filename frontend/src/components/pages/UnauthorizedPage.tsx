@@ -4,10 +4,10 @@ import { useAuthStore } from "@/stores/auth.store";
 
 export function UnauthorizedPage() {
 	const navigate = useNavigate();
-	const token = useAuthStore((s) => s.token);
+	const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
 	const handleBack = () => {
-		if (token) {
+		if (isAuthenticated) {
 			navigate({ to: "/" });
 		} else {
 			navigate({ to: "/auth/login" });

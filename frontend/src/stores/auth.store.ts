@@ -1,29 +1,20 @@
+import type { RoleEnum } from "@/types/api.type";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import type { User } from "../types/user.type";
-
-
 
 interface AuthState {
-	token: string | null;
-	user: User | null;
-	setAuth: (token: string, user: User) => void;
-	logout: () => void;
-	updateGameState: (data: Partial<User>) => void;
+   isAuthenticated: boolean;
+   role: RoleEnum | null;
+   isLoggingOut: boolean; // 1. Tambahkan state baru
+   setLoginParams: (role: RoleEnum) => void;
+   setLoggingOut: (status: boolean) => void; // 2. Tambahkan setter
+   logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>()(
-	persist<AuthState>(
-		(set) => ({
-			token: null,
-			user: null,
-			setAuth: (token, user) => set({ token, user }),
-			logout: () => set({ token: null, user: null }),
-			updateGameState: (data) =>
-				set((state) => ({
-					user: state.user ? { ...state.user, ...data } : null,
-				})),
-		}),
-		{ name: "auth-store" },
-	),
-);
+export const useAuthStore = create<AuthState>()((set) => ({
+   isAuthenticated: false,
+   role: null,
+   isLoggingOut: false,
+   setLoginParams: (role) => set({ isAuthenticated: true, role, isLoggingOut: false }),
+   setLoggingOut: (status) => set({ isLoggingOut: status }),
+   logout: () => set({ isAuthenticated: false, role: null, isLoggingOut: false }), // Reset juga di sini
+}));

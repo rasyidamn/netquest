@@ -6,7 +6,7 @@ const ProgressStatusEnum = {
 	COMPLETED: "COMPLETED",
 };
 
-export const userProgressModel = z.object({
+export const UserProgressModel = z.object({
 	id: z.uuid(),
 	userId: z.uuid(),
 	lessonId: z.uuid(),
