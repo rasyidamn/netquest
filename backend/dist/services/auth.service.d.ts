@@ -1,9 +1,10 @@
-import { type LoginRequest, type LoginResponse, type RegisterRequest, type RegisterResponse } from "../schemas/user.schema.js";
+import { type LoginRequest, type RegisterRequest, type RegisterResponse } from "../schemas/user.schema.js";
 export declare class AuthService {
     static register: (validatedData: RegisterRequest) => Promise<RegisterResponse>;
-    static login: (validatedData: LoginRequest) => Promise<LoginResponse>;
+    static login: (validatedData: LoginRequest) => Promise<{
+        user: RegisterResponse;
+    }>;
     static getProfile: (userId: string) => Promise<{
-        level: number;
         id: string;
         nim: string;
         name: string;

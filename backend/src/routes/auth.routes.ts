@@ -12,3 +12,4 @@ authRouter.post("/login", AuthController.login);
 authRouter.use(authMiddleware);
 
 authRouter.get("/profile", AuthController.getProfile);
+authRouter.post("/logout", AuthController.logout);

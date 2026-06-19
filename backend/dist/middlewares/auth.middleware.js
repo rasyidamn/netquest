@@ -2,11 +2,10 @@ import { ApiError } from "../utils/api-error.util.js";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 export const authMiddleware = (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    const token = req.cookies?.access_token;
+    if (!token) {
         return next(new ApiError(StatusCodes.UNAUTHORIZED, "Akses ditolak! Token tidak ditemukan."));
     }
-    const token = authHeader.split(" ")[1];
     try {
         const secret = process.env.JWT_SECRET;
         if (!secret) {

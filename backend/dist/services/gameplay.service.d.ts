@@ -3,15 +3,13 @@ import type { LessonWithModule } from "../schemas/lesson.schema.js";
 export declare class GameplayService {
     static theoryDone: (userId: string, lessonId: string) => Promise<{
         addedXp: number;
-        isLevelUp: boolean;
-        newLevel: number;
+        currentTotalXp: number;
     }>;
     static submitQuiz: (userId: string, validatedData: SubmitAnswerRequest) => Promise<{
         isCorrect: boolean;
         addedXp: number;
+        currentTotalXp: number;
         heartsLeft: number;
-        isLevelUp: boolean;
-        newLevel: number;
     }>;
     static completeQuiz: (userId: string, validatedData: CompleteQuizRequest) => Promise<{
         isNewBestScore: boolean;

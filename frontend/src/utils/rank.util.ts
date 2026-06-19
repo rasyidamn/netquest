@@ -2,7 +2,6 @@
 export interface RankTier {
 	level: number;
 	title: string;
-	minXp: number;
 	colorClass: string; // Kelas warna daisyUI untuk styling dinamis
 }
 
@@ -15,57 +14,32 @@ export interface RankProgress {
 	isMaxRank: boolean;
 }
 
-// Konfigurasi Pangkat Tema Jaringan Komputer
+// Konfigurasi Pangkat Tema Jaringan Komputer (dekoratif, level dihitung via rumus backend)
 export const RANKS: RankTier[] = [
-	{
-		level: 1,
-		title: "Network Novice",
-		minXp: 0,
-		colorClass: "text-base-content",
-	},
-	{ level: 2, title: "Active Node", minXp: 500, colorClass: "text-info" },
-	{
-		level: 3,
-		title: "Switch Technician",
-		minXp: 1200,
-		colorClass: "text-success",
-	},
-	{
-		level: 4,
-		title: "Router Admin",
-		minXp: 2200,
-		colorClass: "text-warning",
-	},
-	{
-		level: 5,
-		title: "System Architect",
-		minXp: 3500,
-		colorClass: "text-primary",
-	},
-	// Level 6 dihapus, atau jadikan gelar ultimate rahasia jika user mendapat 100% perfect score
-	{
-		level: 6,
-		title: "Master Gateway",
-		minXp: 4000,
-		colorClass: "text-error",
-	},
+	{ level: 1, title: "Network Novice", colorClass: "text-base-content" },
+	{ level: 2, title: "Active Node", colorClass: "text-info" },
+	{ level: 3, title: "Switch Technician", colorClass: "text-success" },
+	{ level: 4, title: "Router Admin", colorClass: "text-warning" },
+	{ level: 5, title: "System Architect", colorClass: "text-primary" },
+	{ level: 6, title: "Master Gateway", colorClass: "text-error" },
+	{ level: 7, title: "Network Sentinel", colorClass: "text-secondary" },
+	{ level: 8, title: "Cloud Commander", colorClass: "text-accent" },
+	{ level: 9, title: "Protocol Master", colorClass: "text-info" },
+	{ level: 10, title: "Internet Legend", colorClass: "text-warning" },
 ];
 
 /**
- * Mendapatkan Pangkat saat ini berdasarkan total XP
+ * Mendapatkan Pangkat saat ini berdasarkan total XP — level dihitung via rumus backend
  */
 export const getCurrentRank = (totalXp: number): RankTier => {
-	// Iterasi dari pangkat tertinggi ke terendah
-	for (let i = RANKS.length - 1; i >= 0; i--) {
-		if (totalXp >= RANKS[i].minXp) {
-			return RANKS[i];
-		}
-	}
-	return RANKS[0]; // Fallback ke pangkat terendah
+	const level = Math.floor(Math.sqrt(totalXp / 100)) + 1;
+	// Cari rank terdekat yang levelnya <= level hasil perhitungan
+	const rankIndex = Math.min(level - 1, RANKS.length - 1);
+	return RANKS[rankIndex];
 };
 
 /**
- * Menghitung kalkulasi progres XP untuk UI (progress bar)
+ * Menghitung kalkulasi progres XP untuk UI (progress bar) — menggunakan rumus backend
  */
 export const getRankProgress = (totalXp: number): RankProgress => {
 	const currentRank = getCurrentRank(totalXp);
@@ -74,23 +48,31 @@ export const getRankProgress = (totalXp: number): RankProgress => {
 	);
 	const nextRank = RANKS[currentRankIndex + 1] || null;
 
-	if (!nextRank) {
-		// Jika user sudah mencapai pangkat maksimum
+	// Gunakan rumus backend untuk threshold XP
+	const getThresholdForLevel = (level: number): number => {
+		if (level <= 1) return 0;
+		return Math.pow(level - 1, 2) * 100;
+	};
+
+	const currentThreshold = getThresholdForLevel(currentRank.level);
+	const nextThreshold = nextRank
+		? getThresholdForLevel(nextRank.level)
+		: null;
+
+	if (!nextRank || nextThreshold === null) {
 		return {
 			currentRank,
 			nextRank: null,
-			xpInCurrentLevel: totalXp - currentRank.minXp,
+			xpInCurrentLevel: totalXp - currentThreshold,
 			xpRequiredForNext: 0,
 			percentage: 100,
-			isMaxRank: true,
+			isMaxRank: currentRankIndex >= RANKS.length - 1,
 		};
 	}
 
-	// Logika kalkulasi batas rentang XP
-	const xpInCurrentLevel = totalXp - currentRank.minXp;
-	const xpRequiredForNext = nextRank.minXp - currentRank.minXp;
+	const xpInCurrentLevel = totalXp - currentThreshold;
+	const xpRequiredForNext = nextThreshold - currentThreshold;
 
-	// Hindari pembagian dengan nol, amankan angka desimal
 	const percentage = Math.max(
 		0,
 		Math.min(100, Math.floor((xpInCurrentLevel / xpRequiredForNext) * 100)),

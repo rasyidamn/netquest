@@ -12,7 +12,6 @@ export class UserSchema {
         password: z.string().min(8).openapi({ example: "rahasia123" }),
         role: z.enum(RoleEnum).optional().openapi({ example: "MAHASISWA" }),
         xp: z.number().int().openapi({ example: 0 }),
-        level: z.number().int().openapi({ example: 1 }),
         hearts: z.number().int().openapi({ example: 3 }),
         heartsUpdatedAt: z.date(),
         recoveryCount: z.number().int().openapi({ example: 0 }),
@@ -32,7 +31,6 @@ export class UserSchema {
     }).strict();
     static LOGIN_RESPONSE = z.object({
         user: this.REGISTER_RESPONSE,
-        accessToken: z.string(),
     });
     static GET_PROFILE_RESPONSE = this.USER_MODEL.omit({
         password: true,

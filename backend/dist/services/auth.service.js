@@ -3,7 +3,6 @@ import { UserSchema, } from "../schemas/user.schema.js";
 import { ApiError } from "../utils/api-error.util.js";
 import { StatusCodes } from "http-status-codes";
 import bcrypt from "bcrypt";
-import { generateToken } from "../utils/generateJWT.util.js";
 import { ProgressStatusEnum } from "../generated/prisma/enums.js";
 export class AuthService {
     static register = async (validatedData) => {
@@ -57,18 +56,9 @@ export class AuthService {
         if (!isPasswordValid) {
             throw new ApiError(StatusCodes.UNAUTHORIZED, "NIM atau password salah!");
         }
-        // generate token
-        const token = generateToken({
-            id: user.id,
-            nim: user.nim,
-            role: user.role,
-        });
         const { password, ...userWithoutPassword } = user;
-        const responseData = UserSchema.LOGIN_RESPONSE.parse({
-            user: userWithoutPassword,
-            accessToken: token,
-        });
-        return responseData;
+        const responseData = UserSchema.REGISTER_RESPONSE.parse(userWithoutPassword);
+        return { user: responseData };
     };
     static getProfile = async (userId) => {
         const user = await prisma.user.findUnique({

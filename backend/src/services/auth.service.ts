@@ -3,14 +3,12 @@ import {
 	UserSchema,
 	type GetProfileResponse,
 	type LoginRequest,
-	type LoginResponse,
 	type RegisterRequest,
 	type RegisterResponse,
 } from "../schemas/user.schema.js";
 import { ApiError } from "../utils/api-error.util.js";
 import { StatusCodes } from "http-status-codes";
 import bcrypt from "bcrypt";
-import { generateToken } from "../utils/generateJWT.util.js";
 import { ProgressStatusEnum } from "../generated/prisma/enums.js";
 
 export class AuthService {
@@ -63,7 +61,7 @@ export class AuthService {
 
 	static login = async (
 		validatedData: LoginRequest,
-	): Promise<LoginResponse> => {
+	): Promise<{ user: RegisterResponse }> => {
 		// nim
 		const user = await prisma.user.findUnique({
 			where: {
@@ -89,21 +87,11 @@ export class AuthService {
 			);
 		}
 
-		// generate token
-		const token = generateToken({
-			id: user.id,
-			nim: user.nim,
-			role: user.role,
-		});
-
 		const { password, ...userWithoutPassword } = user;
 
-		const responseData: LoginResponse = UserSchema.LOGIN_RESPONSE.parse({
-			user: userWithoutPassword,
-			accessToken: token,
-		});
+		const responseData = UserSchema.REGISTER_RESPONSE.parse(userWithoutPassword);
 
-		return responseData;
+		return { user: responseData };
 	};
 
 	static getProfile = async (userId: string) => {

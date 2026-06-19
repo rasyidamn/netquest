@@ -15,13 +15,11 @@ export type AggregateUser = {
 };
 export type UserAvgAggregateOutputType = {
     xp: number | null;
-    level: number | null;
     hearts: number | null;
     recoveryCount: number | null;
 };
 export type UserSumAggregateOutputType = {
     xp: number | null;
-    level: number | null;
     hearts: number | null;
     recoveryCount: number | null;
 };
@@ -32,7 +30,6 @@ export type UserMinAggregateOutputType = {
     password: string | null;
     role: $Enums.RoleEnum | null;
     xp: number | null;
-    level: number | null;
     hearts: number | null;
     heartsUpdatedAt: Date | null;
     recoveryCount: number | null;
@@ -46,7 +43,6 @@ export type UserMaxAggregateOutputType = {
     password: string | null;
     role: $Enums.RoleEnum | null;
     xp: number | null;
-    level: number | null;
     hearts: number | null;
     heartsUpdatedAt: Date | null;
     recoveryCount: number | null;
@@ -60,7 +56,6 @@ export type UserCountAggregateOutputType = {
     password: number;
     role: number;
     xp: number;
-    level: number;
     hearts: number;
     heartsUpdatedAt: number;
     recoveryCount: number;
@@ -70,13 +65,11 @@ export type UserCountAggregateOutputType = {
 };
 export type UserAvgAggregateInputType = {
     xp?: true;
-    level?: true;
     hearts?: true;
     recoveryCount?: true;
 };
 export type UserSumAggregateInputType = {
     xp?: true;
-    level?: true;
     hearts?: true;
     recoveryCount?: true;
 };
@@ -87,7 +80,6 @@ export type UserMinAggregateInputType = {
     password?: true;
     role?: true;
     xp?: true;
-    level?: true;
     hearts?: true;
     heartsUpdatedAt?: true;
     recoveryCount?: true;
@@ -101,7 +93,6 @@ export type UserMaxAggregateInputType = {
     password?: true;
     role?: true;
     xp?: true;
-    level?: true;
     hearts?: true;
     heartsUpdatedAt?: true;
     recoveryCount?: true;
@@ -115,7 +106,6 @@ export type UserCountAggregateInputType = {
     password?: true;
     role?: true;
     xp?: true;
-    level?: true;
     hearts?: true;
     heartsUpdatedAt?: true;
     recoveryCount?: true;
@@ -206,7 +196,6 @@ export type UserGroupByOutputType = {
     password: string;
     role: $Enums.RoleEnum;
     xp: number;
-    level: number;
     hearts: number;
     heartsUpdatedAt: Date;
     recoveryCount: number;
@@ -231,7 +220,6 @@ export type UserWhereInput = {
     password?: Prisma.StringFilter<"User"> | string;
     role?: Prisma.EnumRoleEnumFilter<"User"> | $Enums.RoleEnum;
     xp?: Prisma.IntFilter<"User"> | number;
-    level?: Prisma.IntFilter<"User"> | number;
     hearts?: Prisma.IntFilter<"User"> | number;
     heartsUpdatedAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     recoveryCount?: Prisma.IntFilter<"User"> | number;
@@ -246,7 +234,6 @@ export type UserOrderByWithRelationInput = {
     password?: Prisma.SortOrder;
     role?: Prisma.SortOrder;
     xp?: Prisma.SortOrder;
-    level?: Prisma.SortOrder;
     hearts?: Prisma.SortOrder;
     heartsUpdatedAt?: Prisma.SortOrder;
     recoveryCount?: Prisma.SortOrder;
@@ -264,7 +251,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
     password?: Prisma.StringFilter<"User"> | string;
     role?: Prisma.EnumRoleEnumFilter<"User"> | $Enums.RoleEnum;
     xp?: Prisma.IntFilter<"User"> | number;
-    level?: Prisma.IntFilter<"User"> | number;
     hearts?: Prisma.IntFilter<"User"> | number;
     heartsUpdatedAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     recoveryCount?: Prisma.IntFilter<"User"> | number;
@@ -279,7 +265,6 @@ export type UserOrderByWithAggregationInput = {
     password?: Prisma.SortOrder;
     role?: Prisma.SortOrder;
     xp?: Prisma.SortOrder;
-    level?: Prisma.SortOrder;
     hearts?: Prisma.SortOrder;
     heartsUpdatedAt?: Prisma.SortOrder;
     recoveryCount?: Prisma.SortOrder;
@@ -301,7 +286,6 @@ export type UserScalarWhereWithAggregatesInput = {
     password?: Prisma.StringWithAggregatesFilter<"User"> | string;
     role?: Prisma.EnumRoleEnumWithAggregatesFilter<"User"> | $Enums.RoleEnum;
     xp?: Prisma.IntWithAggregatesFilter<"User"> | number;
-    level?: Prisma.IntWithAggregatesFilter<"User"> | number;
     hearts?: Prisma.IntWithAggregatesFilter<"User"> | number;
     heartsUpdatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string;
     recoveryCount?: Prisma.IntWithAggregatesFilter<"User"> | number;
@@ -315,7 +299,6 @@ export type UserCreateInput = {
     password: string;
     role?: $Enums.RoleEnum;
     xp?: number;
-    level?: number;
     hearts?: number;
     heartsUpdatedAt?: Date | string;
     recoveryCount?: number;
@@ -330,7 +313,6 @@ export type UserUncheckedCreateInput = {
     password: string;
     role?: $Enums.RoleEnum;
     xp?: number;
-    level?: number;
     hearts?: number;
     heartsUpdatedAt?: Date | string;
     recoveryCount?: number;
@@ -345,7 +327,6 @@ export type UserUpdateInput = {
     password?: Prisma.StringFieldUpdateOperationsInput | string;
     role?: Prisma.EnumRoleEnumFieldUpdateOperationsInput | $Enums.RoleEnum;
     xp?: Prisma.IntFieldUpdateOperationsInput | number;
-    level?: Prisma.IntFieldUpdateOperationsInput | number;
     hearts?: Prisma.IntFieldUpdateOperationsInput | number;
     heartsUpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     recoveryCount?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -360,7 +341,6 @@ export type UserUncheckedUpdateInput = {
     password?: Prisma.StringFieldUpdateOperationsInput | string;
     role?: Prisma.EnumRoleEnumFieldUpdateOperationsInput | $Enums.RoleEnum;
     xp?: Prisma.IntFieldUpdateOperationsInput | number;
-    level?: Prisma.IntFieldUpdateOperationsInput | number;
     hearts?: Prisma.IntFieldUpdateOperationsInput | number;
     heartsUpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     recoveryCount?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -375,7 +355,6 @@ export type UserCreateManyInput = {
     password: string;
     role?: $Enums.RoleEnum;
     xp?: number;
-    level?: number;
     hearts?: number;
     heartsUpdatedAt?: Date | string;
     recoveryCount?: number;
@@ -389,7 +368,6 @@ export type UserUpdateManyMutationInput = {
     password?: Prisma.StringFieldUpdateOperationsInput | string;
     role?: Prisma.EnumRoleEnumFieldUpdateOperationsInput | $Enums.RoleEnum;
     xp?: Prisma.IntFieldUpdateOperationsInput | number;
-    level?: Prisma.IntFieldUpdateOperationsInput | number;
     hearts?: Prisma.IntFieldUpdateOperationsInput | number;
     heartsUpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     recoveryCount?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -403,7 +381,6 @@ export type UserUncheckedUpdateManyInput = {
     password?: Prisma.StringFieldUpdateOperationsInput | string;
     role?: Prisma.EnumRoleEnumFieldUpdateOperationsInput | $Enums.RoleEnum;
     xp?: Prisma.IntFieldUpdateOperationsInput | number;
-    level?: Prisma.IntFieldUpdateOperationsInput | number;
     hearts?: Prisma.IntFieldUpdateOperationsInput | number;
     heartsUpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     recoveryCount?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -417,7 +394,6 @@ export type UserCountOrderByAggregateInput = {
     password?: Prisma.SortOrder;
     role?: Prisma.SortOrder;
     xp?: Prisma.SortOrder;
-    level?: Prisma.SortOrder;
     hearts?: Prisma.SortOrder;
     heartsUpdatedAt?: Prisma.SortOrder;
     recoveryCount?: Prisma.SortOrder;
@@ -426,7 +402,6 @@ export type UserCountOrderByAggregateInput = {
 };
 export type UserAvgOrderByAggregateInput = {
     xp?: Prisma.SortOrder;
-    level?: Prisma.SortOrder;
     hearts?: Prisma.SortOrder;
     recoveryCount?: Prisma.SortOrder;
 };
@@ -437,7 +412,6 @@ export type UserMaxOrderByAggregateInput = {
     password?: Prisma.SortOrder;
     role?: Prisma.SortOrder;
     xp?: Prisma.SortOrder;
-    level?: Prisma.SortOrder;
     hearts?: Prisma.SortOrder;
     heartsUpdatedAt?: Prisma.SortOrder;
     recoveryCount?: Prisma.SortOrder;
@@ -451,7 +425,6 @@ export type UserMinOrderByAggregateInput = {
     password?: Prisma.SortOrder;
     role?: Prisma.SortOrder;
     xp?: Prisma.SortOrder;
-    level?: Prisma.SortOrder;
     hearts?: Prisma.SortOrder;
     heartsUpdatedAt?: Prisma.SortOrder;
     recoveryCount?: Prisma.SortOrder;
@@ -460,7 +433,6 @@ export type UserMinOrderByAggregateInput = {
 };
 export type UserSumOrderByAggregateInput = {
     xp?: Prisma.SortOrder;
-    level?: Prisma.SortOrder;
     hearts?: Prisma.SortOrder;
     recoveryCount?: Prisma.SortOrder;
 };
@@ -503,7 +475,6 @@ export type UserCreateWithoutProgressInput = {
     password: string;
     role?: $Enums.RoleEnum;
     xp?: number;
-    level?: number;
     hearts?: number;
     heartsUpdatedAt?: Date | string;
     recoveryCount?: number;
@@ -517,7 +488,6 @@ export type UserUncheckedCreateWithoutProgressInput = {
     password: string;
     role?: $Enums.RoleEnum;
     xp?: number;
-    level?: number;
     hearts?: number;
     heartsUpdatedAt?: Date | string;
     recoveryCount?: number;
@@ -544,7 +514,6 @@ export type UserUpdateWithoutProgressInput = {
     password?: Prisma.StringFieldUpdateOperationsInput | string;
     role?: Prisma.EnumRoleEnumFieldUpdateOperationsInput | $Enums.RoleEnum;
     xp?: Prisma.IntFieldUpdateOperationsInput | number;
-    level?: Prisma.IntFieldUpdateOperationsInput | number;
     hearts?: Prisma.IntFieldUpdateOperationsInput | number;
     heartsUpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     recoveryCount?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -558,7 +527,6 @@ export type UserUncheckedUpdateWithoutProgressInput = {
     password?: Prisma.StringFieldUpdateOperationsInput | string;
     role?: Prisma.EnumRoleEnumFieldUpdateOperationsInput | $Enums.RoleEnum;
     xp?: Prisma.IntFieldUpdateOperationsInput | number;
-    level?: Prisma.IntFieldUpdateOperationsInput | number;
     hearts?: Prisma.IntFieldUpdateOperationsInput | number;
     heartsUpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     recoveryCount?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -596,7 +564,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
     password?: boolean;
     role?: boolean;
     xp?: boolean;
-    level?: boolean;
     hearts?: boolean;
     heartsUpdatedAt?: boolean;
     recoveryCount?: boolean;
@@ -612,7 +579,6 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
     password?: boolean;
     role?: boolean;
     xp?: boolean;
-    level?: boolean;
     hearts?: boolean;
     heartsUpdatedAt?: boolean;
     recoveryCount?: boolean;
@@ -626,7 +592,6 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
     password?: boolean;
     role?: boolean;
     xp?: boolean;
-    level?: boolean;
     hearts?: boolean;
     heartsUpdatedAt?: boolean;
     recoveryCount?: boolean;
@@ -640,14 +605,13 @@ export type UserSelectScalar = {
     password?: boolean;
     role?: boolean;
     xp?: boolean;
-    level?: boolean;
     hearts?: boolean;
     heartsUpdatedAt?: boolean;
     recoveryCount?: boolean;
     lastRecoveryDate?: boolean;
     createdAt?: boolean;
 };
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nim" | "name" | "password" | "role" | "xp" | "level" | "hearts" | "heartsUpdatedAt" | "recoveryCount" | "lastRecoveryDate" | "createdAt", ExtArgs["result"]["user"]>;
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nim" | "name" | "password" | "role" | "xp" | "hearts" | "heartsUpdatedAt" | "recoveryCount" | "lastRecoveryDate" | "createdAt", ExtArgs["result"]["user"]>;
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     progress?: boolean | Prisma.User$progressArgs<ExtArgs>;
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
@@ -666,7 +630,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
         password: string;
         role: $Enums.RoleEnum;
         xp: number;
-        level: number;
         hearts: number;
         heartsUpdatedAt: Date;
         recoveryCount: number;
@@ -1033,7 +996,6 @@ export interface UserFieldRefs {
     readonly password: Prisma.FieldRef<"User", 'String'>;
     readonly role: Prisma.FieldRef<"User", 'RoleEnum'>;
     readonly xp: Prisma.FieldRef<"User", 'Int'>;
-    readonly level: Prisma.FieldRef<"User", 'Int'>;
     readonly hearts: Prisma.FieldRef<"User", 'Int'>;
     readonly heartsUpdatedAt: Prisma.FieldRef<"User", 'DateTime'>;
     readonly recoveryCount: Prisma.FieldRef<"User", 'Int'>;

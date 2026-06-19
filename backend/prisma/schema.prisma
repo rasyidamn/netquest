@@ -37,7 +37,6 @@ model User {
   password         String
   role             RoleEnum @default(MAHASISWA)
   xp               Int      @default(0)
-  level            Int      @default(1)
   hearts           Int      @default(3)
   heartsUpdatedAt  DateTime @default(now()) @map("hearts_updated_at")
   recoveryCount    Int      @default(0) @map("recovery_count")

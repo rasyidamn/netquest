@@ -15,7 +15,6 @@ export class LeaderboardSchema {
 		rank: z.number().int(),
 		name: z.string(),
 		xp: z.number().int(),
-		level: z.number().int(),
 	});
 
 	static readonly LEADERBOARD_RESPONSE = z.array(this.LEADERBOARD_ITEM);

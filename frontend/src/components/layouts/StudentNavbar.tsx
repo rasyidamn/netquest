@@ -4,13 +4,14 @@ import XpDisplay from "../XpDisplay";
 import Notification from "../Notification";
 import { useProfile } from "@/hooks/auth/useProfile";
 import { useRouterState } from "@tanstack/react-router";
+import { IconMenu2 } from "@tabler/icons-react"; // Gunakan Tabler Icon agar seragam
 
 const titleMap: Record<string, string> = {
 	"/dashboard": "Dashboard",
-	"/roadmap": "Peta Belajar",
-	"/leaderboard": "Leaderboard",
-	"/history": "Riwayat Kuis",
-	"/profile": "Profil",
+	"/roadmap": "Peta Perjalanan",
+	"/leaderboard": "Papan Peringkat",
+	"/history": "Arsip Misi",
+	"/profile": "Identitas",
 };
 
 export function StudentNavbar() {
@@ -19,42 +20,37 @@ export function StudentNavbar() {
 	const pageTitle = titleMap[pathname] ?? "NetQuest";
 
 	return (
-		<header className="navbar sticky top-0 z-30 bg-base-200 shadow-sm">
-			<div className="navbar-start gap-2">
+		<header className="navbar sticky top-0 z-50 bg-base-100/70 backdrop-blur-xl border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.1)] px-2 sm:px-4">
+			{/* Bagian Kiri: Tombol Menu & Judul Halaman */}
+			<div className="navbar-start gap-3">
 				<label
 					htmlFor="my-drawer-4"
 					aria-label="open sidebar"
-					className="btn btn-square btn-ghost"
+					className="btn btn-circle btn-ghost btn-sm sm:btn-md border border-transparent hover:border-white/10 hover:bg-base-200/50"
 				>
-					{/* Sidebar toggle icon */}
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						viewBox="0 0 24 24"
-						strokeLinejoin="round"
-						strokeLinecap="round"
-						strokeWidth="2"
-						fill="none"
-						stroke="currentColor"
-						className="my-1.5 inline-block size-4"
-					>
-						<path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
-						<path d="M9 4v16"></path>
-						<path d="M14 10l2 2l-2 2"></path>
-					</svg>
+					<IconMenu2 size={20} className="text-base-content/80" />
 				</label>
-				{/* Judul halaman dinamis */}
-				<span className="font-bold text-base max-lg:hidden">
+
+				<span className="font-black text-lg tracking-tight bg-gradient-to-br from-base-content to-base-content/60 bg-clip-text text-transparent max-lg:hidden drop-shadow-sm">
 					{pageTitle}
 				</span>
 			</div>
-			<div className="navbar-center gap-6">
+
+			{/* Bagian Tengah: Indikator HUD Pemain */}
+			<div className="navbar-center gap-2 sm:gap-4">
 				<XpDisplay xpValue={data?.xp ?? "-"} />
 				<HeartDisplay heartValue={data?.hearts ?? 0} />
 			</div>
-			<div className="navbar-end">
-				<div className="flex items-center sm:gap-4 sm:mr-4">
-					<Notification />
-					<ThemeToggle className="hidden sm:flex" />
+
+			{/* Bagian Kanan: Notifikasi & Tema */}
+			<div className="navbar-end gap-1 sm:gap-2">
+				<div className="flex items-center gap-1 sm:gap-3">
+					<div className="hover:bg-base-200/50 p-1 sm:p-2 sm:flex flex rounded-full transition-colors border border-transparent hover:border-white/10">
+						<Notification />
+					</div>
+					<div className="hidden sm:flex hover:bg-base-200/50 p-2 rounded-full transition-colors border border-transparent hover:border-white/10">
+						<ThemeToggle />
+					</div>
 				</div>
 			</div>
 		</header>

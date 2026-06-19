@@ -7,13 +7,11 @@ export declare class LeaderboardSchema {
         rank: z.ZodNumber;
         name: z.ZodString;
         xp: z.ZodNumber;
-        level: z.ZodNumber;
     }, z.z.core.$strip>;
     static readonly LEADERBOARD_RESPONSE: z.ZodArray<z.ZodObject<{
         rank: z.ZodNumber;
         name: z.ZodString;
         xp: z.ZodNumber;
-        level: z.ZodNumber;
     }, z.z.core.$strip>>;
 }
 export type LeaderboardQuery = z.infer<typeof LeaderboardSchema.LEADERBOARD_QUERY>;

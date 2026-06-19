@@ -3,7 +3,7 @@ import { useQueries } from "@tanstack/react-query";
 import { useModules } from "@/hooks/module/useModules";
 import { useMyProgress } from "@/hooks/progress/useMyProgress";
 import { moduleApi } from "@/api/module.api";
-import type { RoadmapItem, RoadmapStatus, LessonType } from "@/types/api.type";
+import type { RoadmapItem, RoadmapStatus } from "@/types/api.type";
 
 export function useRoadmap() {
 	const modulesQuery = useModules();
@@ -32,23 +32,22 @@ export function useRoadmap() {
 
 		const sorted = [...modules].sort((a, b) => a.sequence - b.sequence);
 
-		const getStatus = (index: number, moduleId: string): RoadmapStatus => {
-			const moduleLessons: LessonType[] = lessonsByModule[index] ?? [];
-
-			// 1. Jika ada lesson, cek apakah semuanya COMPLETED
-			if (moduleLessons.length > 0 && progress) {
-				const lessonIds = new Set(moduleLessons.map((l) => l.id));
-				const relevantProgress = progress.filter((p) =>
-					lessonIds.has(p.lessonId),
-				);
-				const allCompleted =
-					relevantProgress.length === moduleLessons.length &&
-					relevantProgress.every((p) => p.status === "COMPLETED");
-
-				if (allCompleted) return "COMPLETED";
+		// Build a map of moduleId -> module progress status from backend
+		// Backend returns per-modul progress: { moduleId, status, bestScore, currentLessonId }
+		const progressByModuleId = new Map<string, RoadmapStatus>();
+		if (progress) {
+			for (const p of progress) {
+				progressByModuleId.set(p.moduleId, p.status as RoadmapStatus);
 			}
+		}
 
-			// 2. Jika ini modul pertama dan BELUM completed, dia WAJIB ACTIVE secara default
+		const getStatus = (index: number, moduleId: string): RoadmapStatus => {
+			// 1. Cek status dari backend progress (sumber kebenaran)
+			const backendStatus = progressByModuleId.get(moduleId);
+			if (backendStatus === "COMPLETED") return "COMPLETED";
+			if (backendStatus === "ACTIVE") return "ACTIVE";
+
+			// 2. Jika ini modul pertama dan belum ada progress, dia ACTIVE
 			if (index === 0) return "ACTIVE";
 
 			// 3. Jika modul sebelumnya COMPLETED, maka modul ini ACTIVE

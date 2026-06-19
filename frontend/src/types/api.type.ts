@@ -61,9 +61,42 @@ export interface MaterialType {
 
 export interface LessonDetailType extends LessonType {
 	material?: MaterialType;
+	questions?: Question[];
 }
 
 export interface TheoryDoneResponse {
 	xpGained: number;
 	currentTotalXp: number;
+}
+
+export interface Option {
+	id: string;
+	questionId: string;
+	optionText: string;
+}
+
+export interface Question {
+	id: string;
+	lessonId: string;
+	questionText: string;
+	xpReward: number;
+	options: Option[];
+}
+
+export interface QuizSubmitResult {
+	isCorrect: boolean;
+	correctOptionId?: string;
+	xpGained: number;
+	heartsRemaining: number;
+}
+
+export interface CompleteQuizResult {
+	xpGained: number;
+	currentTotalXp: number;
+}
+
+export interface RecoverHeartResult {
+	hearts: number;
+	recoveryCount: number;
+	lastRecoveryDate: string;
 }

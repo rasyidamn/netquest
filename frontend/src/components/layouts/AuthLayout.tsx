@@ -1,18 +1,21 @@
-
 import type { ReactNode } from "react";
-import NavBar from "../NavBar";
 
 interface AuthLayoutProps {
-	children: ReactNode;
+   children: ReactNode;
 }
 
 export function AuthLayout({ children }: AuthLayoutProps) {
-	return (
-		<div className="relative min-h-screen bg-background">
-			<NavBar role="auth" className="fixed top-0 left-0 right-0 z-50" />
-			<main className="flex min-h-screen items-center justify-center p-4 pt-20">
-				{children}
-			</main>
-		</div>
-	);
+   return (
+      // PERBAIKAN: Gunakan h-screen dan w-screen untuk mengunci ukuran
+      <div className="relative h-screen w-screen bg-base-300 flex items-center justify-center p-4 sm:p-6 md:p-8 overflow-hidden">
+         
+         <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] rounded-full bg-primary/20 blur-[120px] pointer-events-none" />
+         <div className="absolute bottom-[-20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-secondary/15 blur-[150px] pointer-events-none" />
+         
+         {/* PERBAIKAN: max-h-full akan memaksa kartu menyesuaikan diri dengan sisa ruang */}
+         <main className="relative z-10 w-full max-w-5xl max-h-full flex justify-center">
+            {children}
+         </main>
+      </div>
+   );
 }

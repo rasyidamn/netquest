@@ -2,7 +2,6 @@ import { StatusCodes } from "http-status-codes";
 import { prisma } from "../configs/database.config.js";
 import { ApiError } from "../utils/api-error.util.js";
 import { LessonTypeEnum, ProgressStatusEnum, } from "../generated/prisma/enums.js";
-import { LevelingEngine } from "../utils/leveling.engine.js";
 export class GameplayService {
     static theoryDone = async (userId, lessonId) => {
         const lesson = await prisma.lesson.findUnique({
@@ -10,8 +9,8 @@ export class GameplayService {
                 id: lessonId,
             },
             include: {
-                module: true
-            }
+                module: true,
+            },
         });
         if (!lesson) {
             throw new ApiError(StatusCodes.NOT_FOUND, "Pelajaran tidak ditemukan");
@@ -23,8 +22,8 @@ export class GameplayService {
             where: {
                 userId_lessonId: {
                     userId,
-                    lessonId
-                }
+                    lessonId,
+                },
             },
         });
         if (existingProgress?.status === ProgressStatusEnum.COMPLETED) {
@@ -45,28 +44,24 @@ export class GameplayService {
             });
             // MEMBUKA LESSON SELANJUTNYA
             this.unlockNextLesson(tx, userId, lesson);
-            // Perhitungan xp dan level
+            // Perhitungan xp
             const user = await tx.user.findUniqueOrThrow({
                 where: {
                     id: userId,
                 },
             });
             const newTotalXp = user.xp + lesson.xpReward;
-            const calculatedLevel = LevelingEngine.calculateLevel(newTotalXp);
-            const isLevelUp = calculatedLevel > user.level;
             await tx.user.update({
                 where: {
                     id: userId,
                 },
                 data: {
                     xp: newTotalXp,
-                    level: isLevelUp ? calculatedLevel : user.level,
                 },
             });
             return {
                 addedXp: lesson.xpReward,
-                isLevelUp: isLevelUp,
-                newLevel: isLevelUp ? calculatedLevel : user.level,
+                currentTotalXp: newTotalXp,
             };
         });
         return result;
@@ -95,21 +90,15 @@ export class GameplayService {
         }
         const result = await prisma.$transaction(async (tx) => {
             let addedXp = 0;
-            let isLevelUp = false;
-            let newLevel = currentUser.level;
+            let currentTotalXp = currentUser.xp;
             let currentHearts = currentUser.hearts;
             if (option.isCorrect) {
                 addedXp = option.question.xpReward;
-                const newTotalXp = currentUser.xp + addedXp;
-                newLevel = LevelingEngine.calculateLevel(newTotalXp);
-                isLevelUp = newLevel > currentUser.level;
+                currentTotalXp = currentUser.xp + addedXp;
                 await tx.user.update({
-                    where: {
-                        id: userId,
-                    },
+                    where: { id: userId },
                     data: {
-                        xp: newTotalXp,
-                        level: isLevelUp ? newLevel : currentUser.level,
+                        xp: currentTotalXp,
                     },
                 });
             }
@@ -130,9 +119,8 @@ export class GameplayService {
             return {
                 isCorrect: option.isCorrect,
                 addedXp: addedXp,
+                currentTotalXp: currentTotalXp,
                 heartsLeft: currentHearts,
-                isLevelUp,
-                newLevel,
             };
         });
         return result;
@@ -141,7 +129,7 @@ export class GameplayService {
         // 1. Validasi Lesson & Module
         const lesson = await prisma.lesson.findUnique({
             where: { id: validatedData.lessonId },
-            include: { module: true }
+            include: { module: true },
         });
         if (!lesson || lesson.type !== LessonTypeEnum.QUIZ) {
             throw new ApiError(StatusCodes.BAD_REQUEST, "Pelajaran tidak ditemukan atau bukan tipe kuis.");
@@ -150,24 +138,34 @@ export class GameplayService {
         const result = await prisma.$transaction(async (tx) => {
             // A. Cari progress kuis saat ini untuk membandingkan skor
             const currentProgress = await tx.userProgress.findUnique({
-                where: { userId_lessonId: { userId, lessonId: validatedData.lessonId } }
+                where: {
+                    userId_lessonId: {
+                        userId,
+                        lessonId: validatedData.lessonId,
+                    },
+                },
             });
             // B. Simpan skor tertinggi (Jika ngulang kuis dan nilainya lebih kecil, jangan ditimpa)
             const previousScore = currentProgress?.bestScore || 0;
             const newBestScore = Math.max(previousScore, validatedData.finalScore);
             // C. Tandai Kuis COMPLETED & Update Skor
             await tx.userProgress.upsert({
-                where: { userId_lessonId: { userId, lessonId: validatedData.lessonId } },
+                where: {
+                    userId_lessonId: {
+                        userId,
+                        lessonId: validatedData.lessonId,
+                    },
+                },
                 update: {
                     status: ProgressStatusEnum.COMPLETED,
-                    bestScore: newBestScore
+                    bestScore: newBestScore,
                 },
                 create: {
                     userId: userId,
                     lessonId: validatedData.lessonId,
                     status: ProgressStatusEnum.COMPLETED,
-                    bestScore: newBestScore
-                }
+                    bestScore: newBestScore,
+                },
             });
             // D. BUKA GEMBOK MATERI/MODUL SELANJUTNYA!
             // (Kita gunakan helper function yang sudah kita buat sebelumnya)
@@ -175,7 +173,7 @@ export class GameplayService {
             return {
                 isNewBestScore: validatedData.finalScore > previousScore,
                 bestScore: newBestScore,
-                nextLessonId: nextLesson?.id || null
+                nextLessonId: nextLesson?.id || null,
             };
         });
         return result;

@@ -12,11 +12,11 @@ import type { RoadmapStatus } from "@/types/api.type";
 
 function TimelineSkeleton() {
    return (
-      <div className="flex flex-col gap-8 py-8 w-full max-w-3xl mx-auto px-4">
+      <div className="flex flex-col gap-12 py-8 w-full max-w-4xl mx-auto px-4">
          {[1, 2, 3].map((i) => (
-            <div key={i} className="flex gap-6 w-full">
-               <div className="skeleton h-16 w-16 shrink-0 rounded-full" />
-               <div className="skeleton h-40 w-full rounded-2xl" />
+            <div key={i} className="flex flex-col md:flex-row gap-8 w-full items-center opacity-50 animate-pulse">
+               <div className="skeleton h-20 w-20 shrink-0 rounded-full shadow-[0_0_30px_rgba(255,255,255,0.1)]" />
+               <div className="skeleton h-48 w-full md:w-[32rem] rounded-3xl" />
             </div>
          ))}
       </div>
@@ -26,23 +26,30 @@ function TimelineSkeleton() {
 function TimelineError() {
    return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
-         <div className="bg-error/10 p-6 rounded-full mb-4">
-            <IconLock size={48} className="text-error" />
+         <div className="bg-error/10 p-8 rounded-full mb-6 shadow-[0_0_50px_rgba(var(--color-error),0.2)]">
+            <IconLock size={56} className="text-error" />
          </div>
-         <p className="text-error text-xl font-bold">Terputus dari Server</p>
-         <p className="text-base-content/60 mt-2 max-w-md">
-            Kami tidak dapat memuat peta perjalanan Anda saat ini. Periksa koneksi internet dan coba lagi.
+         <h2 className="text-error text-3xl font-black tracking-tight">Koneksi Terputus</h2>
+         <p className="text-base-content/60 mt-3 text-lg max-w-md">
+            Sinyal menuju satelit pembelajaran terganggu. Mohon periksa jaringan Anda.
          </p>
       </div>
    );
 }
 
-// Helper untuk visual HR (Garis)
-function getHrClass(status: RoadmapStatus, isNextLocked?: boolean): string {
-   if (status === "COMPLETED") return "bg-success h-1.5";
-   if (status === "ACTIVE" && !isNextLocked) return "bg-primary h-1.5";
-   // Garis putus-putus untuk rute yang terkunci
-   return "bg-transparent border-l-[6px] border-dashed border-base-300 ml-[-3px]"; 
+// Logic Garis Gradient Cerdas
+function getHrClass(currentStatus: RoadmapStatus, nextStatus?: RoadmapStatus): string {
+   // Ketebalan garis
+   const baseThickness = "w-1.5 md:w-2 rounded-full";
+   
+   if (currentStatus === "COMPLETED") {
+      if (nextStatus === "ACTIVE") return `${baseThickness} bg-gradient-to-b from-success to-primary shadow-[0_0_10px_rgba(var(--color-primary),0.3)]`;
+      return `${baseThickness} bg-success shadow-[0_0_10px_rgba(var(--color-success),0.3)]`;
+   }
+   if (currentStatus === "ACTIVE") {
+      return `${baseThickness} bg-gradient-to-b from-primary to-base-300/30`;
+   }
+   return `w-1 border-l-[4px] border-dashed border-base-300/40 ml-[-2px] md:ml-[-1.5px]`; 
 }
 
 export function RoadmapTimeline() {
@@ -54,16 +61,15 @@ export function RoadmapTimeline() {
    if (!items || items.length === 0) {
       return (
          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <IconBook2 size={64} className="text-base-content/20 mb-4" />
-            <h3 className="text-2xl font-bold text-base-content/70">Peta Masih Kosong</h3>
-            <p className="text-base-content/50 mt-2">Belum ada *quest* yang tersedia untuk Anda.</p>
+            <IconBook2 size={80} className="text-base-content/10 mb-6 drop-shadow-xl" />
+            <h3 className="text-3xl font-black text-base-content/70">Peta Belum Terpetakan</h3>
+            <p className="text-base-content/50 mt-3 text-lg">Misi belum tersedia untuk saat ini.</p>
          </div>
       );
    }
 
    return (
-      <div className="w-full max-w-4xl mx-auto px-2 sm:px-6 py-8">
-         {/* max-md:timeline-compact akan meratakan timeline ke kiri di HP, dan di tengah saat di desktop */}
+      <div className="w-full max-w-5xl mx-auto px-2 sm:px-6 py-8">
          <ul className="timeline max-md:timeline-compact timeline-snap-icon timeline-vertical">
             {items.map((item, index) => {
                const isLast = index === items.length - 1;
@@ -75,85 +81,108 @@ export function RoadmapTimeline() {
                return (
                   <li key={item.module.id}>
                      {index > 0 && (
-                        <hr className={getHrClass(items[index - 1].status, isLocked)} />
+                        <hr className={getHrClass(items[index - 1].status, item.status)} />
                      )}
 
                      {/* Lingkaran Ikon Utama */}
-                     <div className="timeline-middle">
-                        <div
-                           className={`flex size-12 md:size-16 items-center justify-center rounded-full border-4 shadow-sm z-10 ${
-                              isActive
-                                 ? "bg-primary text-primary-content border-primary-content ring-4 ring-primary/30 animate-bounce-slow"
-                                 : isCompleted
-                                    ? "bg-success text-success-content border-success-content"
-                                    : "bg-base-200 text-base-content/40 border-base-300"
-                           }`}
-                        >
-                           {isActive && <IconRocket size={28} />}
-                           {isCompleted && <IconTrophy size={28} />}
-                           {isLocked && <IconLock size={28} />}
+                     <div className="timeline-middle z-20 mx-2 md:mx-4 py-4">
+                        <div className="relative group">
+                           {/* Pulsing Radar Effect for Active */}
+                           {isActive && (
+                              <div className="absolute inset-0 bg-primary rounded-full animate-ping opacity-30 scale-150" />
+                           )}
+                           
+                           <div
+                              className={`relative flex size-14 md:size-20 items-center justify-center rounded-full border-4 shadow-xl backdrop-blur-md transition-transform duration-500 hover:scale-110 ${
+                                 isActive
+                                    ? "bg-primary/10 text-primary border-primary shadow-[0_0_30px_rgba(var(--color-primary),0.4)]"
+                                    : isCompleted
+                                       ? "bg-success/10 text-success border-success shadow-[0_0_20px_rgba(var(--color-success),0.2)]"
+                                       : "bg-base-300/20 text-base-content/30 border-base-300/30"
+                              }`}
+                           >
+                              {isActive && <IconRocket size={36} className="drop-shadow-[0_0_8px_rgba(var(--color-primary),0.8)]" />}
+                              {isCompleted && <IconTrophy size={36} />}
+                              {isLocked && <IconLock size={32} />}
+                           </div>
                         </div>
                      </div>
 
-						{/* Kontainer Kartu (Kiri/Kanan bergantian di Desktop, selalu Kanan di HP) */}
-						<div 
-							className={`timeline-${index % 2 === 0 ? "start" : "end"} w-full mb-10 flex ${
-								index % 2 === 0 ? "justify-start md:justify-end" : "justify-start"
-							}`}
-						>
-							<div
-								className={`card w-[85vw] sm:w-[24rem] md:w-[26rem] lg:w-[30rem] shadow-xl transition-all duration-300 text-left
-									max-md:ml-5
-									${index % 2 === 0 ? "md:mr-8" : "md:ml-8"}
-									${
-										isActive
-											? "bg-gradient-to-br from-base-100 to-primary/5 border-2 border-primary shadow-primary/20 scale-100 hover:scale-[1.02] hover:shadow-primary/30"
-											: isCompleted
-												? "bg-base-100 border border-success/30 opacity-95 hover:opacity-100"
-												: "bg-base-200/50 border-2 border-dashed border-base-300 opacity-60 grayscale-[50%]"
-									}`}
-							>
-								<div className="card-body p-6 md:p-8">
-									{/* Label Atas & Badge */}
-									<div className="flex flex-wrap items-center gap-2 mb-2 justify-start">
-										<span className="text-sm font-black tracking-widest uppercase opacity-50">
-											Tahap {item.module.sequence}
-										</span>
-										{isActive && <span className="badge badge-primary badge-sm animate-pulse">Sedang Berlangsung</span>}
-										{isCompleted && <span className="badge badge-success badge-sm gap-1"><IconCheck size={12}/> Selesai</span>}
-									</div>
+                     {/* Kontainer Kartu */}
+                     <div 
+                        className={`timeline-${index % 2 === 0 ? "start" : "end"} w-full mb-16 flex ${
+                           index % 2 === 0 ? "justify-start md:justify-end" : "justify-start"
+                        }`}
+                     >
+                        <div
+                           className={`group card w-[85vw] sm:w-[26rem] md:w-[28rem] lg:w-[32rem] text-left transition-all duration-500 ease-out
+                              max-md:ml-6
+                              ${index % 2 === 0 ? "md:mr-10" : "md:ml-10"}
+                              ${
+                                 isActive
+                                    ? "bg-base-200/60 backdrop-blur-xl border border-primary/40 shadow-[0_8px_30px_rgba(var(--color-primary),0.15)] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(var(--color-primary),0.25)]"
+                                    : isCompleted
+                                       ? "bg-base-100/50 backdrop-blur-md border border-white/5 shadow-lg hover:-translate-y-1 hover:border-success/30"
+                                       : "bg-base-300/10 border border-white/5 opacity-50 grayscale backdrop-blur-sm"
+                              }`}
+                        >
+                           {/* Glow Effect di dalam kartu aktif */}
+                           {isActive && (
+                              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-bl-full blur-2xl pointer-events-none" />
+                           )}
 
-									{/* Judul Modul */}
-									<h3 className={`card-title text-2xl md:text-3xl font-extrabold ${isActive ? "text-primary" : ""}`}>
-										{item.module.title}
-									</h3>
+                           <div className="card-body p-6 md:p-8 relative z-10">
+                              {/* Label Atas & Badge */}
+                              <div className="flex flex-wrap items-center gap-3 mb-4 justify-start">
+                                 <span className="text-sm font-bold tracking-[0.2em] text-base-content/40 uppercase">
+                                    Tahap {item.module.sequence}
+                                 </span>
+                                 {isActive && (
+                                    <span className="badge badge-primary badge-sm px-3 py-2.5 font-bold shadow-[0_0_10px_rgba(var(--color-primary),0.4)]">
+                                       <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse mr-2"></span>
+                                       Berlangsung
+                                    </span>
+                                 )}
+                                 {isCompleted && (
+                                    <span className="badge badge-success badge-sm px-3 py-2.5 bg-success/20 border-0 text-success gap-1.5 font-bold">
+                                       <IconCheck size={14} stroke={3} /> Selesai
+                                    </span>
+                                 )}
+                              </div>
 
-									{/* Info Pelajaran */}
-									<p className="text-base-content/70 mt-2 font-medium flex items-center gap-2">
-										<IconBook2 size={20} className="opacity-70" />
-										{item.lessons.length} Pelajaran tersedia
-									</p>
+                              {/* Judul Modul */}
+                              <h3 className={`card-title text-2xl md:text-3xl font-black tracking-tight leading-snug mb-2 ${isActive ? "text-primary drop-shadow-sm" : "text-base-content/90"}`}>
+                                 {item.module.title}
+                              </h3>
 
-									{/* Card Actions (Tombol) */}
-									{!isLocked && (
-										<div className="card-actions mt-6 justify-start">
-											<button
-												onClick={() => router.navigate({ to: `/roadmap/${item.module.id}` })}
-												className={`btn ${
-													isActive ? "btn-primary shadow-lg shadow-primary/30" : "btn-outline btn-success"
-												}`}
-											>
-												{isActive ? "Mulai Belajar" : "Lihat Ulang"}
-												{isActive && <IconArrowRight size={20} />}
-											</button>
-										</div>
-									)}
-								</div>
-							</div>
-						</div>
+                              {/* Info Pelajaran */}
+                              <div className="flex items-center gap-2 mt-2 text-base-content/50 font-semibold bg-base-300/30 w-fit px-3 py-1.5 rounded-lg">
+                                 <IconBook2 size={18} />
+                                 <span>{item.lessons.length} Misi Belajar</span>
+                              </div>
+
+                              {/* Card Actions (Tombol) */}
+                              {!isLocked && (
+                                 <div className="card-actions mt-8 justify-start">
+                                    <button
+                                       onClick={() => router.navigate({ to: `/roadmap/${item.module.id}` })}
+                                       className={`btn w-full sm:w-auto px-8 transition-all duration-300 ${
+                                          isActive 
+                                             ? "btn-primary hover:scale-105 shadow-[0_0_20px_rgba(var(--color-primary),0.3)]" 
+                                             : "btn-outline btn-success bg-success/5 hover:bg-success hover:text-success-content"
+                                       }`}
+                                    >
+                                       {isActive ? "Mulai Penjelajahan" : "Buka Arsip"}
+                                       {isActive && <IconArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />}
+                                    </button>
+                                 </div>
+                              )}
+                           </div>
+                        </div>
+                     </div>
 
                      {!isLast && (
-                        <hr className={getHrClass(item.status, nextStatus === "LOCKED")} />
+                        <hr className={getHrClass(item.status, nextStatus)} />
                      )}
                   </li>
                );

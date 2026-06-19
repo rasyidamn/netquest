@@ -6,22 +6,17 @@ export class LeaderboardService {
             where: {
                 role: RoleEnum.MAHASISWA,
             },
-            orderBy: [
-                { xp: "desc" },
-                { name: "asc" },
-            ],
+            orderBy: [{ xp: "desc" }, { name: "asc" }],
             take: limit,
             select: {
                 name: true,
                 xp: true,
-                level: true,
             },
         });
         return users.map((user, index) => ({
             rank: index + 1,
             name: user.name,
             xp: user.xp,
-            level: user.level,
         }));
     };
 }

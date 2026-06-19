@@ -131,6 +131,21 @@ registry.registerPath({
 	},
 });
 
+registry.registerPath({
+	method: "post",
+	path: "/api/auth/logout",
+	summary: "Logout user",
+	description: "Menghapus session user dengan membersihkan cookie access token. Memerlukan token JWT.",
+	tags: ["Auth"],
+	security: [{ bearerAuth: [] }],
+	responses: {
+		200: {
+			description: "Berhasil logout!",
+		},
+		401: { description: "Token tidak valid atau tidak disertakan" },
+	},
+});
+
 // ============================================================
 // 4. Endpoints — MODULES
 // ============================================================

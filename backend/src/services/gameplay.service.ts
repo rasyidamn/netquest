@@ -5,9 +5,8 @@ import {
 	LessonTypeEnum,
 	ProgressStatusEnum,
 } from "../generated/prisma/enums.js";
-import { LevelingEngine } from "../utils/leveling.engine.js";
 import type {
-   CompleteQuizRequest,
+	CompleteQuizRequest,
 	RecoverHeartRequest,
 	SubmitAnswerRequest,
 } from "../schemas/gameplay.schema.js";
@@ -19,9 +18,9 @@ export class GameplayService {
 			where: {
 				id: lessonId,
 			},
-         include: {
-            module: true
-         }
+			include: {
+				module: true,
+			},
 		});
 		if (!lesson) {
 			throw new ApiError(
@@ -39,9 +38,9 @@ export class GameplayService {
 		const existingProgress = await prisma.userProgress.findUnique({
 			where: {
 				userId_lessonId: {
-               userId,
-               lessonId
-            }
+					userId,
+					lessonId,
+				},
 			},
 		});
 
@@ -66,12 +65,10 @@ export class GameplayService {
 				},
 			});
 
-         // MEMBUKA LESSON SELANJUTNYA
-         this.unlockNextLesson(tx, userId, lesson)
+			// MEMBUKA LESSON SELANJUTNYA
+			this.unlockNextLesson(tx, userId, lesson);
 
-			
-         
-         // Perhitungan xp dan level
+			// Perhitungan xp
 			const user = await tx.user.findUniqueOrThrow({
 				where: {
 					id: userId,
@@ -80,23 +77,18 @@ export class GameplayService {
 
 			const newTotalXp = user.xp + lesson.xpReward;
 
-			const calculatedLevel = LevelingEngine.calculateLevel(newTotalXp);
-			const isLevelUp = calculatedLevel > user.level;
-
 			await tx.user.update({
 				where: {
 					id: userId,
 				},
 				data: {
 					xp: newTotalXp,
-					level: isLevelUp ? calculatedLevel : user.level,
 				},
 			});
 
 			return {
 				addedXp: lesson.xpReward,
-				isLevelUp: isLevelUp,
-				newLevel: isLevelUp ? calculatedLevel : user.level,
+				currentTotalXp: newTotalXp,
 			};
 		});
 
@@ -139,23 +131,17 @@ export class GameplayService {
 
 		const result = await prisma.$transaction(async (tx) => {
 			let addedXp = 0;
-			let isLevelUp = false;
-			let newLevel = currentUser.level;
+			let currentTotalXp = currentUser.xp;
 			let currentHearts = currentUser.hearts;
 
 			if (option.isCorrect) {
 				addedXp = option.question.xpReward;
-				const newTotalXp = currentUser.xp + addedXp;
-				newLevel = LevelingEngine.calculateLevel(newTotalXp);
-				isLevelUp = newLevel > currentUser.level;
+				currentTotalXp = currentUser.xp + addedXp;
 
 				await tx.user.update({
-					where: {
-						id: userId,
-					},
+					where: { id: userId },
 					data: {
-						xp: newTotalXp,
-						level: isLevelUp ? newLevel : currentUser.level,
+						xp: currentTotalXp,
 					},
 				});
 			} else {
@@ -178,66 +164,87 @@ export class GameplayService {
 			return {
 				isCorrect: option.isCorrect,
 				addedXp: addedXp,
+				currentTotalXp: currentTotalXp,
 				heartsLeft: currentHearts,
-				isLevelUp,
-				newLevel,
 			};
 		});
 
 		return result;
 	};
 
-   static completeQuiz = async (userId: string, validatedData: CompleteQuizRequest) => {
-      // 1. Validasi Lesson & Module
-      const lesson = await prisma.lesson.findUnique({
-         where: { id: validatedData.lessonId },
-         include: { module: true }
-      });
+	static completeQuiz = async (
+		userId: string,
+		validatedData: CompleteQuizRequest,
+	) => {
+		// 1. Validasi Lesson & Module
+		const lesson = await prisma.lesson.findUnique({
+			where: { id: validatedData.lessonId },
+			include: { module: true },
+		});
 
-      if (!lesson || lesson.type !== LessonTypeEnum.QUIZ) {
-         throw new ApiError(StatusCodes.BAD_REQUEST, "Pelajaran tidak ditemukan atau bukan tipe kuis.");
-      }
+		if (!lesson || lesson.type !== LessonTypeEnum.QUIZ) {
+			throw new ApiError(
+				StatusCodes.BAD_REQUEST,
+				"Pelajaran tidak ditemukan atau bukan tipe kuis.",
+			);
+		}
 
-      // 2. Eksekusi Transaksi
-      const result = await prisma.$transaction(async (tx) => {
-         
-         // A. Cari progress kuis saat ini untuk membandingkan skor
-         const currentProgress = await tx.userProgress.findUnique({
-            where: { userId_lessonId: { userId, lessonId: validatedData.lessonId } }
-         });
+		// 2. Eksekusi Transaksi
+		const result = await prisma.$transaction(async (tx) => {
+			// A. Cari progress kuis saat ini untuk membandingkan skor
+			const currentProgress = await tx.userProgress.findUnique({
+				where: {
+					userId_lessonId: {
+						userId,
+						lessonId: validatedData.lessonId,
+					},
+				},
+			});
 
-         // B. Simpan skor tertinggi (Jika ngulang kuis dan nilainya lebih kecil, jangan ditimpa)
-         const previousScore = currentProgress?.bestScore || 0;
-         const newBestScore = Math.max(previousScore, validatedData.finalScore);
+			// B. Simpan skor tertinggi (Jika ngulang kuis dan nilainya lebih kecil, jangan ditimpa)
+			const previousScore = currentProgress?.bestScore || 0;
+			const newBestScore = Math.max(
+				previousScore,
+				validatedData.finalScore,
+			);
 
-         // C. Tandai Kuis COMPLETED & Update Skor
-         await tx.userProgress.upsert({
-            where: { userId_lessonId: { userId, lessonId: validatedData.lessonId } },
-            update: {
-               status: ProgressStatusEnum.COMPLETED,
-               bestScore: newBestScore
-            },
-            create: {
-               userId: userId,
-               lessonId: validatedData.lessonId,
-               status: ProgressStatusEnum.COMPLETED,
-               bestScore: newBestScore
-            }
-         });
+			// C. Tandai Kuis COMPLETED & Update Skor
+			await tx.userProgress.upsert({
+				where: {
+					userId_lessonId: {
+						userId,
+						lessonId: validatedData.lessonId,
+					},
+				},
+				update: {
+					status: ProgressStatusEnum.COMPLETED,
+					bestScore: newBestScore,
+				},
+				create: {
+					userId: userId,
+					lessonId: validatedData.lessonId,
+					status: ProgressStatusEnum.COMPLETED,
+					bestScore: newBestScore,
+				},
+			});
 
-         // D. BUKA GEMBOK MATERI/MODUL SELANJUTNYA!
-         // (Kita gunakan helper function yang sudah kita buat sebelumnya)
-         const nextLesson = await GameplayService.unlockNextLesson(tx, userId, lesson);
+			// D. BUKA GEMBOK MATERI/MODUL SELANJUTNYA!
+			// (Kita gunakan helper function yang sudah kita buat sebelumnya)
+			const nextLesson = await GameplayService.unlockNextLesson(
+				tx,
+				userId,
+				lesson,
+			);
 
-         return {
-            isNewBestScore: validatedData.finalScore > previousScore,
-            bestScore: newBestScore,
-            nextLessonId: nextLesson?.id || null
-         };
-      });
+			return {
+				isNewBestScore: validatedData.finalScore > previousScore,
+				bestScore: newBestScore,
+				nextLessonId: nextLesson?.id || null,
+			};
+		});
 
-      return result;
-   };
+		return result;
+	};
 
 	static recoverHeart = async (
 		userId: string,

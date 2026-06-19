@@ -17,8 +17,8 @@ export const authMiddleware = (
 	res: Response,
 	next: NextFunction,
 ) => {
-	const authHeader = req.headers.authorization;
-	if (!authHeader || !authHeader.startsWith("Bearer ")) {
+	const token = req.cookies?.access_token;
+	if (!token) {
 		return next(
 			new ApiError(
 				StatusCodes.UNAUTHORIZED,
@@ -26,8 +26,6 @@ export const authMiddleware = (
 			),
 		);
 	}
-
-	const token = authHeader.split(" ")[1];
 
 	try {
 		const secret = process.env.JWT_SECRET;

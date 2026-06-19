@@ -49,7 +49,6 @@ export declare const UserScalarFieldEnum: {
     readonly password: "password";
     readonly role: "role";
     readonly xp: "xp";
-    readonly level: "level";
     readonly hearts: "hearts";
     readonly heartsUpdatedAt: "heartsUpdatedAt";
     readonly recoveryCount: "recoveryCount";

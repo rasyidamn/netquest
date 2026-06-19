@@ -1,4 +1,3 @@
-import { level } from "winston";
 export class LevelingEngine {
     static BASE_EXP = 100;
     static calculateLevel = (totalXp) => {

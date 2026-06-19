@@ -10,7 +10,6 @@ export declare class UserSchema {
             readonly MAHASISWA: "MAHASISWA";
         }>>;
         xp: z.ZodNumber;
-        level: z.ZodNumber;
         hearts: z.ZodNumber;
         heartsUpdatedAt: z.ZodDate;
         recoveryCount: z.ZodNumber;
@@ -23,7 +22,6 @@ export declare class UserSchema {
         name: z.ZodString;
     }, z.z.core.$strict>;
     static readonly REGISTER_RESPONSE: z.ZodObject<{
-        level: z.ZodNumber;
         id: z.ZodUUID;
         nim: z.ZodString;
         name: z.ZodString;
@@ -44,7 +42,6 @@ export declare class UserSchema {
     }, z.z.core.$strict>;
     static readonly LOGIN_RESPONSE: z.ZodObject<{
         user: z.ZodObject<{
-            level: z.ZodNumber;
             id: z.ZodUUID;
             nim: z.ZodString;
             name: z.ZodString;
@@ -59,10 +56,8 @@ export declare class UserSchema {
             lastRecoveryDate: z.ZodDate;
             createdAt: z.ZodDate;
         }, z.z.core.$strict>;
-        accessToken: z.ZodString;
     }, z.z.core.$strip>;
     static readonly GET_PROFILE_RESPONSE: z.ZodObject<{
-        level: z.ZodNumber;
         id: z.ZodUUID;
         nim: z.ZodString;
         name: z.ZodString;
