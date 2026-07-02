@@ -83,6 +83,7 @@ export declare const QuestionScalarFieldEnum: {
     readonly lessonId: "lessonId";
     readonly questionText: "questionText";
     readonly xpReward: "xpReward";
+    readonly type: "type";
 };
 export type QuestionScalarFieldEnum = (typeof QuestionScalarFieldEnum)[keyof typeof QuestionScalarFieldEnum];
 export declare const OptionScalarFieldEnum: {

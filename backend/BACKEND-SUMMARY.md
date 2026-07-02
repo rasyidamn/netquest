@@ -64,7 +64,7 @@ Semua validasi request/response menggunakan **Zod** dengan ekstensi `zod-to-open
 | `module.schema.ts` | id, title, sequence | CREATE (title, sequence), UPDATE (partial) | MODULE_MODEL |
 | `lesson.schema.ts` | id, moduleId, title, lessonSequence, type, xpReward | CREATE (tanpa id/moduleId), UPDATE (partial) | LESSON_MODEL, LESSON_DETAIL (dibedakan admin vs mahasiswa — admin lihat isCorrect, mahasiswa tidak) |
 | `material.schema.ts` | id, lessonId, content, mediaUrl | CREATE (content, mediaUrl?), UPDATE (partial) | MATERIAL_MODEL |
-| `question.schema.ts` | id, lessonId, questionText, xpReward | CREATE_WITH_OPTIONS (questionText, xpReward, options[] min 2), UPDATE (partial) | QUESTION_OPTIONS_MODEL |
+| `question.schema.ts` | id, lessonId, questionText, xpReward, type | CREATE_WITH_OPTIONS (questionText, xpReward, type, options[] min 2), UPDATE (partial) | QUESTION_OPTIONS_MODEL |
 | `option.schema.ts` | id, questionId, optionText, isCorrect | CREATE (tanpa id) | OPTION_MODEL |
 | `gameplay.schema.ts` | - | SUBMIT_ANSWER (lessondId, questionId, optionId), COMPLETE_QUIZ (lessonId, finalScore 0-100), RECOVER_HEART (lessonId, readDuration ≥60) | - |
 | `leaderboard.schema.ts` | - | QUERY (limit, default 10) | LEADERBOARD_ITEM (rank, name, xp) |
@@ -176,6 +176,7 @@ enum ProgressStatusEnum {
 | lessonId | UUID (FK → Lesson) | CASCADE delete |
 | questionText | Text | Teks soal |
 | xpReward | Int | 15 default |
+| type | QuestionType | MULTIPLE_CHOICE | Tipe soal (MULTIPLE_CHOICE, CALCULATION_INPUT, COMMAND_TYPING, SORTING, MATCHING, IMAGE_LABELING) |
 
 **Option (`options`)**
 

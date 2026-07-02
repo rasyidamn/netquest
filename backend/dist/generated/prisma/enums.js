@@ -20,4 +20,12 @@ export const ProgressStatusEnum = {
     ACTIVE: 'ACTIVE',
     COMPLETED: 'COMPLETED'
 };
+export const QuestionType = {
+    MULTIPLE_CHOICE: 'MULTIPLE_CHOICE',
+    CALCULATION_INPUT: 'CALCULATION_INPUT',
+    COMMAND_TYPING: 'COMMAND_TYPING',
+    SORTING: 'SORTING',
+    MATCHING: 'MATCHING',
+    IMAGE_LABELING: 'IMAGE_LABELING'
+};
 //# sourceMappingURL=enums.js.map

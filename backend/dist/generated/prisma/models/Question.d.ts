@@ -1,4 +1,5 @@
 import type * as runtime from "@prisma/client/runtime/client";
+import type * as $Enums from "../enums.js";
 import type * as Prisma from "../internal/prismaNamespace.js";
 /**
  * Model Question
@@ -23,18 +24,21 @@ export type QuestionMinAggregateOutputType = {
     lessonId: string | null;
     questionText: string | null;
     xpReward: number | null;
+    type: $Enums.QuestionType | null;
 };
 export type QuestionMaxAggregateOutputType = {
     id: string | null;
     lessonId: string | null;
     questionText: string | null;
     xpReward: number | null;
+    type: $Enums.QuestionType | null;
 };
 export type QuestionCountAggregateOutputType = {
     id: number;
     lessonId: number;
     questionText: number;
     xpReward: number;
+    type: number;
     _all: number;
 };
 export type QuestionAvgAggregateInputType = {
@@ -48,18 +52,21 @@ export type QuestionMinAggregateInputType = {
     lessonId?: true;
     questionText?: true;
     xpReward?: true;
+    type?: true;
 };
 export type QuestionMaxAggregateInputType = {
     id?: true;
     lessonId?: true;
     questionText?: true;
     xpReward?: true;
+    type?: true;
 };
 export type QuestionCountAggregateInputType = {
     id?: true;
     lessonId?: true;
     questionText?: true;
     xpReward?: true;
+    type?: true;
     _all?: true;
 };
 export type QuestionAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -143,6 +150,7 @@ export type QuestionGroupByOutputType = {
     lessonId: string;
     questionText: string;
     xpReward: number;
+    type: $Enums.QuestionType;
     _count: QuestionCountAggregateOutputType | null;
     _avg: QuestionAvgAggregateOutputType | null;
     _sum: QuestionSumAggregateOutputType | null;
@@ -160,6 +168,7 @@ export type QuestionWhereInput = {
     lessonId?: Prisma.UuidFilter<"Question"> | string;
     questionText?: Prisma.StringFilter<"Question"> | string;
     xpReward?: Prisma.IntFilter<"Question"> | number;
+    type?: Prisma.EnumQuestionTypeFilter<"Question"> | $Enums.QuestionType;
     lesson?: Prisma.XOR<Prisma.LessonScalarRelationFilter, Prisma.LessonWhereInput>;
     options?: Prisma.OptionListRelationFilter;
 };
@@ -168,6 +177,7 @@ export type QuestionOrderByWithRelationInput = {
     lessonId?: Prisma.SortOrder;
     questionText?: Prisma.SortOrder;
     xpReward?: Prisma.SortOrder;
+    type?: Prisma.SortOrder;
     lesson?: Prisma.LessonOrderByWithRelationInput;
     options?: Prisma.OptionOrderByRelationAggregateInput;
 };
@@ -179,6 +189,7 @@ export type QuestionWhereUniqueInput = Prisma.AtLeast<{
     lessonId?: Prisma.UuidFilter<"Question"> | string;
     questionText?: Prisma.StringFilter<"Question"> | string;
     xpReward?: Prisma.IntFilter<"Question"> | number;
+    type?: Prisma.EnumQuestionTypeFilter<"Question"> | $Enums.QuestionType;
     lesson?: Prisma.XOR<Prisma.LessonScalarRelationFilter, Prisma.LessonWhereInput>;
     options?: Prisma.OptionListRelationFilter;
 }, "id">;
@@ -187,6 +198,7 @@ export type QuestionOrderByWithAggregationInput = {
     lessonId?: Prisma.SortOrder;
     questionText?: Prisma.SortOrder;
     xpReward?: Prisma.SortOrder;
+    type?: Prisma.SortOrder;
     _count?: Prisma.QuestionCountOrderByAggregateInput;
     _avg?: Prisma.QuestionAvgOrderByAggregateInput;
     _max?: Prisma.QuestionMaxOrderByAggregateInput;
@@ -201,11 +213,13 @@ export type QuestionScalarWhereWithAggregatesInput = {
     lessonId?: Prisma.UuidWithAggregatesFilter<"Question"> | string;
     questionText?: Prisma.StringWithAggregatesFilter<"Question"> | string;
     xpReward?: Prisma.IntWithAggregatesFilter<"Question"> | number;
+    type?: Prisma.EnumQuestionTypeWithAggregatesFilter<"Question"> | $Enums.QuestionType;
 };
 export type QuestionCreateInput = {
     id?: string;
     questionText: string;
     xpReward?: number;
+    type?: $Enums.QuestionType;
     lesson: Prisma.LessonCreateNestedOneWithoutQuestionsInput;
     options?: Prisma.OptionCreateNestedManyWithoutQuestionInput;
 };
@@ -214,12 +228,14 @@ export type QuestionUncheckedCreateInput = {
     lessonId: string;
     questionText: string;
     xpReward?: number;
+    type?: $Enums.QuestionType;
     options?: Prisma.OptionUncheckedCreateNestedManyWithoutQuestionInput;
 };
 export type QuestionUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     questionText?: Prisma.StringFieldUpdateOperationsInput | string;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    type?: Prisma.EnumQuestionTypeFieldUpdateOperationsInput | $Enums.QuestionType;
     lesson?: Prisma.LessonUpdateOneRequiredWithoutQuestionsNestedInput;
     options?: Prisma.OptionUpdateManyWithoutQuestionNestedInput;
 };
@@ -228,6 +244,7 @@ export type QuestionUncheckedUpdateInput = {
     lessonId?: Prisma.StringFieldUpdateOperationsInput | string;
     questionText?: Prisma.StringFieldUpdateOperationsInput | string;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    type?: Prisma.EnumQuestionTypeFieldUpdateOperationsInput | $Enums.QuestionType;
     options?: Prisma.OptionUncheckedUpdateManyWithoutQuestionNestedInput;
 };
 export type QuestionCreateManyInput = {
@@ -235,17 +252,20 @@ export type QuestionCreateManyInput = {
     lessonId: string;
     questionText: string;
     xpReward?: number;
+    type?: $Enums.QuestionType;
 };
 export type QuestionUpdateManyMutationInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     questionText?: Prisma.StringFieldUpdateOperationsInput | string;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    type?: Prisma.EnumQuestionTypeFieldUpdateOperationsInput | $Enums.QuestionType;
 };
 export type QuestionUncheckedUpdateManyInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     lessonId?: Prisma.StringFieldUpdateOperationsInput | string;
     questionText?: Prisma.StringFieldUpdateOperationsInput | string;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    type?: Prisma.EnumQuestionTypeFieldUpdateOperationsInput | $Enums.QuestionType;
 };
 export type QuestionListRelationFilter = {
     every?: Prisma.QuestionWhereInput;
@@ -260,6 +280,7 @@ export type QuestionCountOrderByAggregateInput = {
     lessonId?: Prisma.SortOrder;
     questionText?: Prisma.SortOrder;
     xpReward?: Prisma.SortOrder;
+    type?: Prisma.SortOrder;
 };
 export type QuestionAvgOrderByAggregateInput = {
     xpReward?: Prisma.SortOrder;
@@ -269,12 +290,14 @@ export type QuestionMaxOrderByAggregateInput = {
     lessonId?: Prisma.SortOrder;
     questionText?: Prisma.SortOrder;
     xpReward?: Prisma.SortOrder;
+    type?: Prisma.SortOrder;
 };
 export type QuestionMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     lessonId?: Prisma.SortOrder;
     questionText?: Prisma.SortOrder;
     xpReward?: Prisma.SortOrder;
+    type?: Prisma.SortOrder;
 };
 export type QuestionSumOrderByAggregateInput = {
     xpReward?: Prisma.SortOrder;
@@ -321,6 +344,9 @@ export type QuestionUncheckedUpdateManyWithoutLessonNestedInput = {
     updateMany?: Prisma.QuestionUpdateManyWithWhereWithoutLessonInput | Prisma.QuestionUpdateManyWithWhereWithoutLessonInput[];
     deleteMany?: Prisma.QuestionScalarWhereInput | Prisma.QuestionScalarWhereInput[];
 };
+export type EnumQuestionTypeFieldUpdateOperationsInput = {
+    set?: $Enums.QuestionType;
+};
 export type QuestionCreateNestedOneWithoutOptionsInput = {
     create?: Prisma.XOR<Prisma.QuestionCreateWithoutOptionsInput, Prisma.QuestionUncheckedCreateWithoutOptionsInput>;
     connectOrCreate?: Prisma.QuestionCreateOrConnectWithoutOptionsInput;
@@ -337,12 +363,14 @@ export type QuestionCreateWithoutLessonInput = {
     id?: string;
     questionText: string;
     xpReward?: number;
+    type?: $Enums.QuestionType;
     options?: Prisma.OptionCreateNestedManyWithoutQuestionInput;
 };
 export type QuestionUncheckedCreateWithoutLessonInput = {
     id?: string;
     questionText: string;
     xpReward?: number;
+    type?: $Enums.QuestionType;
     options?: Prisma.OptionUncheckedCreateNestedManyWithoutQuestionInput;
 };
 export type QuestionCreateOrConnectWithoutLessonInput = {
@@ -374,11 +402,13 @@ export type QuestionScalarWhereInput = {
     lessonId?: Prisma.UuidFilter<"Question"> | string;
     questionText?: Prisma.StringFilter<"Question"> | string;
     xpReward?: Prisma.IntFilter<"Question"> | number;
+    type?: Prisma.EnumQuestionTypeFilter<"Question"> | $Enums.QuestionType;
 };
 export type QuestionCreateWithoutOptionsInput = {
     id?: string;
     questionText: string;
     xpReward?: number;
+    type?: $Enums.QuestionType;
     lesson: Prisma.LessonCreateNestedOneWithoutQuestionsInput;
 };
 export type QuestionUncheckedCreateWithoutOptionsInput = {
@@ -386,6 +416,7 @@ export type QuestionUncheckedCreateWithoutOptionsInput = {
     lessonId: string;
     questionText: string;
     xpReward?: number;
+    type?: $Enums.QuestionType;
 };
 export type QuestionCreateOrConnectWithoutOptionsInput = {
     where: Prisma.QuestionWhereUniqueInput;
@@ -404,6 +435,7 @@ export type QuestionUpdateWithoutOptionsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     questionText?: Prisma.StringFieldUpdateOperationsInput | string;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    type?: Prisma.EnumQuestionTypeFieldUpdateOperationsInput | $Enums.QuestionType;
     lesson?: Prisma.LessonUpdateOneRequiredWithoutQuestionsNestedInput;
 };
 export type QuestionUncheckedUpdateWithoutOptionsInput = {
@@ -411,28 +443,33 @@ export type QuestionUncheckedUpdateWithoutOptionsInput = {
     lessonId?: Prisma.StringFieldUpdateOperationsInput | string;
     questionText?: Prisma.StringFieldUpdateOperationsInput | string;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    type?: Prisma.EnumQuestionTypeFieldUpdateOperationsInput | $Enums.QuestionType;
 };
 export type QuestionCreateManyLessonInput = {
     id?: string;
     questionText: string;
     xpReward?: number;
+    type?: $Enums.QuestionType;
 };
 export type QuestionUpdateWithoutLessonInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     questionText?: Prisma.StringFieldUpdateOperationsInput | string;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    type?: Prisma.EnumQuestionTypeFieldUpdateOperationsInput | $Enums.QuestionType;
     options?: Prisma.OptionUpdateManyWithoutQuestionNestedInput;
 };
 export type QuestionUncheckedUpdateWithoutLessonInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     questionText?: Prisma.StringFieldUpdateOperationsInput | string;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    type?: Prisma.EnumQuestionTypeFieldUpdateOperationsInput | $Enums.QuestionType;
     options?: Prisma.OptionUncheckedUpdateManyWithoutQuestionNestedInput;
 };
 export type QuestionUncheckedUpdateManyWithoutLessonInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     questionText?: Prisma.StringFieldUpdateOperationsInput | string;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    type?: Prisma.EnumQuestionTypeFieldUpdateOperationsInput | $Enums.QuestionType;
 };
 /**
  * Count Type QuestionCountOutputType
@@ -463,6 +500,7 @@ export type QuestionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
     lessonId?: boolean;
     questionText?: boolean;
     xpReward?: boolean;
+    type?: boolean;
     lesson?: boolean | Prisma.LessonDefaultArgs<ExtArgs>;
     options?: boolean | Prisma.Question$optionsArgs<ExtArgs>;
     _count?: boolean | Prisma.QuestionCountOutputTypeDefaultArgs<ExtArgs>;
@@ -472,6 +510,7 @@ export type QuestionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
     lessonId?: boolean;
     questionText?: boolean;
     xpReward?: boolean;
+    type?: boolean;
     lesson?: boolean | Prisma.LessonDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["question"]>;
 export type QuestionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -479,6 +518,7 @@ export type QuestionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
     lessonId?: boolean;
     questionText?: boolean;
     xpReward?: boolean;
+    type?: boolean;
     lesson?: boolean | Prisma.LessonDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["question"]>;
 export type QuestionSelectScalar = {
@@ -486,8 +526,9 @@ export type QuestionSelectScalar = {
     lessonId?: boolean;
     questionText?: boolean;
     xpReward?: boolean;
+    type?: boolean;
 };
-export type QuestionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "lessonId" | "questionText" | "xpReward", ExtArgs["result"]["question"]>;
+export type QuestionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "lessonId" | "questionText" | "xpReward" | "type", ExtArgs["result"]["question"]>;
 export type QuestionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     lesson?: boolean | Prisma.LessonDefaultArgs<ExtArgs>;
     options?: boolean | Prisma.Question$optionsArgs<ExtArgs>;
@@ -510,6 +551,7 @@ export type $QuestionPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
         lessonId: string;
         questionText: string;
         xpReward: number;
+        type: $Enums.QuestionType;
     }, ExtArgs["result"]["question"]>;
     composites: {};
 };
@@ -870,6 +912,7 @@ export interface QuestionFieldRefs {
     readonly lessonId: Prisma.FieldRef<"Question", 'String'>;
     readonly questionText: Prisma.FieldRef<"Question", 'String'>;
     readonly xpReward: Prisma.FieldRef<"Question", 'Int'>;
+    readonly type: Prisma.FieldRef<"Question", 'QuestionType'>;
 }
 /**
  * Question findUnique

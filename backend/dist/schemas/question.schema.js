@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { OptionSchema } from "./option.schema.js";
+import { QuestionType } from "../generated/prisma/enums.js";
 extendZodWithOpenApi(z);
 export class QuestionSchema {
     static QUESTION_MODEL = z.object({
@@ -18,6 +19,7 @@ export class QuestionSchema {
             .int()
             .nonnegative("XP tidak boleh negatif")
             .openapi({ example: 15 }),
+        type: z.enum(QuestionType).openapi({ example: "MULTIPLE_CHOICE" }),
     });
     static QUESTION_OPTIONS_MODEL = this.QUESTION_MODEL.extend({
         options: z.array(OptionSchema.OPTION_MODEL),
@@ -25,6 +27,7 @@ export class QuestionSchema {
     static CREATE_QUESTION_WITH_OPTIONS_REQUEST = this.QUESTION_MODEL.pick({
         questionText: true,
         xpReward: true,
+        type: true,
     })
         .extend({
         options: z

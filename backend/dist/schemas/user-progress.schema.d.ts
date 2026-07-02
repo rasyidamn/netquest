@@ -12,8 +12,8 @@ export declare class UserProgressSchema {
         bestScore: z.ZodNumber;
     }, z.core.$strip>;
     static readonly CREATE_USER_PROGRESS_REQUEST: z.ZodObject<{
-        userId: z.ZodUUID;
         lessonId: z.ZodUUID;
+        userId: z.ZodUUID;
         status: z.ZodOptional<z.ZodEnum<{
             readonly LOCKED: "LOCKED";
             readonly ACTIVE: "ACTIVE";
@@ -22,8 +22,8 @@ export declare class UserProgressSchema {
         bestScore: z.ZodOptional<z.ZodNumber>;
     }, z.core.$strict>;
     static readonly UPDATE_USER_PROGRESS_REQUEST: z.ZodObject<{
-        userId: z.ZodOptional<z.ZodUUID>;
         lessonId: z.ZodOptional<z.ZodUUID>;
+        userId: z.ZodOptional<z.ZodUUID>;
         status: z.ZodOptional<z.ZodOptional<z.ZodEnum<{
             readonly LOCKED: "LOCKED";
             readonly ACTIVE: "ACTIVE";

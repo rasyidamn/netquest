@@ -24,3 +24,5 @@ lessonRouter.put("/:id/material", LessonController.upsertMaterial);
 
 // Menambah Soal Kuis ke dalam Lesson
 lessonRouter.post("/:id/questions", LessonController.createQuestionWithOption);
+lessonRouter.put("/questions/:id", LessonController.updateQuestionWithOption);
+lessonRouter.delete("/questions/:id", LessonController.deleteQuestion);

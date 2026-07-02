@@ -847,6 +847,7 @@ export declare const QuestionScalarFieldEnum: {
     readonly lessonId: "lessonId";
     readonly questionText: "questionText";
     readonly xpReward: "xpReward";
+    readonly type: "type";
 };
 export type QuestionScalarFieldEnum = (typeof QuestionScalarFieldEnum)[keyof typeof QuestionScalarFieldEnum];
 export declare const OptionScalarFieldEnum: {
@@ -923,6 +924,14 @@ export type EnumLessonTypeEnumFieldRefInput<$PrismaModel> = FieldRefInputType<$P
  * Reference to a field of type 'LessonTypeEnum[]'
  */
 export type ListEnumLessonTypeEnumFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LessonTypeEnum[]'>;
+/**
+ * Reference to a field of type 'QuestionType'
+ */
+export type EnumQuestionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QuestionType'>;
+/**
+ * Reference to a field of type 'QuestionType[]'
+ */
+export type ListEnumQuestionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QuestionType[]'>;
 /**
  * Reference to a field of type 'Boolean'
  */

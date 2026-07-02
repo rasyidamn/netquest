@@ -6,9 +6,9 @@ import { StatusCodes } from "http-status-codes";
 import { GameplaySchema } from "../schemas/gameplay.schema.js";
 export class GameplayController {
     static theoryDone = catchAsync(async (req, res) => {
-        const params = LessonSchema.LESSON_ID_PARAM.parse(req.params);
+        const { lessonId } = req.body;
         const userId = req.user?.id;
-        const responseData = await GameplayService.theoryDone(userId, params.id);
+        const responseData = await GameplayService.theoryDone(userId, lessonId);
         sendSuccess(res, StatusCodes.OK, "Berhasil menyelesaikan lesson theory!", responseData);
     });
     static submitQuiz = catchAsync(async (req, res) => {

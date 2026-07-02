@@ -32,6 +32,10 @@ export class LessonSchema {
 			.int()
 			.nonnegative("XP tidak boleh negatif")
 			.openapi({ example: 50 }),
+		isPublished: z
+			.boolean()
+			.default(false)
+			.openapi({ example: false }),
 	});
 
 	static readonly LESSON_WITH_MODULE = this.LESSON_MODEL.extend({
@@ -56,6 +60,12 @@ export class LessonSchema {
 			this.LESSON_MODEL.extend({
 				type: z.literal(LessonTypeEnum.THEORY),
 				material: MaterialSchema.MATERIAL_MODEL.nullable(),
+				questions: z.array(
+					QuestionSchema.QUESTION_MODEL.extend({
+						options: z.array(OptionSchema.OPTION_MODEL),
+					}),
+				).optional(),
+				module: ModuleSchema.MODULE_MODEL
 			}),
 			this.LESSON_MODEL.extend({
 				type: z.literal(LessonTypeEnum.QUIZ),
@@ -64,6 +74,7 @@ export class LessonSchema {
 						options: z.array(OptionSchema.OPTION_MODEL),
 					}),
 				),
+				module: ModuleSchema.MODULE_MODEL
 			}),
 		],
 	);
@@ -74,6 +85,13 @@ export class LessonSchema {
 			this.LESSON_MODEL.extend({
 				type: z.literal(LessonTypeEnum.THEORY),
 				material: MaterialSchema.MATERIAL_MODEL.nullable(),
+				questions: z.array(
+					QuestionSchema.QUESTION_MODEL.extend({
+						options: z.array(
+							OptionSchema.OPTION_MODEL.omit({ isCorrect: true }),
+						),
+					}),
+				).optional(),
 			}),
 			this.LESSON_MODEL.extend({
 				type: z.literal(LessonTypeEnum.QUIZ),

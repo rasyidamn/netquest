@@ -19,6 +19,10 @@ export class ModuleSchema {
 			.int("Urutan harus berupa bilangan bulat")
 			.positive("Urutan modul harus dimulai dari 1 atau lebih")
 			.openapi({ example: 1 }),
+		isPublished: z
+			.boolean()
+			.default(false)
+			.openapi({ example: false }),
 	});
 
 	static readonly MODULE_ID_PARAM = this.MODULE_MODEL.pick({

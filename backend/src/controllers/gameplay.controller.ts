@@ -8,11 +8,11 @@ import { GameplaySchema } from "../schemas/gameplay.schema.js";
 
 export class GameplayController {
 	static theoryDone = catchAsync(async (req: Request, res: Response) => {
-		const params = LessonSchema.LESSON_ID_PARAM.parse(req.params);
+		const { lessonId } = req.body;
 		const userId = req.user?.id;
 		const responseData = await GameplayService.theoryDone(
 			userId as string,
-			params.id,
+			lessonId as string,
 		);
 		sendSuccess(
 			res,
@@ -21,7 +21,7 @@ export class GameplayController {
 			responseData,
 		);
 	});
-
+	
 	static submitQuiz = catchAsync(async (req: Request, res: Response) => {
 		const userId = req.user?.id;
 		const validatedData = GameplaySchema.SUBMIT_ANSWER_REQUEST.parse(

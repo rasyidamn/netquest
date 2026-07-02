@@ -33,8 +33,8 @@ export declare class LessonSchema {
             readonly QUIZ: "QUIZ";
         }>;
         title: z.ZodString;
-        lessonSequence: z.ZodNumber;
         xpReward: z.ZodNumber;
+        lessonSequence: z.ZodNumber;
     }, z.core.$strict>;
     static readonly UPDATE_LESSON_REQUEST: z.ZodObject<{
         type: z.ZodOptional<z.ZodEnum<{
@@ -42,8 +42,8 @@ export declare class LessonSchema {
             readonly QUIZ: "QUIZ";
         }>>;
         title: z.ZodOptional<z.ZodString>;
-        lessonSequence: z.ZodOptional<z.ZodNumber>;
         xpReward: z.ZodOptional<z.ZodNumber>;
+        lessonSequence: z.ZodOptional<z.ZodNumber>;
     }, z.core.$strict>;
     static readonly LESSON_ID_PARAM: z.ZodObject<{
         id: z.ZodUUID;
@@ -61,6 +61,26 @@ export declare class LessonSchema {
             content: z.ZodString;
             mediaUrl: z.ZodOptional<z.ZodNullable<z.ZodURL>>;
         }, z.core.$strip>>;
+        questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            id: z.ZodUUID;
+            lessonId: z.ZodString;
+            questionText: z.ZodString;
+            xpReward: z.ZodNumber;
+            type: z.ZodEnum<{
+                readonly MULTIPLE_CHOICE: "MULTIPLE_CHOICE";
+                readonly CALCULATION_INPUT: "CALCULATION_INPUT";
+                readonly COMMAND_TYPING: "COMMAND_TYPING";
+                readonly SORTING: "SORTING";
+                readonly MATCHING: "MATCHING";
+                readonly IMAGE_LABELING: "IMAGE_LABELING";
+            }>;
+            options: z.ZodArray<z.ZodObject<{
+                id: z.ZodUUID;
+                questionId: z.ZodString;
+                optionText: z.ZodString;
+                isCorrect: z.ZodBoolean;
+            }, z.core.$strip>>;
+        }, z.core.$strip>>>;
     }, z.core.$strip>, z.ZodObject<{
         id: z.ZodUUID;
         moduleId: z.ZodUUID;
@@ -73,6 +93,14 @@ export declare class LessonSchema {
             lessonId: z.ZodString;
             questionText: z.ZodString;
             xpReward: z.ZodNumber;
+            type: z.ZodEnum<{
+                readonly MULTIPLE_CHOICE: "MULTIPLE_CHOICE";
+                readonly CALCULATION_INPUT: "CALCULATION_INPUT";
+                readonly COMMAND_TYPING: "COMMAND_TYPING";
+                readonly SORTING: "SORTING";
+                readonly MATCHING: "MATCHING";
+                readonly IMAGE_LABELING: "IMAGE_LABELING";
+            }>;
             options: z.ZodArray<z.ZodObject<{
                 id: z.ZodUUID;
                 questionId: z.ZodString;
@@ -94,6 +122,25 @@ export declare class LessonSchema {
             content: z.ZodString;
             mediaUrl: z.ZodOptional<z.ZodNullable<z.ZodURL>>;
         }, z.core.$strip>>;
+        questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            id: z.ZodUUID;
+            lessonId: z.ZodString;
+            questionText: z.ZodString;
+            xpReward: z.ZodNumber;
+            type: z.ZodEnum<{
+                readonly MULTIPLE_CHOICE: "MULTIPLE_CHOICE";
+                readonly CALCULATION_INPUT: "CALCULATION_INPUT";
+                readonly COMMAND_TYPING: "COMMAND_TYPING";
+                readonly SORTING: "SORTING";
+                readonly MATCHING: "MATCHING";
+                readonly IMAGE_LABELING: "IMAGE_LABELING";
+            }>;
+            options: z.ZodArray<z.ZodObject<{
+                id: z.ZodUUID;
+                questionId: z.ZodString;
+                optionText: z.ZodString;
+            }, z.core.$strip>>;
+        }, z.core.$strip>>>;
     }, z.core.$strip>, z.ZodObject<{
         id: z.ZodUUID;
         moduleId: z.ZodUUID;
@@ -106,6 +153,14 @@ export declare class LessonSchema {
             lessonId: z.ZodString;
             questionText: z.ZodString;
             xpReward: z.ZodNumber;
+            type: z.ZodEnum<{
+                readonly MULTIPLE_CHOICE: "MULTIPLE_CHOICE";
+                readonly CALCULATION_INPUT: "CALCULATION_INPUT";
+                readonly COMMAND_TYPING: "COMMAND_TYPING";
+                readonly SORTING: "SORTING";
+                readonly MATCHING: "MATCHING";
+                readonly IMAGE_LABELING: "IMAGE_LABELING";
+            }>;
             options: z.ZodArray<z.ZodObject<{
                 id: z.ZodUUID;
                 questionId: z.ZodString;

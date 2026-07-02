@@ -1,17 +1,16 @@
 import z from "zod";
 export declare class GameplaySchema {
     static readonly SUBMIT_ANSWER_REQUEST: z.ZodObject<{
-        lessondId: z.ZodUUID;
+        lessonId: z.ZodUUID;
         questionId: z.ZodUUID;
-        optionId: z.ZodUUID;
+        answer: z.ZodString;
     }, z.z.core.$strict>;
     static readonly RECOVER_HEART_REQUEST: z.ZodObject<{
         lessonId: z.ZodUUID;
         readDuration: z.ZodNumber;
     }, z.z.core.$strict>;
     static readonly COMPLETE_QUIZ_REQUEST: z.ZodObject<{
-        lessonId: z.ZodUUID;
-        finalScore: z.ZodNumber;
+        lessonId: z.ZodString;
     }, z.z.core.$strict>;
 }
 export type SubmitAnswerRequest = z.infer<typeof GameplaySchema.SUBMIT_ANSWER_REQUEST>;

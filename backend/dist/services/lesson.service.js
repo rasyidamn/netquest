@@ -4,7 +4,7 @@ import { LessonSchema, } from "../schemas/lesson.schema.js";
 import { ApiError } from "../utils/api-error.util.js";
 import z from "zod";
 import { MaterialSchema, } from "../schemas/material.schema.js";
-import { LessonTypeEnum, RoleEnum, } from "../generated/prisma/client.js";
+import { LessonTypeEnum, RoleEnum, QuestionType, } from "../generated/prisma/client.js";
 import { QuestionSchema, } from "../schemas/question.schema.js";
 export class LessonService {
     static getLessonByModule = async (moduleId) => {
@@ -100,7 +100,7 @@ export class LessonService {
             throw new ApiError(StatusCodes.NOT_FOUND, "Lesson tidak ditemukan");
         }
         if (lesson.type !== LessonTypeEnum.THEORY) {
-            throw new ApiError(StatusCodes.BAD_REQUEST, "Lesson ini khusus untuk materiKonten materi hanya bisa ditambahkan pada Lesson dengan tipe THEORY");
+            throw new ApiError(StatusCodes.BAD_REQUEST, "Lesson ini khusus untuk materi. Konten materi hanya bisa ditambahkan pada Lesson dengan tipe THEORY");
         }
         const material = await prisma.material.upsert({
             where: {
@@ -133,6 +133,7 @@ export class LessonService {
                 lessonId: lessonId,
                 questionText: validatedData.questionText,
                 xpReward: validatedData.xpReward ?? 15,
+                type: validatedData.type ?? QuestionType.MULTIPLE_CHOICE,
                 options: {
                     createMany: {
                         data: validatedData.options,
@@ -156,6 +157,7 @@ export class LessonService {
             questionText: validatedData.questionText ?? existingQuestion.questionText,
             // Pastikan properti Prisma Anda adalah xp_reward sesuai skema database
             xpReward: validatedData.xpReward ?? existingQuestion.xpReward,
+            type: validatedData.type ?? existingQuestion.type,
         };
         // 3. Modifikasi opsi HANYA jika frontend benar-benar mengirimkan array opsi baru
         if (validatedData.options && validatedData.options.length > 0) {

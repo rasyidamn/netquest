@@ -92,7 +92,8 @@ export const QuestionScalarFieldEnum = {
     id: 'id',
     lessonId: 'lessonId',
     questionText: 'questionText',
-    xpReward: 'xpReward'
+    xpReward: 'xpReward',
+    type: 'type'
 };
 export const OptionScalarFieldEnum = {
     id: 'id',

@@ -23,6 +23,7 @@ import type {
 import {
 	LessonTypeEnum,
 	RoleEnum,
+	QuestionType,
 	type Prisma,
 } from "../generated/prisma/client.js";
 import {
@@ -71,6 +72,7 @@ export class LessonService {
 				id: lessonId,
 			},
 			include: {
+				module:true,
 				material: true,
 				questions: {
 					include: {
@@ -156,7 +158,7 @@ export class LessonService {
 		if (lesson.type !== LessonTypeEnum.THEORY) {
 			throw new ApiError(
 				StatusCodes.BAD_REQUEST,
-				"Lesson ini khusus untuk materiKonten materi hanya bisa ditambahkan pada Lesson dengan tipe THEORY",
+				"Lesson ini khusus untuk materi. Konten materi hanya bisa ditambahkan pada Lesson dengan tipe THEORY",
 			);
 		}
 
@@ -189,28 +191,73 @@ export class LessonService {
 			throw new ApiError(StatusCodes.NOT_FOUND, "Lesson tidak ditemukan");
 		}
 
-		if (lesson.type !== LessonTypeEnum.QUIZ) {
-			throw new ApiError(
-				StatusCodes.BAD_REQUEST,
-				"Lesson ini khusus untuk Materi",
-			);
-		}
+		let question;
+		if ((validatedData.type === QuestionType.MATCHING || validatedData.type === QuestionType.SORTING || validatedData.type === QuestionType.IMAGE_LABELING) && validatedData.advancedOptions && validatedData.answerPattern) {
+			question = await prisma.$transaction(async (tx) => {
+				const created = await tx.question.create({
+					data: {
+						lessonId: lessonId,
+						questionText: validatedData.questionText,
+						xpReward: validatedData.xpReward ?? 15,
+						type: validatedData.type,
+					},
+				});
 
-		const question = await prisma.question.create({
-			data: {
-				lessonId: lessonId,
-				questionText: validatedData.questionText,
-				xpReward: validatedData.xpReward ?? 15,
-				options: {
-					createMany: {
-						data: validatedData.options,
+				const createdOptions: any[] = [];
+				for (const text of validatedData.advancedOptions!) {
+					const opt = await tx.option.create({
+						data: {
+							questionId: created.id,
+							optionText: text,
+							isCorrect: false,
+						}
+					});
+					createdOptions.push(opt);
+				}
+
+				let expectedArray: any[] = [];
+				if (validatedData.type === QuestionType.MATCHING) {
+					const pattern = validatedData.answerPattern as number[][];
+					expectedArray = pattern.map((pair: number[]) => [
+						createdOptions[pair[0] as number].id,
+						createdOptions[pair[1] as number].id
+					]);
+				} else {
+					const pattern = validatedData.answerPattern as number[];
+					expectedArray = pattern.map((idx: number) => createdOptions[idx].id);
+				}
+
+				await tx.option.create({
+					data: {
+						questionId: created.id,
+						optionText: JSON.stringify(expectedArray),
+						isCorrect: true,
+					}
+				});
+
+				return await tx.question.findUniqueOrThrow({
+					where: { id: created.id },
+					include: { options: true }
+				});
+			});
+		} else {
+			question = await prisma.question.create({
+				data: {
+					lessonId: lessonId,
+					questionText: validatedData.questionText,
+					xpReward: validatedData.xpReward ?? 15,
+					type: validatedData.type ?? QuestionType.MULTIPLE_CHOICE,
+					options: {
+						createMany: {
+							data: validatedData.options || [],
+						},
 					},
 				},
-			},
-			include: {
-				options: true,
-			},
-		});
+				include: {
+					options: true,
+				},
+			});
+		}
 
 		const responseData =
 			QuestionSchema.QUESTION_OPTIONS_MODEL.parse(question);
@@ -232,23 +279,72 @@ export class LessonService {
 				validatedData.questionText ?? existingQuestion.questionText,
 			// Pastikan properti Prisma Anda adalah xp_reward sesuai skema database
 			xpReward: validatedData.xpReward ?? existingQuestion.xpReward,
+			type: validatedData.type ?? existingQuestion.type,
 		};
 
-		// 3. Modifikasi opsi HANYA jika frontend benar-benar mengirimkan array opsi baru
-		if (validatedData.options && validatedData.options.length > 0) {
-			updatePayload.options = {
-				deleteMany: {}, // Hapus semua opsi lama
-				createMany: {
-					data: validatedData.options, // Masukkan set opsi yang baru
+		const updatedQuestion = await prisma.$transaction(async (tx) => {
+			const updated = await tx.question.update({
+				where: { id: questionId },
+				data: updatePayload,
+				include: {
+					options: true,
 				},
-			};
-		}
+			});
 
-		// 4. Eksekusi pembaruan
-		const updatedQuestion = await prisma.question.update({
-			where: { id: questionId },
-			data: updatePayload,
-			include: { options: true },
+			if ((validatedData.type === QuestionType.MATCHING || validatedData.type === QuestionType.SORTING || validatedData.type === QuestionType.IMAGE_LABELING) && validatedData.advancedOptions && validatedData.answerPattern) {
+				await tx.option.deleteMany({
+					where: { questionId: questionId },
+				});
+
+				const createdOptions: any[] = [];
+				for (const text of validatedData.advancedOptions!) {
+					const opt = await tx.option.create({
+						data: {
+							questionId: questionId,
+							optionText: text,
+							isCorrect: false,
+						}
+					});
+					createdOptions.push(opt);
+				}
+
+				let expectedArray: any[] = [];
+				if (validatedData.type === QuestionType.MATCHING) {
+					const pattern = validatedData.answerPattern as number[][];
+					expectedArray = pattern.map((pair: number[]) => [
+						createdOptions[pair[0] as number].id,
+						createdOptions[pair[1] as number].id
+					]);
+				} else {
+					const pattern = validatedData.answerPattern as number[];
+					expectedArray = pattern.map((idx: number) => createdOptions[idx].id);
+				}
+
+				await tx.option.create({
+					data: {
+						questionId: questionId,
+						optionText: JSON.stringify(expectedArray),
+						isCorrect: true,
+					}
+				});
+			} else if (validatedData.options && validatedData.options.length > 0) {
+				await tx.option.deleteMany({
+					where: { questionId: questionId },
+				});
+
+				await tx.option.createMany({
+					data: validatedData.options.map((opt) => ({
+						questionId: questionId,
+						optionText: opt.optionText,
+						isCorrect: opt.isCorrect,
+					})),
+				});
+			}
+
+			return await tx.question.findUniqueOrThrow({
+				where: { id: questionId },
+				include: { options: true },
+			});
 		});
 
 		return QuestionSchema.QUESTION_OPTIONS_MODEL.parse(updatedQuestion);

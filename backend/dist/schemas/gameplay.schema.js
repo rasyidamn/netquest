@@ -2,9 +2,10 @@ import z from "zod";
 export class GameplaySchema {
     static SUBMIT_ANSWER_REQUEST = z
         .object({
-        lessondId: z.uuid(),
+        lessonId: z.uuid(),
         questionId: z.uuid(),
-        optionId: z.uuid(),
+        // 'answer' bisa berupa UUID, teks "ping 8.8.8.8", atau stringified JSON '["A", "B"]'
+        answer: z.string().min(1, "Jawaban tidak boleh kosong"),
     })
         .strict();
     static RECOVER_HEART_REQUEST = z
@@ -17,8 +18,7 @@ export class GameplaySchema {
         .strict();
     static COMPLETE_QUIZ_REQUEST = z
         .object({
-        lessonId: z.uuid(),
-        finalScore: z.number().min(0).max(100), // Asumsi skor 0-100
+        lessonId: z.string().uuid(),
     })
         .strict();
 }

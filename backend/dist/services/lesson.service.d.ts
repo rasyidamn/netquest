@@ -21,6 +21,7 @@ export declare class LessonService {
         lessonId: string;
         questionText: string;
         xpReward: number;
+        type: "MULTIPLE_CHOICE" | "CALCULATION_INPUT" | "COMMAND_TYPING" | "SORTING" | "MATCHING" | "IMAGE_LABELING";
         options: {
             id: string;
             questionId: string;

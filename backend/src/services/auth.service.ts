@@ -10,6 +10,7 @@ import { ApiError } from "../utils/api-error.util.js";
 import { StatusCodes } from "http-status-codes";
 import bcrypt from "bcrypt";
 import { ProgressStatusEnum } from "../generated/prisma/enums.js";
+import { GameplayService } from "./gameplay.service.js";
 
 export class AuthService {
 	static register = async (
@@ -95,54 +96,13 @@ export class AuthService {
 	};
 
 	static getProfile = async (userId: string) => {
-		const user = await prisma.user.findUnique({
-			where: {
-				id: userId,
-			},
-			omit: {
-				password: true,
-			},
-		});
+		// Sinkronisasi nyawa berdasarkan cooldown (lazy evaluation terpusat)
+		const user = await GameplayService.syncUserHearts(userId);
 		if (!user) {
 			throw new ApiError(StatusCodes.NOT_FOUND, "User tidak ditemukan!");
 		}
 
-		// LOGIKA PEMULIHAN HEART SETIAP 4 JAM
-		if (user.hearts < 3) {
-			const now = new Date();
-			const diffInMilliseconds =
-				now.getTime() - user.heartsUpdatedAt.getTime();
-
-			// 4 jam = 14.400.000 milidetik
-			const cooldownPeriod = 4 * 60 * 60 * 1000;
-
-			const heartsToRecover = Math.floor(
-				diffInMilliseconds / cooldownPeriod,
-			);
-
-			if (heartsToRecover > 0) {
-				const newHearts = Math.min(3, user.hearts + heartsToRecover);
-
-				// Geser waktu update agar sisa waktunya tidak hilang
-				const newUpdatedAt = new Date(
-					user.heartsUpdatedAt.getTime() +
-						heartsToRecover * cooldownPeriod,
-				);
-
-				// Update diam-diam di background
-				const updatedUser = await prisma.user.update({
-					where: { id: userId },
-					data: {
-						hearts: newHearts,
-						heartsUpdatedAt: newHearts === 3 ? now : newUpdatedAt,
-					},
-				});
-				return UserSchema.GET_PROFILE_RESPONSE.parse(updatedUser);
-			}
-		}
-
 		const responseData = UserSchema.GET_PROFILE_RESPONSE.parse(user);
-
 		return responseData;
 	};
 }
