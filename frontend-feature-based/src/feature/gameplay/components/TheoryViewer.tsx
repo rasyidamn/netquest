@@ -6,10 +6,13 @@ import { useNavigate } from "@tanstack/react-router";
 import { useTheoryDone } from "../hooks/useTheoryDone";
 import { useRecoverHeart } from "../hooks/useRecoverHeart";
 import { useSubmitQuiz } from "../hooks/useSubmitQuiz";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import { QuestionMultipleChoice } from "./QuestionMultipleChoice";
 import { QuestionType } from "../types/gameplay.types";
+import { useCreateBlockNote } from "@blocknote/react";
+import { BlockNoteView } from "@blocknote/mantine";
+import "@blocknote/mantine/style.css";
 
 interface TheoryViewerProps {
 	lessonId: string;
@@ -34,6 +37,27 @@ export function TheoryViewer({ lessonId, moduleId, title, material, questions }:
 
 	const hasPopQuiz = questions && questions.length > 0;
 	const popQuizQuestion = hasPopQuiz ? questions[0] : null;
+
+	const initialContent = useMemo(() => {
+		if (material?.content) {
+			try {
+				return JSON.parse(material.content);
+			} catch (e) {
+				// Fallback untuk legacy text/html yang belum berbentuk JSON
+				return [
+					{
+						type: "paragraph",
+						content: material.content,
+					}
+				];
+			}
+		}
+		return undefined;
+	}, [material]);
+
+	const editor = useCreateBlockNote({
+		initialContent,
+	});
 
 	const goBack = () => navigate({ to: "/roadmap/$moduleId", params: { moduleId } });
 
@@ -131,8 +155,8 @@ export function TheoryViewer({ lessonId, moduleId, title, material, questions }:
 	};
 
 	return (
-		<div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-			{/* Header */}
+		<div className="w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
+			{/* Top Bar: Navigation & Progress Indicator */}
 			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-base-100 p-6 rounded-2xl shadow-sm border border-base-200">
 				<div>
 					<h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
@@ -162,19 +186,24 @@ export function TheoryViewer({ lessonId, moduleId, title, material, questions }:
 			</div>
 
 			{/* Content Area */}
-			<div className="prose prose-sm sm:prose-base lg:prose-lg max-w-none bg-base-100 p-6 sm:p-8 rounded-2xl shadow-sm border border-base-200">
-				{material?.mediaUrl && (
-					<div className="mb-8 rounded-xl overflow-hidden aspect-video bg-base-200">
-						<iframe
-							src={material.mediaUrl}
-							className="w-full h-full"
-							allowFullScreen
-							title={title}
-						/>
-					</div>
-				)}
-				<div dangerouslySetInnerHTML={{ __html: material?.content || "Tidak ada konten." }} />
+			<div className="bg-base-100 p-6 sm:p-8 rounded-2xl shadow-sm border border-base-200 blocknote-theme-container">
+				<BlockNoteView editor={editor} editable={false} theme="dark" />
 			</div>
+
+			<style dangerouslySetInnerHTML={{__html: `
+				/* Penyesuaian tema kustom agar menyatu dengan DaisyUI */
+				.blocknote-theme-container {
+					font-family: inherit;
+				}
+				.bn-editor {
+					background-color: transparent !important;
+					padding-inline: 0 !important;
+				}
+				.bn-container[data-theme="dark"] {
+					--bn-colors-editor-text: oklch(var(--bc)) !important;
+					--bn-colors-editor-background: transparent !important;
+				}
+			`}} />
 
 			{/* Pop Quiz Section */}
 			{hasPopQuiz && !isPopQuizPassed && (

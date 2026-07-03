@@ -9,11 +9,14 @@ import { QuestionSorting } from "./QuestionSorting";
 import { QuestionMatching } from "./QuestionMatching";
 import { QuestionImageLabeling } from "./QuestionImageLabeling";
 import { QuestionCalculationInput } from "./QuestionCalculationInput";
+import { QuestionTopology } from "./QuestionTopology";
 import { QuestionType } from "../types/gameplay.types";
 import { useNavigate } from "@tanstack/react-router";
 import { Heart, XCircle } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { ReactFlow } from "@xyflow/react";
+import { ReactFlowExample } from "./ReactFlowExample";
 
 interface QuizEngineProps {
 	lessonId: string;
@@ -104,7 +107,7 @@ export function QuizEngine({ lessonId, questions }: QuizEngineProps) {
 	const isPending = submitQuizMutation.isPending || completeQuizMutation.isPending;
 
 	return (
-		<div className="max-w-3xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
+		<div className="w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
 			{/* Top Bar: Progress & Hearts */}
 			<div className="flex items-center justify-between gap-4">
 				<button 
@@ -189,6 +192,15 @@ export function QuizEngine({ lessonId, questions }: QuizEngineProps) {
 						options={currentQuestion.options || []}
 						selectedAnswer={currentAnswer}
 						onSelect={handleAnswerSubmit}
+						disabled={isPending}
+					/>
+				)}
+
+				{currentQuestion.type === QuestionType.TOPOLOGY && (
+					<QuestionTopology
+						questionText={currentQuestion.questionText}
+						nodes={currentQuestion.options || []}
+						onSubmit={(answerStr) => handleAnswerSubmit(answerStr)}
 						disabled={isPending}
 					/>
 				)}

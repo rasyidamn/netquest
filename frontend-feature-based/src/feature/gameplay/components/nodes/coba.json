@@ -1,0 +1,14 @@
+[
+	{
+		"id": "node_0",
+		"type": "networkDevice",
+		"position": { "x": 100, "y": 100 },
+		"data": { "label": "PC 1", "deviceType": "pc" }
+	},
+	{
+		"id": "node_1",
+		"type": "networkDevice",
+		"position": { "x": 300, "y": 100 },
+		"data": { "label": "PC 2", "deviceType": "pc" }
+	}
+]

@@ -36,7 +36,6 @@ export function StudentSidebar() {
 
 	const handleLogout = () => {
 		logout();
-		router.navigate({ to: "/auth/login" });
 	};
 
 	return (

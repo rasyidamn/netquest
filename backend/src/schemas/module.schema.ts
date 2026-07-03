@@ -14,6 +14,11 @@ export class ModuleSchema {
 			.min(3, "Judul modul minimal 3 karakter")
 			.max(255, "Judul modul terlalu panjang")
 			.openapi({ example: "Pengenalan Jaringan Komputer" }),
+		description: z
+			.string()
+			.trim()
+			.optional()
+			.openapi({ example: "Modul ini membahas tentang dasar-dasar jaringan komputer." }),
 		sequence: z
 			.number()
 			.int("Urutan harus berupa bilangan bulat")

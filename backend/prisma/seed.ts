@@ -145,6 +145,16 @@ const SYLLABUS = [
 						advancedOptions: ["Switch / Hub Pusat", "Kabel UTP", "PC Client"],
 						answerPattern: [0, 1, 2] // The correct sorting for zone 1, 2, 3
 					},
+					{
+						text: "Rangkailah sebuah jaringan peer-to-peer sederhana dengan menghubungkan dua PC menggunakan kabel Cross-Over.",
+						type: QuestionType.TOPOLOGY,
+						reward: 200,
+						advancedOptions: JSON.stringify([
+							{ id: "node_0", type: "networkDevice", position: { x: 100, y: 100 }, data: { label: "PC 1", deviceType: "pc" } },
+							{ id: "node_1", type: "networkDevice", position: { x: 300, y: 100 }, data: { label: "PC 2", deviceType: "pc" } }
+						]),
+						answerPattern: ["node_0-node_1"] // or whatever id format our topology builder uses. The frontend edge source-target
+					},
 				],
 			},
 		],
@@ -403,40 +413,59 @@ async function main() {
 								})),
 							});
 						}
-					} else if (q.type === QuestionType.SORTING || q.type === QuestionType.MATCHING || q.type === QuestionType.IMAGE_LABELING) {
+					} else if (q.type === QuestionType.SORTING || q.type === QuestionType.MATCHING || q.type === QuestionType.IMAGE_LABELING || q.type === QuestionType.TOPOLOGY) {
 						if (q.advancedOptions && q.answerPattern) {
-							const createdOptions = [];
-							for (const text of q.advancedOptions) {
-								const opt = await prisma.option.create({
+							if (q.type === QuestionType.TOPOLOGY) {
+								// Simpan nodes di satu opsi dummy agar tidak membebani baris option
+								await prisma.option.create({
 									data: {
 										questionId: createdQuestion.id,
-										optionText: text,
-										isCorrect: false,
+										optionText: typeof q.advancedOptions === 'string' ? q.advancedOptions : JSON.stringify(q.advancedOptions),
+										isCorrect: false, // Disimpan sebagai nodes
 									}
 								});
-								createdOptions.push(opt);
-							}
 
-							let expectedArray: unknown[] = [];
-							if (q.type === QuestionType.SORTING || q.type === QuestionType.IMAGE_LABELING) {
-								const pattern = q.answerPattern as number[];
-								expectedArray = pattern.map(idx => createdOptions[idx].id);
-							} else if (q.type === QuestionType.MATCHING) {
-								const pattern = q.answerPattern as number[][];
-								expectedArray = pattern.map(pair => [
-									createdOptions[pair[0]].id,
-									createdOptions[pair[1]].id
-								]);
-							}
-
-							// 3. Simpan jawaban benar sebagai opsi dengan JSON string
-							await prisma.option.create({
-								data: {
-									questionId: createdQuestion.id,
-									optionText: JSON.stringify(expectedArray),
-									isCorrect: true, // Kunci Jawaban
+								await prisma.option.create({
+									data: {
+										questionId: createdQuestion.id,
+										optionText: JSON.stringify(q.answerPattern),
+										isCorrect: true, // Kunci Jawaban (Edges)
+									}
+								});
+							} else {
+								const createdOptions = [];
+								for (const text of q.advancedOptions) {
+									const opt = await prisma.option.create({
+										data: {
+											questionId: createdQuestion.id,
+											optionText: text,
+											isCorrect: false,
+										}
+									});
+									createdOptions.push(opt);
 								}
-							});
+
+								let expectedArray: unknown[] = [];
+								if (q.type === QuestionType.SORTING || q.type === QuestionType.IMAGE_LABELING) {
+									const pattern = q.answerPattern as number[];
+									expectedArray = pattern.map(idx => createdOptions[idx].id);
+								} else if (q.type === QuestionType.MATCHING) {
+									const pattern = q.answerPattern as number[][];
+									expectedArray = pattern.map(pair => [
+										createdOptions[pair[0]].id,
+										createdOptions[pair[1]].id
+									]);
+								}
+
+								// 3. Simpan jawaban benar sebagai opsi dengan JSON string
+								await prisma.option.create({
+									data: {
+										questionId: createdQuestion.id,
+										optionText: JSON.stringify(expectedArray),
+										isCorrect: true, // Kunci Jawaban
+									}
+								});
+							}
 						}
 					}
 				}

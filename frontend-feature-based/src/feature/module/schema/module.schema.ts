@@ -3,6 +3,7 @@ import z from "zod";
 export const ModuleModel = z.object({
 	id: z.uuid(),
 	title: z.string().min(3),
+	description: z.string().optional(),
 	sequence: z.number().int(),
 	isPublished: z.boolean().default(false),
 });

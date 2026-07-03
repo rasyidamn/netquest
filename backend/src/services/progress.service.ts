@@ -7,9 +7,11 @@ export class ProgressService {
 	static getMyProgress = async (userId: string) => {
       // 1. Tarik semua modul beserta seluruh lesson dan progress user di dalamnya
       const modules = await prisma.module.findMany({
+         where: { isPublished: true },
          orderBy: { sequence: "asc" },
          include: {
             lessons: {
+               where: { isPublished: true },
                orderBy: { lessonSequence: "asc" },
                include: {
                   userProgress: {
@@ -49,7 +51,15 @@ export class ProgressService {
             currentLessonId = lessons[lessons.length - 1]?.id || ""; // Balikkan lesson terakhir jika sudah tamat
          } else {
             const activeProgress = userProgresses.find((p) => p.status === ProgressStatusEnum.ACTIVE);
-            currentLessonId = activeProgress ? activeProgress.lessonId : (lessons[0]?.id || "");
+            if (activeProgress) {
+               currentLessonId = activeProgress.lessonId;
+            } else {
+               // Cari lesson pertama yang belum selesai (untuk mengakomodasi lesson baru yang ditambahkan di belakang)
+               const firstIncompleteLesson = lessons.find(l => 
+                  !l.userProgress.length || l.userProgress[0].status !== ProgressStatusEnum.COMPLETED
+               );
+               currentLessonId = firstIncompleteLesson ? firstIncompleteLesson.id : (lessons[0]?.id || "");
+            }
          }
 
          return {

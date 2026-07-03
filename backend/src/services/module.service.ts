@@ -11,8 +11,11 @@ import z from "zod";
 import type { Prisma } from "../generated/prisma/client.js";
 
 export class ModuleService {
-	static getAllModules = async (): Promise<ModuleResponse[]> => {
+	static getAllModules = async (role?: string): Promise<ModuleResponse[]> => {
+		const whereClause = role === "ADMIN" ? {} : { isPublished: true };
+		
 		const modules = await prisma.module.findMany({
+			where: whereClause,
 			orderBy: {
 				sequence: "asc",
 			},

@@ -61,14 +61,18 @@ function ModuleDetailPage() {
 	const { module, lessons, status, currentLessonId } = item;
 	const isModuleLocked = status === "LOCKED";
 
-	let completedCount = 0;
-	let foundCurrent = false;
+	// currentLessonId = lesson yang sedang aktif (belum selesai)
+	// completedCount = jumlah lesson SEBELUM lesson aktif = semua yang sudah selesai
+	// Jika currentLessonId kosong (belum ada progress), default ke lesson pertama → 0 selesai
+	const resolvedCurrentId = currentLessonId || (lessons[0]?.id ?? "");
+	const currentIndex = lessons.findIndex((l) => l.id === resolvedCurrentId);
 
+	let completedCount = 0;
 	if (status === "COMPLETED") {
 		completedCount = lessons.length;
 	} else if (!isModuleLocked) {
-		const currentIndex = lessons.findIndex((l) => l.id === currentLessonId);
-		completedCount = currentIndex >= 0 ? currentIndex : 0;
+		// currentIndex adalah posisi lesson aktif; semua lesson sebelumnya sudah selesai
+		completedCount = currentIndex > 0 ? currentIndex : 0;
 	}
 
 	const progressPercent = lessons.length > 0 ? Math.round((completedCount / lessons.length) * 100) : 0;
@@ -126,7 +130,7 @@ function ModuleDetailPage() {
 					{/* RADIAL PROGRESS INDICATOR */}
 					<div className="shrink-0 flex justify-center items-center">
 						<div className="relative flex items-center justify-center w-40 h-40 rounded-full bg-base-300/30 border border-white/5 shadow-inner backdrop-blur-md">
-							<svg className="w-32 h-32 transform -rotate-90">
+							<svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 128 128">
 								<circle
 									cx="64"
 									cy="64"
@@ -145,8 +149,8 @@ function ModuleDetailPage() {
 									fill="none"
 									stroke="currentColor"
 									strokeLinecap="round"
-									initial={{ strokeDasharray: 364, strokeDashoffset: 364 }}
-									animate={{ strokeDashoffset: 364 - (364 * progressPercent) / 100 }}
+									initial={{ strokeDasharray: 364.42, strokeDashoffset: 364.42 }}
+									animate={{ strokeDashoffset: 364.42 - (364.42 * progressPercent) / 100 }}
 									transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
 								/>
 							</svg>
@@ -180,7 +184,7 @@ function ModuleDetailPage() {
 						<div className="absolute left-6 sm:left-9 top-6 bottom-6 w-1.5 bg-base-300/50 rounded-full" />
 						
 						<div className="space-y-8">
-							{lessons.map((lesson, idx) => {
+							{(() => { let foundCurrent = false; return lessons.map((lesson, idx) => {
 								let lessonStatus: "LOCKED" | "ACTIVE" | "COMPLETED" = "LOCKED";
 								
 								if (isModuleLocked) {
@@ -188,7 +192,7 @@ function ModuleDetailPage() {
 								} else if (status === "COMPLETED") {
 									lessonStatus = "COMPLETED";
 								} else {
-									if (lesson.id === currentLessonId) {
+									if (lesson.id === resolvedCurrentId) {
 										foundCurrent = true;
 										lessonStatus = "ACTIVE";
 									} else if (!foundCurrent) {
@@ -295,7 +299,7 @@ function ModuleDetailPage() {
 										</motion.div>
 									</motion.div>
 								)
-							})}
+				})})()}
 						</div>
 					</div>
 				)}

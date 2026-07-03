@@ -1,36 +1,41 @@
-import { useCreateBlockNote } from "@blocknote/react";
+import { getDefaultReactSlashMenuItems, SuggestionMenuController, useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
-import { useState, useEffect } from "react";
+import React from "react";
 import { Save, AlertCircle } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { lessonApi } from "@/feature/module/api/lessonApi";
 import toast from "react-hot-toast";
 import type { LessonDetailType } from "@/feature/module/schema/lesson.schema";
+import { BlockNoteSchema, defaultBlockSpecs, filterSuggestionItems } from "@blocknote/core";
+import { insertYoutubeEmbed, YoutubeEmbedBlock } from "@/utils/YoutubeEmbedBlock";
 
 export function LessonEditor({ lesson }: { lesson: LessonDetailType }) {
 	const queryClient = useQueryClient();
 	
-	const [initialContent, setInitialContent] = useState<any | null>(null);
-
-	// Load existing content (parsing from JSON string)
-	useEffect(() => {
+	const initialContent = React.useMemo(() => {
 		if (lesson.material?.content) {
 			try {
-				setInitialContent(JSON.parse(lesson.material.content));
+				return JSON.parse(lesson.material.content);
 			} catch (e) {
 				// Fallback untuk legacy text/html yang belum berbentuk JSON
-				setInitialContent([
+				return [
 					{
 						type: "paragraph",
 						content: lesson.material.content,
 					}
-				]);
+				];
 			}
-		} else {
-			setInitialContent(undefined); // undefined triggers default empty editor
 		}
+		return undefined; // undefined triggers default empty editor
 	}, [lesson.material]);
+
+	const schema = BlockNoteSchema.create({
+  blockSpecs: {
+    ...defaultBlockSpecs,
+    youtubeEmbed: YoutubeEmbedBlock(),
+  },
+});
 
 	const editor = useCreateBlockNote({
 		initialContent: initialContent,
@@ -43,6 +48,7 @@ export function LessonEditor({ lesson }: { lesson: LessonDetailType }) {
 				reader.readAsDataURL(file);
 			});
 		},
+		schema
 	});
 
 	const { mutate: saveMaterial, isPending } = useMutation({
@@ -54,7 +60,7 @@ export function LessonEditor({ lesson }: { lesson: LessonDetailType }) {
 		},
 		onSuccess: () => {
 			toast.success("Materi berhasil disimpan!");
-			queryClient.invalidateQueries({ queryKey: ["admin-lesson", lesson.id] });
+			queryClient.invalidateQueries({ queryKey: ["lesson", lesson.id] });
 		},
 		onError: (error: any) => {
 			toast.error(error?.response?.data?.message || "Gagal menyimpan materi");
@@ -66,15 +72,6 @@ export function LessonEditor({ lesson }: { lesson: LessonDetailType }) {
 		const contentJson = JSON.stringify(editor.document);
 		saveMaterial(contentJson);
 	};
-
-	if (initialContent === null) {
-		return (
-			<div className="alert alert-error">
-				<AlertCircle className="w-5 h-5" />
-				Format konten lama tidak valid (bukan JSON BlockNote).
-			</div>
-		);
-	}
 
 	return (
 		<div className="flex flex-col h-full rounded-2xl bg-base-100 border border-base-200 overflow-hidden shadow-sm">
@@ -102,7 +99,20 @@ export function LessonEditor({ lesson }: { lesson: LessonDetailType }) {
 			<div className="flex-1 overflow-y-auto p-4 sm:p-8 bg-base-100 blocknote-theme-container">
 				{/* BlockNote handles its own styling, but we wrap it to give padding */}
 				<div className="max-w-4xl mx-auto min-h-[500px]">
-					<BlockNoteView editor={editor} theme="dark" />
+					<BlockNoteView editor={editor} slashMenu={false} theme={"dark"}>
+      <SuggestionMenuController
+        triggerCharacter="/"
+        getItems={async (query) =>
+          filterSuggestionItems(
+            [
+              ...getDefaultReactSlashMenuItems(editor),
+              insertYoutubeEmbed(editor),
+            ],
+            query
+          )
+        }
+      />
+    </BlockNoteView>
 				</div>
 			</div>
 			

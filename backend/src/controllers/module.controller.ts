@@ -7,7 +7,8 @@ import { ModuleSchema } from "../schemas/module.schema.js";
 
 export class ModuleController {
 	static getAllModules = catchAsync(async (req: Request, res: Response) => {
-		const responseData = await ModuleService.getAllModules();
+		const role = req.user?.role;
+		const responseData = await ModuleService.getAllModules(role);
 		sendSuccess(
 			res,
 			StatusCodes.OK,

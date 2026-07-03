@@ -36,6 +36,7 @@ enum QuestionType {
   SORTING // Mengurutkan (Drag & Drop)
   MATCHING // Mencocokkan (Drag & Drop)
   IMAGE_LABELING // Labeling Topologi Statis
+  TOPOLOGY // Topologi Interaktif Canvas
 }
 
 // MODELS
@@ -61,7 +62,8 @@ model User {
 model Module {
   id          String   @id @default(uuid()) @db.Uuid
   title       String
-  sequence    Int      // urutan modul
+  description String?  @db.Text
+  sequence    Int      @unique // urutan modul
   isPublished Boolean  @default(false) @map("is_published")
 
   // relasi

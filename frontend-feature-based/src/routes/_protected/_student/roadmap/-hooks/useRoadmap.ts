@@ -68,17 +68,11 @@ export function useRoadmap() {
 			const mod = sorted[i];
 			const statusInfo = getStatusInfo(i, mod.id);
 			
-			// Jika belum ada progress di backend dan statusnya ACTIVE, currentLessonId harusnya materi pertama (jika ada)
-			let currentId = statusInfo.currentLessonId;
-			if (statusInfo.status === "ACTIVE" && !currentId && lessonsByModule[i]?.length > 0) {
-				currentId = lessonsByModule[i][0].id;
-			}
-
 			const item: RoadmapItem = {
 				module: mod,
 				lessons: lessonsByModule[i] ?? [],
 				status: statusInfo.status,
-				currentLessonId: currentId,
+				currentLessonId: statusInfo.currentLessonId,
 			};
 			roadmapItemsCache.push(item);
 		}

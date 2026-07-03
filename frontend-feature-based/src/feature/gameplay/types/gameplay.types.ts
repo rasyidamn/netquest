@@ -5,6 +5,7 @@ export const QuestionType = {
 	SORTING: "SORTING",
 	MATCHING: "MATCHING",
 	IMAGE_LABELING: "IMAGE_LABELING",
+	TOPOLOGY: "TOPOLOGY",
 } as const;
 
 export interface TheoryDoneResponse {

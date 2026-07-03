@@ -37,6 +37,7 @@ import {
 export class LessonService {
 	static getLessonByModule = async (
 		moduleId: string,
+		role?: string,
 	): Promise<LessonResponse[]> => {
 		const module = await prisma.module.findUnique({
 			where: {
@@ -50,10 +51,14 @@ export class LessonService {
 			);
 		}
 
+		const whereClause: any = { moduleId: moduleId };
+		if (role !== "ADMIN") {
+			whereClause.isPublished = true;
+		}
+
 		const lessons = await prisma.lesson.findMany({
-			where: {
-				moduleId: moduleId,
-			},
+			where: whereClause,
+			orderBy: { lessonSequence: "asc" },
 		});
 		if (!lessons) {
 			return [];

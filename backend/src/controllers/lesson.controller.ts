@@ -12,8 +12,10 @@ export class LessonController {
 	static getLessonByModule = catchAsync(
 		async (req: Request, res: Response) => {
 			const params = ModuleSchema.MODULE_ID_PARAM.parse(req.params);
+			const role = req.user?.role;
 			const responseData = await LessonService.getLessonByModule(
 				params.id,
+				role,
 			);
 			sendSuccess(
 				res,
