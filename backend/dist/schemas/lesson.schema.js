@@ -30,6 +30,10 @@ export class LessonSchema {
             .int()
             .nonnegative("XP tidak boleh negatif")
             .openapi({ example: 50 }),
+        isPublished: z
+            .boolean()
+            .default(false)
+            .openapi({ example: false }),
     });
     static LESSON_WITH_MODULE = this.LESSON_MODEL.extend({
         module: ModuleSchema.MODULE_MODEL,
@@ -49,12 +53,14 @@ export class LessonSchema {
             questions: z.array(QuestionSchema.QUESTION_MODEL.extend({
                 options: z.array(OptionSchema.OPTION_MODEL),
             })).optional(),
+            module: ModuleSchema.MODULE_MODEL
         }),
         this.LESSON_MODEL.extend({
             type: z.literal(LessonTypeEnum.QUIZ),
             questions: z.array(QuestionSchema.QUESTION_MODEL.extend({
                 options: z.array(OptionSchema.OPTION_MODEL),
             })),
+            module: ModuleSchema.MODULE_MODEL
         }),
     ]);
     static LESSON_DETAIL_MAHASISWA_RESPONSE = z.discriminatedUnion("type", [

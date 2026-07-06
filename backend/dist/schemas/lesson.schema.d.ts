@@ -10,6 +10,7 @@ export declare class LessonSchema {
             readonly QUIZ: "QUIZ";
         }>;
         xpReward: z.ZodNumber;
+        isPublished: z.ZodDefault<z.ZodBoolean>;
     }, z.core.$strip>;
     static readonly LESSON_WITH_MODULE: z.ZodObject<{
         id: z.ZodUUID;
@@ -21,10 +22,13 @@ export declare class LessonSchema {
             readonly QUIZ: "QUIZ";
         }>;
         xpReward: z.ZodNumber;
+        isPublished: z.ZodDefault<z.ZodBoolean>;
         module: z.ZodObject<{
             id: z.ZodUUID;
             title: z.ZodString;
+            description: z.ZodDefault<z.ZodNullable<z.ZodString>>;
             sequence: z.ZodNumber;
+            isPublished: z.ZodDefault<z.ZodBoolean>;
         }, z.core.$strip>;
     }, z.core.$strict>;
     static readonly CREATE_LESSON_REQUEST: z.ZodObject<{
@@ -34,6 +38,7 @@ export declare class LessonSchema {
         }>;
         title: z.ZodString;
         xpReward: z.ZodNumber;
+        isPublished: z.ZodDefault<z.ZodBoolean>;
         lessonSequence: z.ZodNumber;
     }, z.core.$strict>;
     static readonly UPDATE_LESSON_REQUEST: z.ZodObject<{
@@ -43,6 +48,7 @@ export declare class LessonSchema {
         }>>;
         title: z.ZodOptional<z.ZodString>;
         xpReward: z.ZodOptional<z.ZodNumber>;
+        isPublished: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
         lessonSequence: z.ZodOptional<z.ZodNumber>;
     }, z.core.$strict>;
     static readonly LESSON_ID_PARAM: z.ZodObject<{
@@ -54,6 +60,7 @@ export declare class LessonSchema {
         title: z.ZodString;
         lessonSequence: z.ZodNumber;
         xpReward: z.ZodNumber;
+        isPublished: z.ZodDefault<z.ZodBoolean>;
         type: z.ZodLiteral<"THEORY">;
         material: z.ZodNullable<z.ZodObject<{
             id: z.ZodUUID;
@@ -73,6 +80,7 @@ export declare class LessonSchema {
                 readonly SORTING: "SORTING";
                 readonly MATCHING: "MATCHING";
                 readonly IMAGE_LABELING: "IMAGE_LABELING";
+                readonly TOPOLOGY: "TOPOLOGY";
             }>;
             options: z.ZodArray<z.ZodObject<{
                 id: z.ZodUUID;
@@ -81,12 +89,20 @@ export declare class LessonSchema {
                 isCorrect: z.ZodBoolean;
             }, z.core.$strip>>;
         }, z.core.$strip>>>;
+        module: z.ZodObject<{
+            id: z.ZodUUID;
+            title: z.ZodString;
+            description: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+            sequence: z.ZodNumber;
+            isPublished: z.ZodDefault<z.ZodBoolean>;
+        }, z.core.$strip>;
     }, z.core.$strip>, z.ZodObject<{
         id: z.ZodUUID;
         moduleId: z.ZodUUID;
         title: z.ZodString;
         lessonSequence: z.ZodNumber;
         xpReward: z.ZodNumber;
+        isPublished: z.ZodDefault<z.ZodBoolean>;
         type: z.ZodLiteral<"QUIZ">;
         questions: z.ZodArray<z.ZodObject<{
             id: z.ZodUUID;
@@ -100,6 +116,7 @@ export declare class LessonSchema {
                 readonly SORTING: "SORTING";
                 readonly MATCHING: "MATCHING";
                 readonly IMAGE_LABELING: "IMAGE_LABELING";
+                readonly TOPOLOGY: "TOPOLOGY";
             }>;
             options: z.ZodArray<z.ZodObject<{
                 id: z.ZodUUID;
@@ -108,6 +125,13 @@ export declare class LessonSchema {
                 isCorrect: z.ZodBoolean;
             }, z.core.$strip>>;
         }, z.core.$strip>>;
+        module: z.ZodObject<{
+            id: z.ZodUUID;
+            title: z.ZodString;
+            description: z.ZodDefault<z.ZodNullable<z.ZodString>>;
+            sequence: z.ZodNumber;
+            isPublished: z.ZodDefault<z.ZodBoolean>;
+        }, z.core.$strip>;
     }, z.core.$strip>], "type">;
     static readonly LESSON_DETAIL_MAHASISWA_RESPONSE: z.ZodDiscriminatedUnion<[z.ZodObject<{
         id: z.ZodUUID;
@@ -115,6 +139,7 @@ export declare class LessonSchema {
         title: z.ZodString;
         lessonSequence: z.ZodNumber;
         xpReward: z.ZodNumber;
+        isPublished: z.ZodDefault<z.ZodBoolean>;
         type: z.ZodLiteral<"THEORY">;
         material: z.ZodNullable<z.ZodObject<{
             id: z.ZodUUID;
@@ -134,6 +159,7 @@ export declare class LessonSchema {
                 readonly SORTING: "SORTING";
                 readonly MATCHING: "MATCHING";
                 readonly IMAGE_LABELING: "IMAGE_LABELING";
+                readonly TOPOLOGY: "TOPOLOGY";
             }>;
             options: z.ZodArray<z.ZodObject<{
                 id: z.ZodUUID;
@@ -147,6 +173,7 @@ export declare class LessonSchema {
         title: z.ZodString;
         lessonSequence: z.ZodNumber;
         xpReward: z.ZodNumber;
+        isPublished: z.ZodDefault<z.ZodBoolean>;
         type: z.ZodLiteral<"QUIZ">;
         questions: z.ZodArray<z.ZodObject<{
             id: z.ZodUUID;
@@ -160,6 +187,7 @@ export declare class LessonSchema {
                 readonly SORTING: "SORTING";
                 readonly MATCHING: "MATCHING";
                 readonly IMAGE_LABELING: "IMAGE_LABELING";
+                readonly TOPOLOGY: "TOPOLOGY";
             }>;
             options: z.ZodArray<z.ZodObject<{
                 id: z.ZodUUID;

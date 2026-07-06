@@ -1,20 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { X, Star } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import clsx from "clsx";
 import type { LessonType } from "@/feature/module/schema/lesson.schema";
-
-const lessonSchema = z.object({
-  title: z.string().min(3, "Judul misi minimal 3 karakter").max(255),
-  lessonSequence: z.number().int().positive("Urutan harus dimulai dari 1"),
-  type: z.enum(["THEORY", "QUIZ"]),
-  xpReward: z.number().int().nonnegative("XP tidak boleh negatif"),
-  isPublished: z.boolean(),
-});
-
-type LessonFormValues = z.infer<typeof lessonSchema>;
+import toast from "react-hot-toast";
 
 interface LessonModalProps {
   isOpen: boolean;
@@ -22,9 +13,26 @@ interface LessonModalProps {
   onSave: (data: Partial<LessonType>) => void;
   initialData?: LessonType | null;
   isPending?: boolean;
+  usedSequences?: number[];
 }
 
-export function LessonModal({ isOpen, onClose, onSave, initialData, isPending }: LessonModalProps) {
+export function LessonModal({ isOpen, onClose, onSave, initialData, isPending, usedSequences = [] }: LessonModalProps) {
+  const lessonSchema = useMemo(() => {
+    return z.object({
+      title: z.string().min(3, "Judul misi minimal 3 karakter").max(255),
+      lessonSequence: z.number({ invalid_type_error: "Urutan harus berupa angka" }).int().positive("Urutan harus dimulai dari 1").refine((val) => {
+        if (initialData && initialData.lessonSequence === val) return true;
+        return !usedSequences.includes(val);
+      }, { message: "Urutan misi ini sudah digunakan dalam modul ini" }),
+      type: z.enum(["THEORY", "QUIZ"]),
+      xpReward: z.number().int().nonnegative("XP tidak boleh negatif"),
+      isPublished: z.boolean(),
+    });
+  }, [usedSequences, initialData]);
+
+  type LessonFormValues = z.infer<typeof lessonSchema>;
+
+
   const {
     register,
     handleSubmit,
@@ -52,34 +60,51 @@ export function LessonModal({ isOpen, onClose, onSave, initialData, isPending }:
           isPublished: initialData.isPublished,
         });
       } else {
+        const nextSequence = usedSequences.length > 0 ? Math.max(...usedSequences) + 1 : 1;
         reset({
           title: "",
-          lessonSequence: 1,
+          lessonSequence: nextSequence,
           type: "THEORY",
           xpReward: 50,
           isPublished: false,
         });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, initialData, reset]);
 
   if (!isOpen) return null;
 
   const onSubmit = (data: LessonFormValues) => {
+    const isDuplicate = usedSequences.includes(data.lessonSequence) && (!initialData || initialData.lessonSequence !== data.lessonSequence);
+    
+    if (isDuplicate) {
+      toast.error("Urutan misi ini sudah digunakan dalam modul ini");
+      return;
+    }
+    
     onSave(data);
+  };
+
+  const onInvalid = (formErrors: any) => {
+    if (formErrors.lessonSequence) {
+      toast.error(formErrors.lessonSequence.message as string);
+    } else {
+      toast.error("Mohon periksa kembali isian form Anda");
+    }
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-base-100 rounded-2xl w-full max-w-md shadow-xl border border-base-200 overflow-hidden">
+      <div className="bg-base-100 rounded-2xl w-full max-w-lg shadow-xl border border-base-200 overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-base-200 bg-base-200/30">
+        <div className="flex items-center justify-between p-5 border-b border-base-200 bg-base-200/30 shrink-0">
           <div>
             <h2 className="text-xl font-black text-base-content">
               {initialData ? "Edit Misi" : "Tambah Misi Baru"}
             </h2>
             <p className="text-xs text-base-content/50 mt-0.5">
-              {initialData ? "Perbarui informasi lesson" : "Isi detail untuk lesson baru"}
+              {initialData ? "Perbarui informasi misi ini" : "Pilih tipe dan isi detail misi"}
             </p>
           </div>
           <button onClick={onClose} className="btn btn-sm btn-circle btn-ghost">
@@ -87,7 +112,8 @@ export function LessonModal({ isOpen, onClose, onSave, initialData, isPending }:
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-5">
+        <div className="overflow-y-auto">
+          <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="p-6 space-y-6">
           {/* Judul */}
           <div className="form-control">
             <label className="label pb-1">
@@ -177,6 +203,7 @@ export function LessonModal({ isOpen, onClose, onSave, initialData, isPending }:
             </button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );

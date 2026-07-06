@@ -98,6 +98,10 @@ function ModuleAccordion({ module, usedSequences }: { module: any, usedSequences
     enabled: isOpen,
   })
 
+  const usedLessonSequences = useMemo(() => {
+    return lessonsResponse?.data?.map((l: any) => l.lessonSequence) || []
+  }, [lessonsResponse?.data])
+
   const { mutate: togglePublish } = useMutation({
     mutationFn: () => moduleApi.updateModule({ 
       id: module.id, 
@@ -334,6 +338,7 @@ function ModuleAccordion({ module, usedSequences }: { module: any, usedSequences
         onSave={handleSaveLesson}
         initialData={selectedLesson}
         isPending={createLessonMutation.isPending || updateLessonMutation.isPending}
+        usedSequences={usedLessonSequences}
       />
     </div>
   )

@@ -1,4 +1,9 @@
-import { getDefaultReactSlashMenuItems, SuggestionMenuController, useCreateBlockNote } from "@blocknote/react";
+import {
+	FormattingToolbarController,
+	getDefaultReactSlashMenuItems,
+	SuggestionMenuController,
+	useCreateBlockNote,
+} from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import React from "react";
@@ -7,12 +12,22 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { lessonApi } from "@/feature/module/api/lessonApi";
 import toast from "react-hot-toast";
 import type { LessonDetailType } from "@/feature/module/schema/lesson.schema";
-import { BlockNoteSchema, defaultBlockSpecs, filterSuggestionItems } from "@blocknote/core";
-import { insertYoutubeEmbed, YoutubeEmbedBlock } from "@/utils/YoutubeEmbedBlock";
+import { uploadApi } from "@/core/api/upload.api";
+import {
+	BlockNoteSchema,
+	defaultBlockSpecs,
+	filterSuggestionItems,
+} from "@blocknote/core";
+import {
+	insertYoutubeEmbed,
+	YoutubeEmbedBlock,
+} from "@/utils/YoutubeEmbedBlock";
+import { CustomFormattingToolbar } from "@/utils/CustomFormattingToolbar";
+import { editorSchema } from "@/utils/editorSchema";
 
 export function LessonEditor({ lesson }: { lesson: LessonDetailType }) {
 	const queryClient = useQueryClient();
-	
+
 	const initialContent = React.useMemo(() => {
 		if (lesson.material?.content) {
 			try {
@@ -23,32 +38,27 @@ export function LessonEditor({ lesson }: { lesson: LessonDetailType }) {
 					{
 						type: "paragraph",
 						content: lesson.material.content,
-					}
+					},
 				];
 			}
 		}
 		return undefined; // undefined triggers default empty editor
 	}, [lesson.material]);
 
-	const schema = BlockNoteSchema.create({
-  blockSpecs: {
-    ...defaultBlockSpecs,
-    youtubeEmbed: YoutubeEmbedBlock(),
-  },
-});
+
 
 	const editor = useCreateBlockNote({
 		initialContent: initialContent,
 		uploadFile: async (file: File) => {
-			// Convert image to Base64
-			return new Promise((resolve, reject) => {
-				const reader = new FileReader();
-				reader.onload = () => resolve(reader.result as string);
-				reader.onerror = reject;
-				reader.readAsDataURL(file);
-			});
+			try {
+				const url = await uploadApi.uploadImage(file);
+				return url;
+			} catch (error) {
+				console.error("Gagal mengunggah gambar:", error);
+				throw new Error("Gagal mengunggah gambar");
+			}
 		},
-		schema
+		schema: editorSchema,
 	});
 
 	const { mutate: saveMaterial, isPending } = useMutation({
@@ -63,7 +73,9 @@ export function LessonEditor({ lesson }: { lesson: LessonDetailType }) {
 			queryClient.invalidateQueries({ queryKey: ["lesson", lesson.id] });
 		},
 		onError: (error: any) => {
-			toast.error(error?.response?.data?.message || "Gagal menyimpan materi");
+			toast.error(
+				error?.response?.data?.message || "Gagal menyimpan materi",
+			);
 		},
 	});
 
@@ -79,10 +91,12 @@ export function LessonEditor({ lesson }: { lesson: LessonDetailType }) {
 			<div className="flex justify-between items-center p-4 border-b border-base-200 bg-base-200/30">
 				<div>
 					<h3 className="font-bold text-lg">{lesson.title}</h3>
-					<p className="text-sm text-base-content/60">Tipe: Teori (Block-Based Editor)</p>
+					<p className="text-sm text-base-content/60">
+						Tipe: Teori (Block-Based Editor)
+					</p>
 				</div>
-				<button 
-					onClick={handleSave} 
+				<button
+					onClick={handleSave}
 					disabled={isPending}
 					className="btn btn-primary btn-sm px-6"
 				>
@@ -99,24 +113,34 @@ export function LessonEditor({ lesson }: { lesson: LessonDetailType }) {
 			<div className="flex-1 overflow-y-auto p-4 sm:p-8 bg-base-100 blocknote-theme-container">
 				{/* BlockNote handles its own styling, but we wrap it to give padding */}
 				<div className="max-w-4xl mx-auto min-h-[500px]">
-					<BlockNoteView editor={editor} slashMenu={false} theme={"dark"}>
-      <SuggestionMenuController
-        triggerCharacter="/"
-        getItems={async (query) =>
-          filterSuggestionItems(
-            [
-              ...getDefaultReactSlashMenuItems(editor),
-              insertYoutubeEmbed(editor),
-            ],
-            query
-          )
-        }
-      />
-    </BlockNoteView>
+					<BlockNoteView
+						editor={editor}
+						slashMenu={false}
+						theme={"dark"}
+						formattingToolbar={false}
+					>
+						<SuggestionMenuController
+							triggerCharacter="/"
+							getItems={async (query) =>
+								filterSuggestionItems(
+									[
+										...getDefaultReactSlashMenuItems(
+											editor,
+										),
+										insertYoutubeEmbed(editor),
+									],
+									query,
+								)
+							}
+						/>
+							<FormattingToolbarController formattingToolbar={CustomFormattingToolbar}/>
+					</BlockNoteView>
 				</div>
 			</div>
-			
-			<style dangerouslySetInnerHTML={{__html: `
+
+			<style
+				dangerouslySetInnerHTML={{
+					__html: `
 				/* Penyesuaian tema kustom agar menyatu dengan DaisyUI */
 				.blocknote-theme-container {
 					font-family: inherit;
@@ -128,7 +152,9 @@ export function LessonEditor({ lesson }: { lesson: LessonDetailType }) {
 					--bn-colors-editor-text: oklch(var(--bc)) !important;
 					--bn-colors-editor-background: transparent !important;
 				}
-			`}} />
+			`,
+				}}
+			/>
 		</div>
 	);
 }

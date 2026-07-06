@@ -167,6 +167,8 @@ export class GameplayService {
 
 		switch (question.type) {
 			case QuestionType.MULTIPLE_CHOICE:
+			case QuestionType.RAPID_TRUE_FALSE:
+			case QuestionType.VISUAL_IDENTIFICATION:
 				const selectedOption = question.options.find(
 					(opt) => opt.id === validatedData.answer,
 				);
@@ -197,7 +199,6 @@ export class GameplayService {
 
 			case QuestionType.SORTING:
 			case QuestionType.MATCHING:
-			case QuestionType.IMAGE_LABELING:
 				// Mode JSON Array: Frontend mengirimkan stringified array
 				const correctSortOption = question.options.find(
 					(opt) => opt.isCorrect,

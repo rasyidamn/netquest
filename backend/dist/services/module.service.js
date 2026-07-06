@@ -4,8 +4,10 @@ import { ModuleSchema, } from "../schemas/module.schema.js";
 import { ApiError } from "../utils/api-error.util.js";
 import z from "zod";
 export class ModuleService {
-    static getAllModules = async () => {
+    static getAllModules = async (role) => {
+        const whereClause = role === "ADMIN" ? {} : { isPublished: true };
         const modules = await prisma.module.findMany({
+            where: whereClause,
             orderBy: {
                 sequence: "asc",
             },

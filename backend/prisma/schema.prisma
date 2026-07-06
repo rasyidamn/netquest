@@ -34,9 +34,10 @@ enum QuestionType {
   CALCULATION_INPUT // Isian Singkat Kalkulasi
   COMMAND_TYPING // Simulasi CLI / Terminal
   SORTING // Mengurutkan (Drag & Drop)
-  MATCHING // Mencocokkan (Drag & Drop)
-  IMAGE_LABELING // Labeling Topologi Statis
+  MATCHING // Menjodohkan
   TOPOLOGY // Topologi Interaktif Canvas
+  RAPID_TRUE_FALSE // Swift Card Benar/Salah
+  VISUAL_IDENTIFICATION // Image Select / Hotspot
 }
 
 // MODELS
@@ -87,6 +88,7 @@ model Lesson {
   questions    Question[]
   userProgress UserProgress[]
 
+  @@unique([moduleId, lessonSequence])
   @@map("lessons")
 }
 

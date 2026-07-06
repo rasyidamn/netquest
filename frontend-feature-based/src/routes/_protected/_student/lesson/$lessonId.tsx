@@ -53,6 +53,7 @@ function LessonPage() {
 		return (
 			<QuizEngine
 				lessonId={lesson.id}
+				moduleId={lesson.moduleId}
 				questions={lesson.questions}
 			/>
 		);

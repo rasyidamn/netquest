@@ -12,11 +12,21 @@ export class ModuleSchema {
             .min(3, "Judul modul minimal 3 karakter")
             .max(255, "Judul modul terlalu panjang")
             .openapi({ example: "Pengenalan Jaringan Komputer" }),
+        description: z
+            .string()
+            .trim()
+            .nullable()
+            .default(null)
+            .openapi({ example: "Modul ini membahas tentang dasar-dasar jaringan komputer." }),
         sequence: z
             .number()
             .int("Urutan harus berupa bilangan bulat")
             .positive("Urutan modul harus dimulai dari 1 atau lebih")
             .openapi({ example: 1 }),
+        isPublished: z
+            .boolean()
+            .default(false)
+            .openapi({ example: false }),
     });
     static MODULE_ID_PARAM = this.MODULE_MODEL.pick({
         id: true,

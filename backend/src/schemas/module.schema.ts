@@ -17,7 +17,8 @@ export class ModuleSchema {
 		description: z
 			.string()
 			.trim()
-			.optional()
+			.nullable()
+			.default(null)
 			.openapi({ example: "Modul ini membahas tentang dasar-dasar jaringan komputer." }),
 		sequence: z
 			.number()

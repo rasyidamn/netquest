@@ -12,6 +12,7 @@ export declare class QuestionSchema {
             readonly SORTING: "SORTING";
             readonly MATCHING: "MATCHING";
             readonly IMAGE_LABELING: "IMAGE_LABELING";
+            readonly TOPOLOGY: "TOPOLOGY";
         }>;
     }, z.core.$strip>;
     static readonly QUESTION_OPTIONS_MODEL: z.ZodObject<{
@@ -26,6 +27,7 @@ export declare class QuestionSchema {
             readonly SORTING: "SORTING";
             readonly MATCHING: "MATCHING";
             readonly IMAGE_LABELING: "IMAGE_LABELING";
+            readonly TOPOLOGY: "TOPOLOGY";
         }>;
         options: z.ZodArray<z.ZodObject<{
             id: z.ZodUUID;
@@ -33,6 +35,25 @@ export declare class QuestionSchema {
             optionText: z.ZodString;
             isCorrect: z.ZodBoolean;
         }, z.core.$strip>>;
+    }, z.core.$strict>;
+    static readonly CREATE_BASE: z.ZodObject<{
+        type: z.ZodEnum<{
+            readonly MULTIPLE_CHOICE: "MULTIPLE_CHOICE";
+            readonly CALCULATION_INPUT: "CALCULATION_INPUT";
+            readonly COMMAND_TYPING: "COMMAND_TYPING";
+            readonly SORTING: "SORTING";
+            readonly MATCHING: "MATCHING";
+            readonly IMAGE_LABELING: "IMAGE_LABELING";
+            readonly TOPOLOGY: "TOPOLOGY";
+        }>;
+        questionText: z.ZodString;
+        xpReward: z.ZodNumber;
+        options: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            optionText: z.ZodString;
+            isCorrect: z.ZodBoolean;
+        }, z.core.$strip>>>;
+        advancedOptions: z.ZodOptional<z.ZodArray<z.ZodString>>;
+        answerPattern: z.ZodOptional<z.ZodAny>;
     }, z.core.$strict>;
     static readonly CREATE_QUESTION_WITH_OPTIONS_REQUEST: z.ZodObject<{
         type: z.ZodEnum<{
@@ -42,13 +63,16 @@ export declare class QuestionSchema {
             readonly SORTING: "SORTING";
             readonly MATCHING: "MATCHING";
             readonly IMAGE_LABELING: "IMAGE_LABELING";
+            readonly TOPOLOGY: "TOPOLOGY";
         }>;
         questionText: z.ZodString;
         xpReward: z.ZodNumber;
-        options: z.ZodArray<z.ZodObject<{
+        options: z.ZodOptional<z.ZodArray<z.ZodObject<{
             optionText: z.ZodString;
             isCorrect: z.ZodBoolean;
-        }, z.core.$strip>>;
+        }, z.core.$strip>>>;
+        advancedOptions: z.ZodOptional<z.ZodArray<z.ZodString>>;
+        answerPattern: z.ZodOptional<z.ZodAny>;
     }, z.core.$strict>;
     static readonly UPDATE_QUESTION_WITH_OPTIONS_REQUEST: z.ZodObject<{
         type: z.ZodOptional<z.ZodEnum<{
@@ -58,13 +82,16 @@ export declare class QuestionSchema {
             readonly SORTING: "SORTING";
             readonly MATCHING: "MATCHING";
             readonly IMAGE_LABELING: "IMAGE_LABELING";
+            readonly TOPOLOGY: "TOPOLOGY";
         }>>;
         questionText: z.ZodOptional<z.ZodString>;
         xpReward: z.ZodOptional<z.ZodNumber>;
-        options: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        options: z.ZodOptional<z.ZodOptional<z.ZodArray<z.ZodObject<{
             optionText: z.ZodString;
             isCorrect: z.ZodBoolean;
-        }, z.core.$strip>>>;
+        }, z.core.$strip>>>>;
+        advancedOptions: z.ZodOptional<z.ZodOptional<z.ZodArray<z.ZodString>>>;
+        answerPattern: z.ZodOptional<z.ZodOptional<z.ZodAny>>;
     }, z.core.$strict>;
     static readonly QUESTION_ID_PARAM: z.ZodObject<{
         id: z.ZodUUID;

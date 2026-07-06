@@ -26,6 +26,25 @@ interface SortableMatchItemProps {
 	disabled?: boolean;
 }
 
+function MatchContentRenderer({ text }: { text: string }) {
+	const imgMatch = text.match(/!\[(.*?)\]\((.*?)\)/);
+	if (imgMatch) {
+		const [, alt, url] = imgMatch;
+		const remainingText = text.replace(imgMatch[0], "").trim();
+		return (
+			<div className="flex flex-col items-center gap-2 w-full p-2">
+				<img 
+					src={url} 
+					alt={alt || "Matching item"} 
+					className="w-full max-w-[12rem] h-24 object-cover rounded-lg shadow-sm border border-base-300 bg-base-200 shrink-0" 
+				/>
+				{remainingText && <span className="text-center font-medium w-full text-sm leading-tight">{remainingText}</span>}
+			</div>
+		);
+	}
+	return <span className="font-medium text-sm leading-tight">{text}</span>;
+}
+
 function SortableMatchItem({ id, text, disabled }: SortableMatchItemProps) {
 	const {
 		attributes,
@@ -46,12 +65,14 @@ function SortableMatchItem({ id, text, disabled }: SortableMatchItemProps) {
 			ref={setNodeRef}
 			style={style}
 			className={clsx(
-				"flex items-center justify-between p-3 mb-2 bg-base-100 rounded-xl border-2 transition-colors min-h-[4rem]",
+				"flex items-center justify-between p-3 mb-2 bg-base-100 rounded-xl border-2 transition-colors h-40",
 				isDragging ? "border-secondary shadow-lg shadow-secondary/20 z-10 opacity-90" : "border-base-300",
 				disabled ? "opacity-70" : "hover:border-secondary/50"
 			)}
 		>
-			<span className="font-medium text-sm md:text-base select-none px-2 text-right w-full">{text}</span>
+			<div className="font-medium text-sm md:text-base select-none px-2 flex justify-center items-center w-full min-w-0 h-full">
+				<MatchContentRenderer text={text} />
+			</div>
 			<div
 				{...attributes}
 				{...listeners}
@@ -131,7 +152,8 @@ export function QuestionMatching({
 			}
 		}
 		
-		setRightItems(initialRightItems);
+		const shuffledRightItems = [...initialRightItems].sort(() => Math.random() - 0.5);
+		setRightItems(shuffledRightItems);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [options, selectedAnswer]);
 
@@ -177,8 +199,10 @@ export function QuestionMatching({
 				{/* LEFT COLUMN (STATIC) */}
 				<div className="flex-1 space-y-2">
 					{leftItems.map((item) => (
-						<div key={item.id} className="flex items-center justify-between p-3 mb-2 bg-base-200/50 rounded-xl border-2 border-base-200 min-h-[4rem]">
-							<span className="font-semibold text-sm md:text-base">{item.optionText}</span>
+						<div key={item.id} className="flex items-center justify-between p-3 mb-2 bg-base-200/50 rounded-xl border-2 border-base-200 h-40">
+							<div className="font-semibold text-sm md:text-base min-w-0 w-full flex justify-center items-center h-full">
+								<MatchContentRenderer text={item.optionText} />
+							</div>
 							<Link className="w-5 h-5 text-base-content/20 shrink-0 ml-2" />
 						</div>
 					))}
@@ -187,7 +211,7 @@ export function QuestionMatching({
 				{/* CONNECTOR UI */}
 				<div className="flex flex-col items-center justify-center gap-2 pb-2">
 					{leftItems.map((_, i) => (
-						<div key={i} className="flex items-center min-h-[4rem] mb-2">
+						<div key={i} className="flex items-center h-40 mb-2">
 							<div className="w-8 h-1 bg-base-300 rounded-full" />
 						</div>
 					))}

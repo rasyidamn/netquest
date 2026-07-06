@@ -56,7 +56,7 @@ export class ProgressService {
             } else {
                // Cari lesson pertama yang belum selesai (untuk mengakomodasi lesson baru yang ditambahkan di belakang)
                const firstIncompleteLesson = lessons.find(l => 
-                  !l.userProgress.length || l.userProgress[0].status !== ProgressStatusEnum.COMPLETED
+                  !l.userProgress.length || l.userProgress[0]?.status !== ProgressStatusEnum.COMPLETED
                );
                currentLessonId = firstIncompleteLesson ? firstIncompleteLesson.id : (lessons[0]?.id || "");
             }

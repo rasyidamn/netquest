@@ -72,7 +72,9 @@ export const UserScalarFieldEnum = {
 export const ModuleScalarFieldEnum = {
     id: 'id',
     title: 'title',
-    sequence: 'sequence'
+    description: 'description',
+    sequence: 'sequence',
+    isPublished: 'isPublished'
 };
 export const LessonScalarFieldEnum = {
     id: 'id',
@@ -80,7 +82,8 @@ export const LessonScalarFieldEnum = {
     title: 'title',
     lessonSequence: 'lessonSequence',
     type: 'type',
-    xpReward: 'xpReward'
+    xpReward: 'xpReward',
+    isPublished: 'isPublished'
 };
 export const MaterialScalarFieldEnum = {
     id: 'id',

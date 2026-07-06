@@ -9,7 +9,8 @@ import { QuestionSchema } from "../schemas/question.schema.js";
 export class LessonController {
     static getLessonByModule = catchAsync(async (req, res) => {
         const params = ModuleSchema.MODULE_ID_PARAM.parse(req.params);
-        const responseData = await LessonService.getLessonByModule(params.id);
+        const role = req.user?.role;
+        const responseData = await LessonService.getLessonByModule(params.id, role);
         sendSuccess(res, StatusCodes.OK, "Berhasil mengambil daftar lesson", responseData);
     });
     static getLessonDetail = catchAsync(async (req, res) => {

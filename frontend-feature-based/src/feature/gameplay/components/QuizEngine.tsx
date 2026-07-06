@@ -7,9 +7,10 @@ import { QuestionMultipleChoice } from "./QuestionMultipleChoice";
 import { QuestionCommandTyping } from "./QuestionCommandTyping";
 import { QuestionSorting } from "./QuestionSorting";
 import { QuestionMatching } from "./QuestionMatching";
-import { QuestionImageLabeling } from "./QuestionImageLabeling";
 import { QuestionCalculationInput } from "./QuestionCalculationInput";
 import { QuestionTopology } from "./QuestionTopology";
+import { QuestionRapidTrueFalse } from "./QuestionRapidTrueFalse";
+import { QuestionVisualIdentification } from "./QuestionVisualIdentification";
 import { QuestionType } from "../types/gameplay.types";
 import { useNavigate } from "@tanstack/react-router";
 import { Heart, XCircle } from "lucide-react";
@@ -20,16 +21,18 @@ import { ReactFlowExample } from "./ReactFlowExample";
 
 interface QuizEngineProps {
 	lessonId: string;
+	moduleId: string;
 	questions: Question[];
 }
 
-export function QuizEngine({ lessonId, questions }: QuizEngineProps) {
+export function QuizEngine({ lessonId, moduleId, questions }: QuizEngineProps) {
 	const navigate = useNavigate();
 	const { data: user } = useProfile();
 	const currentTotalXp = user?.xp || 0;
 	const currentHearts = user?.hearts ?? 3;
 
 	const [currentAnswer, setCurrentAnswer] = useState<any>(null);
+	const [attemptKey, setAttemptKey] = useState(0);
 
 	const {
 		currentQuestionIndex,
@@ -70,15 +73,17 @@ export function QuizEngine({ lessonId, questions }: QuizEngineProps) {
 					} else {
 						toast.error(`Jawaban salah! Sisa Nyawa: ${data.heartsLeft}`);
 						setCurrentAnswer(null); // Reset agar bisa coba lagi
+						setAttemptKey(prev => prev + 1); // Reset card / timer
 						
 						if (data.heartsLeft <= 0) {
-							navigate({ to: "/roadmap" });
+							navigate({ to: "/roadmap/$moduleId", params: { moduleId } });
 						}
 					}
 				},
 				onError: (error) => {
 					toast.error(error.message);
 					setCurrentAnswer(null);
+					setAttemptKey(prev => prev + 1);
 				}
 			}
 		);
@@ -93,7 +98,7 @@ export function QuizEngine({ lessonId, questions }: QuizEngineProps) {
 					if (data.isLevelUp) {
 						toast.success("Selamat! Anda Naik Level! 🎉", { duration: 5000, icon: '🌟' });
 					}
-					navigate({ to: "/roadmap" });
+					navigate({ to: "/roadmap/$moduleId", params: { moduleId } });
 				},
 				onError: (error) => {
 					toast.error("Gagal menyimpan hasil kuis.");
@@ -111,7 +116,7 @@ export function QuizEngine({ lessonId, questions }: QuizEngineProps) {
 			{/* Top Bar: Progress & Hearts */}
 			<div className="flex items-center justify-between gap-4">
 				<button 
-					onClick={() => navigate({ to: "/roadmap" })}
+					onClick={() => navigate({ to: "/roadmap/$moduleId", params: { moduleId } })}
 					className="btn btn-ghost btn-circle btn-sm text-base-content/50 hover:text-base-content"
 				>
 					<XCircle className="w-6 h-6" />
@@ -186,21 +191,31 @@ export function QuizEngine({ lessonId, questions }: QuizEngineProps) {
 					/>
 				)}
 
-				{currentQuestion.type === QuestionType.IMAGE_LABELING && (
-					<QuestionImageLabeling
-						questionText={currentQuestion.questionText}
-						options={currentQuestion.options || []}
-						selectedAnswer={currentAnswer}
-						onSelect={handleAnswerSubmit}
-						disabled={isPending}
-					/>
-				)}
-
 				{currentQuestion.type === QuestionType.TOPOLOGY && (
 					<QuestionTopology
 						questionText={currentQuestion.questionText}
 						nodes={currentQuestion.options || []}
 						onSubmit={(answerStr) => handleAnswerSubmit(answerStr)}
+						disabled={isPending}
+					/>
+				)}
+
+				{currentQuestion.type === QuestionType.RAPID_TRUE_FALSE && (
+					<QuestionRapidTrueFalse
+						key={`${currentQuestion.id}-${attemptKey}`}
+						questionText={currentQuestion.questionText}
+						options={currentQuestion.options || []}
+						onAnswer={(optionIds) => handleAnswerSubmit(optionIds[0])}
+						isRetry={attemptKey > 0}
+					/>
+				)}
+
+				{currentQuestion.type === QuestionType.VISUAL_IDENTIFICATION && (
+					<QuestionVisualIdentification
+						key={`${currentQuestion.id}-${attemptKey}`}
+						questionText={currentQuestion.questionText}
+						options={currentQuestion.options || []}
+						onAnswer={(optionIds) => handleAnswerSubmit(optionIds[0])}
 						disabled={isPending}
 					/>
 				)}

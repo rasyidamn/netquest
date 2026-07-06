@@ -51,24 +51,27 @@ export class GameplayService {
                 },
             },
         });
-        // Bug Fix: Jika record tidak ada sama sekali, lempar 403 (bukan crash P2025)
-        if (!existingProgress) {
-            throw new ApiError(StatusCodes.FORBIDDEN, "Anda belum membuka materi ini.");
-        }
-        if (existingProgress.status === ProgressStatusEnum.COMPLETED) {
-            throw new ApiError(StatusCodes.BAD_REQUEST, "Anda sudah menyelsaikan materi ini!");
+        // Bug Fix: Jangan lempar error jika tidak ada progress, biarkan upsert yang menangani
+        if (existingProgress && existingProgress.status === ProgressStatusEnum.COMPLETED) {
+            throw new ApiError(StatusCodes.BAD_REQUEST, "Anda sudah menyelesaikan materi ini!");
         }
         const result = await prisma.$transaction(async (tx) => {
             // MENANDAI LESSON COMPLETED
-            await tx.userProgress.update({
+            await tx.userProgress.upsert({
                 where: {
                     userId_lessonId: {
                         userId: userId,
                         lessonId: lessonId,
                     },
                 },
-                data: {
+                update: {
                     status: ProgressStatusEnum.COMPLETED,
+                },
+                create: {
+                    userId: userId,
+                    lessonId: lessonId,
+                    status: ProgressStatusEnum.COMPLETED,
+                    bestScore: 0,
                 },
             });
             // MEMBUKA LESSON SELANJUTNYA — Bug Fix: harus di-await!
@@ -157,6 +160,25 @@ export class GameplayService {
                     }
                     catch (error) {
                         throw new ApiError(StatusCodes.BAD_REQUEST, "Format array jawaban tidak valid.");
+                    }
+                }
+                break;
+            case QuestionType.TOPOLOGY:
+                const correctTopologyOption = question.options.find((opt) => opt.isCorrect);
+                if (correctTopologyOption) {
+                    try {
+                        // Frontend akan mengirimkan array of edges/connections, misalnya: ["nodeA-nodeB", "nodeC-nodeD"]
+                        const expectedEdges = JSON.parse(correctTopologyOption.optionText);
+                        const submittedEdges = JSON.parse(validatedData.answer);
+                        // Urutan kabel/edges tidak masalah, jadi kita sort dulu lalu bandingkan
+                        expectedEdges.sort();
+                        submittedEdges.sort();
+                        if (JSON.stringify(expectedEdges) === JSON.stringify(submittedEdges)) {
+                            isAnswerCorrect = true;
+                        }
+                    }
+                    catch (error) {
+                        throw new ApiError(StatusCodes.BAD_REQUEST, "Format jawaban topologi tidak valid.");
                     }
                 }
                 break;
@@ -320,17 +342,18 @@ export class GameplayService {
             where: {
                 moduleId: currentLesson.moduleId,
                 lessonSequence: currentLesson.lessonSequence + 1,
+                isPublished: true,
             },
         });
         if (!nextLesson) {
             // Cari modul yang urutannya 1 tingkat di atas modul saat ini
             const nextModule = await tx.module.findFirst({
-                where: { sequence: currentLesson.module.sequence + 1 },
+                where: { sequence: currentLesson.module.sequence + 1, isPublished: true },
             });
             // Jika modul berikutnya ada, ambil materi urutan PERTAMA di modul tersebut
             if (nextModule) {
                 nextLesson = await tx.lesson.findFirst({
-                    where: { moduleId: nextModule.id },
+                    where: { moduleId: nextModule.id, isPublished: true },
                     orderBy: { lessonSequence: "asc" }, // Ambil yang paling awal
                 });
             }

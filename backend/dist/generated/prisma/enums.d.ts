@@ -21,6 +21,7 @@ export declare const QuestionType: {
     readonly SORTING: "SORTING";
     readonly MATCHING: "MATCHING";
     readonly IMAGE_LABELING: "IMAGE_LABELING";
+    readonly TOPOLOGY: "TOPOLOGY";
 };
 export type QuestionType = (typeof QuestionType)[keyof typeof QuestionType];
 //# sourceMappingURL=enums.d.ts.map

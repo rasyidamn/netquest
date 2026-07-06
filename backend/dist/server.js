@@ -1,8 +1,10 @@
 import "dotenv/config";
 import { prisma } from "./configs/database.config.js";
 import logger from "./utils/logger.util.js";
+import { configureCloudinary } from "./configs/cloudinary.config.js";
 import app from "./app.js";
 const PORT = process.env["PORT"] || 3000;
+configureCloudinary();
 const start_server = async () => {
     try {
         await prisma.$connect;

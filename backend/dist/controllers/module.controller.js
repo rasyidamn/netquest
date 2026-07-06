@@ -5,7 +5,8 @@ import { StatusCodes } from "http-status-codes";
 import { ModuleSchema } from "../schemas/module.schema.js";
 export class ModuleController {
     static getAllModules = catchAsync(async (req, res) => {
-        const responseData = await ModuleService.getAllModules();
+        const role = req.user?.role;
+        const responseData = await ModuleService.getAllModules(role);
         sendSuccess(res, StatusCodes.OK, "Berhasil mengambil data modules", responseData);
     });
     static createModule = catchAsync(async (req, res) => {

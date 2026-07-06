@@ -59,7 +59,9 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export declare const ModuleScalarFieldEnum: {
     readonly id: "id";
     readonly title: "title";
+    readonly description: "description";
     readonly sequence: "sequence";
+    readonly isPublished: "isPublished";
 };
 export type ModuleScalarFieldEnum = (typeof ModuleScalarFieldEnum)[keyof typeof ModuleScalarFieldEnum];
 export declare const LessonScalarFieldEnum: {
@@ -69,6 +71,7 @@ export declare const LessonScalarFieldEnum: {
     readonly lessonSequence: "lessonSequence";
     readonly type: "type";
     readonly xpReward: "xpReward";
+    readonly isPublished: "isPublished";
 };
 export type LessonScalarFieldEnum = (typeof LessonScalarFieldEnum)[keyof typeof LessonScalarFieldEnum];
 export declare const MaterialScalarFieldEnum: {

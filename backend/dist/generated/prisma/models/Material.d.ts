@@ -258,9 +258,6 @@ export type MaterialUncheckedUpdateOneWithoutLessonNestedInput = {
     connect?: Prisma.MaterialWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.MaterialUpdateToOneWithWhereWithoutLessonInput, Prisma.MaterialUpdateWithoutLessonInput>, Prisma.MaterialUncheckedUpdateWithoutLessonInput>;
 };
-export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null;
-};
 export type MaterialCreateWithoutLessonInput = {
     id?: string;
     content: string;

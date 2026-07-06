@@ -21,17 +21,23 @@ export type ModuleSumAggregateOutputType = {
 export type ModuleMinAggregateOutputType = {
     id: string | null;
     title: string | null;
+    description: string | null;
     sequence: number | null;
+    isPublished: boolean | null;
 };
 export type ModuleMaxAggregateOutputType = {
     id: string | null;
     title: string | null;
+    description: string | null;
     sequence: number | null;
+    isPublished: boolean | null;
 };
 export type ModuleCountAggregateOutputType = {
     id: number;
     title: number;
+    description: number;
     sequence: number;
+    isPublished: number;
     _all: number;
 };
 export type ModuleAvgAggregateInputType = {
@@ -43,17 +49,23 @@ export type ModuleSumAggregateInputType = {
 export type ModuleMinAggregateInputType = {
     id?: true;
     title?: true;
+    description?: true;
     sequence?: true;
+    isPublished?: true;
 };
 export type ModuleMaxAggregateInputType = {
     id?: true;
     title?: true;
+    description?: true;
     sequence?: true;
+    isPublished?: true;
 };
 export type ModuleCountAggregateInputType = {
     id?: true;
     title?: true;
+    description?: true;
     sequence?: true;
+    isPublished?: true;
     _all?: true;
 };
 export type ModuleAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -135,7 +147,9 @@ export type ModuleGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 export type ModuleGroupByOutputType = {
     id: string;
     title: string;
+    description: string | null;
     sequence: number;
+    isPublished: boolean;
     _count: ModuleCountAggregateOutputType | null;
     _avg: ModuleAvgAggregateOutputType | null;
     _sum: ModuleSumAggregateOutputType | null;
@@ -151,28 +165,36 @@ export type ModuleWhereInput = {
     NOT?: Prisma.ModuleWhereInput | Prisma.ModuleWhereInput[];
     id?: Prisma.UuidFilter<"Module"> | string;
     title?: Prisma.StringFilter<"Module"> | string;
+    description?: Prisma.StringNullableFilter<"Module"> | string | null;
     sequence?: Prisma.IntFilter<"Module"> | number;
+    isPublished?: Prisma.BoolFilter<"Module"> | boolean;
     lessons?: Prisma.LessonListRelationFilter;
 };
 export type ModuleOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
     title?: Prisma.SortOrder;
+    description?: Prisma.SortOrderInput | Prisma.SortOrder;
     sequence?: Prisma.SortOrder;
+    isPublished?: Prisma.SortOrder;
     lessons?: Prisma.LessonOrderByRelationAggregateInput;
 };
 export type ModuleWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
+    sequence?: number;
     AND?: Prisma.ModuleWhereInput | Prisma.ModuleWhereInput[];
     OR?: Prisma.ModuleWhereInput[];
     NOT?: Prisma.ModuleWhereInput | Prisma.ModuleWhereInput[];
     title?: Prisma.StringFilter<"Module"> | string;
-    sequence?: Prisma.IntFilter<"Module"> | number;
+    description?: Prisma.StringNullableFilter<"Module"> | string | null;
+    isPublished?: Prisma.BoolFilter<"Module"> | boolean;
     lessons?: Prisma.LessonListRelationFilter;
-}, "id">;
+}, "id" | "sequence">;
 export type ModuleOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
     title?: Prisma.SortOrder;
+    description?: Prisma.SortOrderInput | Prisma.SortOrder;
     sequence?: Prisma.SortOrder;
+    isPublished?: Prisma.SortOrder;
     _count?: Prisma.ModuleCountOrderByAggregateInput;
     _avg?: Prisma.ModuleAvgOrderByAggregateInput;
     _max?: Prisma.ModuleMaxOrderByAggregateInput;
@@ -185,51 +207,69 @@ export type ModuleScalarWhereWithAggregatesInput = {
     NOT?: Prisma.ModuleScalarWhereWithAggregatesInput | Prisma.ModuleScalarWhereWithAggregatesInput[];
     id?: Prisma.UuidWithAggregatesFilter<"Module"> | string;
     title?: Prisma.StringWithAggregatesFilter<"Module"> | string;
+    description?: Prisma.StringNullableWithAggregatesFilter<"Module"> | string | null;
     sequence?: Prisma.IntWithAggregatesFilter<"Module"> | number;
+    isPublished?: Prisma.BoolWithAggregatesFilter<"Module"> | boolean;
 };
 export type ModuleCreateInput = {
     id?: string;
     title: string;
+    description?: string | null;
     sequence: number;
+    isPublished?: boolean;
     lessons?: Prisma.LessonCreateNestedManyWithoutModuleInput;
 };
 export type ModuleUncheckedCreateInput = {
     id?: string;
     title: string;
+    description?: string | null;
     sequence: number;
+    isPublished?: boolean;
     lessons?: Prisma.LessonUncheckedCreateNestedManyWithoutModuleInput;
 };
 export type ModuleUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sequence?: Prisma.IntFieldUpdateOperationsInput | number;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     lessons?: Prisma.LessonUpdateManyWithoutModuleNestedInput;
 };
 export type ModuleUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sequence?: Prisma.IntFieldUpdateOperationsInput | number;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     lessons?: Prisma.LessonUncheckedUpdateManyWithoutModuleNestedInput;
 };
 export type ModuleCreateManyInput = {
     id?: string;
     title: string;
+    description?: string | null;
     sequence: number;
+    isPublished?: boolean;
 };
 export type ModuleUpdateManyMutationInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sequence?: Prisma.IntFieldUpdateOperationsInput | number;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 };
 export type ModuleUncheckedUpdateManyInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sequence?: Prisma.IntFieldUpdateOperationsInput | number;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 };
 export type ModuleCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     title?: Prisma.SortOrder;
+    description?: Prisma.SortOrder;
     sequence?: Prisma.SortOrder;
+    isPublished?: Prisma.SortOrder;
 };
 export type ModuleAvgOrderByAggregateInput = {
     sequence?: Prisma.SortOrder;
@@ -237,12 +277,16 @@ export type ModuleAvgOrderByAggregateInput = {
 export type ModuleMaxOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     title?: Prisma.SortOrder;
+    description?: Prisma.SortOrder;
     sequence?: Prisma.SortOrder;
+    isPublished?: Prisma.SortOrder;
 };
 export type ModuleMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     title?: Prisma.SortOrder;
+    description?: Prisma.SortOrder;
     sequence?: Prisma.SortOrder;
+    isPublished?: Prisma.SortOrder;
 };
 export type ModuleSumOrderByAggregateInput = {
     sequence?: Prisma.SortOrder;
@@ -250,6 +294,12 @@ export type ModuleSumOrderByAggregateInput = {
 export type ModuleScalarRelationFilter = {
     is?: Prisma.ModuleWhereInput;
     isNot?: Prisma.ModuleWhereInput;
+};
+export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null;
+};
+export type BoolFieldUpdateOperationsInput = {
+    set?: boolean;
 };
 export type ModuleCreateNestedOneWithoutLessonsInput = {
     create?: Prisma.XOR<Prisma.ModuleCreateWithoutLessonsInput, Prisma.ModuleUncheckedCreateWithoutLessonsInput>;
@@ -266,12 +316,16 @@ export type ModuleUpdateOneRequiredWithoutLessonsNestedInput = {
 export type ModuleCreateWithoutLessonsInput = {
     id?: string;
     title: string;
+    description?: string | null;
     sequence: number;
+    isPublished?: boolean;
 };
 export type ModuleUncheckedCreateWithoutLessonsInput = {
     id?: string;
     title: string;
+    description?: string | null;
     sequence: number;
+    isPublished?: boolean;
 };
 export type ModuleCreateOrConnectWithoutLessonsInput = {
     where: Prisma.ModuleWhereUniqueInput;
@@ -289,12 +343,16 @@ export type ModuleUpdateToOneWithWhereWithoutLessonsInput = {
 export type ModuleUpdateWithoutLessonsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sequence?: Prisma.IntFieldUpdateOperationsInput | number;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 };
 export type ModuleUncheckedUpdateWithoutLessonsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sequence?: Prisma.IntFieldUpdateOperationsInput | number;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 };
 /**
  * Count Type ModuleCountOutputType
@@ -323,26 +381,34 @@ export type ModuleCountOutputTypeCountLessonsArgs<ExtArgs extends runtime.Types.
 export type ModuleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     title?: boolean;
+    description?: boolean;
     sequence?: boolean;
+    isPublished?: boolean;
     lessons?: boolean | Prisma.Module$lessonsArgs<ExtArgs>;
     _count?: boolean | Prisma.ModuleCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["module"]>;
 export type ModuleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     title?: boolean;
+    description?: boolean;
     sequence?: boolean;
+    isPublished?: boolean;
 }, ExtArgs["result"]["module"]>;
 export type ModuleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     title?: boolean;
+    description?: boolean;
     sequence?: boolean;
+    isPublished?: boolean;
 }, ExtArgs["result"]["module"]>;
 export type ModuleSelectScalar = {
     id?: boolean;
     title?: boolean;
+    description?: boolean;
     sequence?: boolean;
+    isPublished?: boolean;
 };
-export type ModuleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "sequence", ExtArgs["result"]["module"]>;
+export type ModuleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "sequence" | "isPublished", ExtArgs["result"]["module"]>;
 export type ModuleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     lessons?: boolean | Prisma.Module$lessonsArgs<ExtArgs>;
     _count?: boolean | Prisma.ModuleCountOutputTypeDefaultArgs<ExtArgs>;
@@ -357,7 +423,9 @@ export type $ModulePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
         title: string;
+        description: string | null;
         sequence: number;
+        isPublished: boolean;
     }, ExtArgs["result"]["module"]>;
     composites: {};
 };
@@ -715,7 +783,9 @@ export interface Prisma__ModuleClient<T, Null = never, ExtArgs extends runtime.T
 export interface ModuleFieldRefs {
     readonly id: Prisma.FieldRef<"Module", 'String'>;
     readonly title: Prisma.FieldRef<"Module", 'String'>;
+    readonly description: Prisma.FieldRef<"Module", 'String'>;
     readonly sequence: Prisma.FieldRef<"Module", 'Int'>;
+    readonly isPublished: Prisma.FieldRef<"Module", 'Boolean'>;
 }
 /**
  * Module findUnique

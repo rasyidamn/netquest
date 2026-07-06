@@ -28,6 +28,7 @@ export type LessonMinAggregateOutputType = {
     lessonSequence: number | null;
     type: $Enums.LessonTypeEnum | null;
     xpReward: number | null;
+    isPublished: boolean | null;
 };
 export type LessonMaxAggregateOutputType = {
     id: string | null;
@@ -36,6 +37,7 @@ export type LessonMaxAggregateOutputType = {
     lessonSequence: number | null;
     type: $Enums.LessonTypeEnum | null;
     xpReward: number | null;
+    isPublished: boolean | null;
 };
 export type LessonCountAggregateOutputType = {
     id: number;
@@ -44,6 +46,7 @@ export type LessonCountAggregateOutputType = {
     lessonSequence: number;
     type: number;
     xpReward: number;
+    isPublished: number;
     _all: number;
 };
 export type LessonAvgAggregateInputType = {
@@ -61,6 +64,7 @@ export type LessonMinAggregateInputType = {
     lessonSequence?: true;
     type?: true;
     xpReward?: true;
+    isPublished?: true;
 };
 export type LessonMaxAggregateInputType = {
     id?: true;
@@ -69,6 +73,7 @@ export type LessonMaxAggregateInputType = {
     lessonSequence?: true;
     type?: true;
     xpReward?: true;
+    isPublished?: true;
 };
 export type LessonCountAggregateInputType = {
     id?: true;
@@ -77,6 +82,7 @@ export type LessonCountAggregateInputType = {
     lessonSequence?: true;
     type?: true;
     xpReward?: true;
+    isPublished?: true;
     _all?: true;
 };
 export type LessonAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -162,6 +168,7 @@ export type LessonGroupByOutputType = {
     lessonSequence: number;
     type: $Enums.LessonTypeEnum;
     xpReward: number;
+    isPublished: boolean;
     _count: LessonCountAggregateOutputType | null;
     _avg: LessonAvgAggregateOutputType | null;
     _sum: LessonSumAggregateOutputType | null;
@@ -181,6 +188,7 @@ export type LessonWhereInput = {
     lessonSequence?: Prisma.IntFilter<"Lesson"> | number;
     type?: Prisma.EnumLessonTypeEnumFilter<"Lesson"> | $Enums.LessonTypeEnum;
     xpReward?: Prisma.IntFilter<"Lesson"> | number;
+    isPublished?: Prisma.BoolFilter<"Lesson"> | boolean;
     module?: Prisma.XOR<Prisma.ModuleScalarRelationFilter, Prisma.ModuleWhereInput>;
     material?: Prisma.XOR<Prisma.MaterialNullableScalarRelationFilter, Prisma.MaterialWhereInput> | null;
     questions?: Prisma.QuestionListRelationFilter;
@@ -193,6 +201,7 @@ export type LessonOrderByWithRelationInput = {
     lessonSequence?: Prisma.SortOrder;
     type?: Prisma.SortOrder;
     xpReward?: Prisma.SortOrder;
+    isPublished?: Prisma.SortOrder;
     module?: Prisma.ModuleOrderByWithRelationInput;
     material?: Prisma.MaterialOrderByWithRelationInput;
     questions?: Prisma.QuestionOrderByRelationAggregateInput;
@@ -200,6 +209,7 @@ export type LessonOrderByWithRelationInput = {
 };
 export type LessonWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
+    moduleId_lessonSequence?: Prisma.LessonModuleIdLessonSequenceCompoundUniqueInput;
     AND?: Prisma.LessonWhereInput | Prisma.LessonWhereInput[];
     OR?: Prisma.LessonWhereInput[];
     NOT?: Prisma.LessonWhereInput | Prisma.LessonWhereInput[];
@@ -208,11 +218,12 @@ export type LessonWhereUniqueInput = Prisma.AtLeast<{
     lessonSequence?: Prisma.IntFilter<"Lesson"> | number;
     type?: Prisma.EnumLessonTypeEnumFilter<"Lesson"> | $Enums.LessonTypeEnum;
     xpReward?: Prisma.IntFilter<"Lesson"> | number;
+    isPublished?: Prisma.BoolFilter<"Lesson"> | boolean;
     module?: Prisma.XOR<Prisma.ModuleScalarRelationFilter, Prisma.ModuleWhereInput>;
     material?: Prisma.XOR<Prisma.MaterialNullableScalarRelationFilter, Prisma.MaterialWhereInput> | null;
     questions?: Prisma.QuestionListRelationFilter;
     userProgress?: Prisma.UserProgressListRelationFilter;
-}, "id">;
+}, "id" | "moduleId_lessonSequence">;
 export type LessonOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
     moduleId?: Prisma.SortOrder;
@@ -220,6 +231,7 @@ export type LessonOrderByWithAggregationInput = {
     lessonSequence?: Prisma.SortOrder;
     type?: Prisma.SortOrder;
     xpReward?: Prisma.SortOrder;
+    isPublished?: Prisma.SortOrder;
     _count?: Prisma.LessonCountOrderByAggregateInput;
     _avg?: Prisma.LessonAvgOrderByAggregateInput;
     _max?: Prisma.LessonMaxOrderByAggregateInput;
@@ -236,6 +248,7 @@ export type LessonScalarWhereWithAggregatesInput = {
     lessonSequence?: Prisma.IntWithAggregatesFilter<"Lesson"> | number;
     type?: Prisma.EnumLessonTypeEnumWithAggregatesFilter<"Lesson"> | $Enums.LessonTypeEnum;
     xpReward?: Prisma.IntWithAggregatesFilter<"Lesson"> | number;
+    isPublished?: Prisma.BoolWithAggregatesFilter<"Lesson"> | boolean;
 };
 export type LessonCreateInput = {
     id?: string;
@@ -243,6 +256,7 @@ export type LessonCreateInput = {
     lessonSequence: number;
     type: $Enums.LessonTypeEnum;
     xpReward: number;
+    isPublished?: boolean;
     module: Prisma.ModuleCreateNestedOneWithoutLessonsInput;
     material?: Prisma.MaterialCreateNestedOneWithoutLessonInput;
     questions?: Prisma.QuestionCreateNestedManyWithoutLessonInput;
@@ -255,6 +269,7 @@ export type LessonUncheckedCreateInput = {
     lessonSequence: number;
     type: $Enums.LessonTypeEnum;
     xpReward: number;
+    isPublished?: boolean;
     material?: Prisma.MaterialUncheckedCreateNestedOneWithoutLessonInput;
     questions?: Prisma.QuestionUncheckedCreateNestedManyWithoutLessonInput;
     userProgress?: Prisma.UserProgressUncheckedCreateNestedManyWithoutLessonInput;
@@ -265,6 +280,7 @@ export type LessonUpdateInput = {
     lessonSequence?: Prisma.IntFieldUpdateOperationsInput | number;
     type?: Prisma.EnumLessonTypeEnumFieldUpdateOperationsInput | $Enums.LessonTypeEnum;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     module?: Prisma.ModuleUpdateOneRequiredWithoutLessonsNestedInput;
     material?: Prisma.MaterialUpdateOneWithoutLessonNestedInput;
     questions?: Prisma.QuestionUpdateManyWithoutLessonNestedInput;
@@ -277,6 +293,7 @@ export type LessonUncheckedUpdateInput = {
     lessonSequence?: Prisma.IntFieldUpdateOperationsInput | number;
     type?: Prisma.EnumLessonTypeEnumFieldUpdateOperationsInput | $Enums.LessonTypeEnum;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     material?: Prisma.MaterialUncheckedUpdateOneWithoutLessonNestedInput;
     questions?: Prisma.QuestionUncheckedUpdateManyWithoutLessonNestedInput;
     userProgress?: Prisma.UserProgressUncheckedUpdateManyWithoutLessonNestedInput;
@@ -288,6 +305,7 @@ export type LessonCreateManyInput = {
     lessonSequence: number;
     type: $Enums.LessonTypeEnum;
     xpReward: number;
+    isPublished?: boolean;
 };
 export type LessonUpdateManyMutationInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -295,6 +313,7 @@ export type LessonUpdateManyMutationInput = {
     lessonSequence?: Prisma.IntFieldUpdateOperationsInput | number;
     type?: Prisma.EnumLessonTypeEnumFieldUpdateOperationsInput | $Enums.LessonTypeEnum;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 };
 export type LessonUncheckedUpdateManyInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -303,6 +322,7 @@ export type LessonUncheckedUpdateManyInput = {
     lessonSequence?: Prisma.IntFieldUpdateOperationsInput | number;
     type?: Prisma.EnumLessonTypeEnumFieldUpdateOperationsInput | $Enums.LessonTypeEnum;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 };
 export type LessonListRelationFilter = {
     every?: Prisma.LessonWhereInput;
@@ -312,6 +332,10 @@ export type LessonListRelationFilter = {
 export type LessonOrderByRelationAggregateInput = {
     _count?: Prisma.SortOrder;
 };
+export type LessonModuleIdLessonSequenceCompoundUniqueInput = {
+    moduleId: string;
+    lessonSequence: number;
+};
 export type LessonCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     moduleId?: Prisma.SortOrder;
@@ -319,6 +343,7 @@ export type LessonCountOrderByAggregateInput = {
     lessonSequence?: Prisma.SortOrder;
     type?: Prisma.SortOrder;
     xpReward?: Prisma.SortOrder;
+    isPublished?: Prisma.SortOrder;
 };
 export type LessonAvgOrderByAggregateInput = {
     lessonSequence?: Prisma.SortOrder;
@@ -331,6 +356,7 @@ export type LessonMaxOrderByAggregateInput = {
     lessonSequence?: Prisma.SortOrder;
     type?: Prisma.SortOrder;
     xpReward?: Prisma.SortOrder;
+    isPublished?: Prisma.SortOrder;
 };
 export type LessonMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -339,6 +365,7 @@ export type LessonMinOrderByAggregateInput = {
     lessonSequence?: Prisma.SortOrder;
     type?: Prisma.SortOrder;
     xpReward?: Prisma.SortOrder;
+    isPublished?: Prisma.SortOrder;
 };
 export type LessonSumOrderByAggregateInput = {
     lessonSequence?: Prisma.SortOrder;
@@ -431,6 +458,7 @@ export type LessonCreateWithoutModuleInput = {
     lessonSequence: number;
     type: $Enums.LessonTypeEnum;
     xpReward: number;
+    isPublished?: boolean;
     material?: Prisma.MaterialCreateNestedOneWithoutLessonInput;
     questions?: Prisma.QuestionCreateNestedManyWithoutLessonInput;
     userProgress?: Prisma.UserProgressCreateNestedManyWithoutLessonInput;
@@ -441,6 +469,7 @@ export type LessonUncheckedCreateWithoutModuleInput = {
     lessonSequence: number;
     type: $Enums.LessonTypeEnum;
     xpReward: number;
+    isPublished?: boolean;
     material?: Prisma.MaterialUncheckedCreateNestedOneWithoutLessonInput;
     questions?: Prisma.QuestionUncheckedCreateNestedManyWithoutLessonInput;
     userProgress?: Prisma.UserProgressUncheckedCreateNestedManyWithoutLessonInput;
@@ -476,6 +505,7 @@ export type LessonScalarWhereInput = {
     lessonSequence?: Prisma.IntFilter<"Lesson"> | number;
     type?: Prisma.EnumLessonTypeEnumFilter<"Lesson"> | $Enums.LessonTypeEnum;
     xpReward?: Prisma.IntFilter<"Lesson"> | number;
+    isPublished?: Prisma.BoolFilter<"Lesson"> | boolean;
 };
 export type LessonCreateWithoutMaterialInput = {
     id?: string;
@@ -483,6 +513,7 @@ export type LessonCreateWithoutMaterialInput = {
     lessonSequence: number;
     type: $Enums.LessonTypeEnum;
     xpReward: number;
+    isPublished?: boolean;
     module: Prisma.ModuleCreateNestedOneWithoutLessonsInput;
     questions?: Prisma.QuestionCreateNestedManyWithoutLessonInput;
     userProgress?: Prisma.UserProgressCreateNestedManyWithoutLessonInput;
@@ -494,6 +525,7 @@ export type LessonUncheckedCreateWithoutMaterialInput = {
     lessonSequence: number;
     type: $Enums.LessonTypeEnum;
     xpReward: number;
+    isPublished?: boolean;
     questions?: Prisma.QuestionUncheckedCreateNestedManyWithoutLessonInput;
     userProgress?: Prisma.UserProgressUncheckedCreateNestedManyWithoutLessonInput;
 };
@@ -516,6 +548,7 @@ export type LessonUpdateWithoutMaterialInput = {
     lessonSequence?: Prisma.IntFieldUpdateOperationsInput | number;
     type?: Prisma.EnumLessonTypeEnumFieldUpdateOperationsInput | $Enums.LessonTypeEnum;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     module?: Prisma.ModuleUpdateOneRequiredWithoutLessonsNestedInput;
     questions?: Prisma.QuestionUpdateManyWithoutLessonNestedInput;
     userProgress?: Prisma.UserProgressUpdateManyWithoutLessonNestedInput;
@@ -527,6 +560,7 @@ export type LessonUncheckedUpdateWithoutMaterialInput = {
     lessonSequence?: Prisma.IntFieldUpdateOperationsInput | number;
     type?: Prisma.EnumLessonTypeEnumFieldUpdateOperationsInput | $Enums.LessonTypeEnum;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     questions?: Prisma.QuestionUncheckedUpdateManyWithoutLessonNestedInput;
     userProgress?: Prisma.UserProgressUncheckedUpdateManyWithoutLessonNestedInput;
 };
@@ -536,6 +570,7 @@ export type LessonCreateWithoutQuestionsInput = {
     lessonSequence: number;
     type: $Enums.LessonTypeEnum;
     xpReward: number;
+    isPublished?: boolean;
     module: Prisma.ModuleCreateNestedOneWithoutLessonsInput;
     material?: Prisma.MaterialCreateNestedOneWithoutLessonInput;
     userProgress?: Prisma.UserProgressCreateNestedManyWithoutLessonInput;
@@ -547,6 +582,7 @@ export type LessonUncheckedCreateWithoutQuestionsInput = {
     lessonSequence: number;
     type: $Enums.LessonTypeEnum;
     xpReward: number;
+    isPublished?: boolean;
     material?: Prisma.MaterialUncheckedCreateNestedOneWithoutLessonInput;
     userProgress?: Prisma.UserProgressUncheckedCreateNestedManyWithoutLessonInput;
 };
@@ -569,6 +605,7 @@ export type LessonUpdateWithoutQuestionsInput = {
     lessonSequence?: Prisma.IntFieldUpdateOperationsInput | number;
     type?: Prisma.EnumLessonTypeEnumFieldUpdateOperationsInput | $Enums.LessonTypeEnum;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     module?: Prisma.ModuleUpdateOneRequiredWithoutLessonsNestedInput;
     material?: Prisma.MaterialUpdateOneWithoutLessonNestedInput;
     userProgress?: Prisma.UserProgressUpdateManyWithoutLessonNestedInput;
@@ -580,6 +617,7 @@ export type LessonUncheckedUpdateWithoutQuestionsInput = {
     lessonSequence?: Prisma.IntFieldUpdateOperationsInput | number;
     type?: Prisma.EnumLessonTypeEnumFieldUpdateOperationsInput | $Enums.LessonTypeEnum;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     material?: Prisma.MaterialUncheckedUpdateOneWithoutLessonNestedInput;
     userProgress?: Prisma.UserProgressUncheckedUpdateManyWithoutLessonNestedInput;
 };
@@ -589,6 +627,7 @@ export type LessonCreateWithoutUserProgressInput = {
     lessonSequence: number;
     type: $Enums.LessonTypeEnum;
     xpReward: number;
+    isPublished?: boolean;
     module: Prisma.ModuleCreateNestedOneWithoutLessonsInput;
     material?: Prisma.MaterialCreateNestedOneWithoutLessonInput;
     questions?: Prisma.QuestionCreateNestedManyWithoutLessonInput;
@@ -600,6 +639,7 @@ export type LessonUncheckedCreateWithoutUserProgressInput = {
     lessonSequence: number;
     type: $Enums.LessonTypeEnum;
     xpReward: number;
+    isPublished?: boolean;
     material?: Prisma.MaterialUncheckedCreateNestedOneWithoutLessonInput;
     questions?: Prisma.QuestionUncheckedCreateNestedManyWithoutLessonInput;
 };
@@ -622,6 +662,7 @@ export type LessonUpdateWithoutUserProgressInput = {
     lessonSequence?: Prisma.IntFieldUpdateOperationsInput | number;
     type?: Prisma.EnumLessonTypeEnumFieldUpdateOperationsInput | $Enums.LessonTypeEnum;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     module?: Prisma.ModuleUpdateOneRequiredWithoutLessonsNestedInput;
     material?: Prisma.MaterialUpdateOneWithoutLessonNestedInput;
     questions?: Prisma.QuestionUpdateManyWithoutLessonNestedInput;
@@ -633,6 +674,7 @@ export type LessonUncheckedUpdateWithoutUserProgressInput = {
     lessonSequence?: Prisma.IntFieldUpdateOperationsInput | number;
     type?: Prisma.EnumLessonTypeEnumFieldUpdateOperationsInput | $Enums.LessonTypeEnum;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     material?: Prisma.MaterialUncheckedUpdateOneWithoutLessonNestedInput;
     questions?: Prisma.QuestionUncheckedUpdateManyWithoutLessonNestedInput;
 };
@@ -642,6 +684,7 @@ export type LessonCreateManyModuleInput = {
     lessonSequence: number;
     type: $Enums.LessonTypeEnum;
     xpReward: number;
+    isPublished?: boolean;
 };
 export type LessonUpdateWithoutModuleInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -649,6 +692,7 @@ export type LessonUpdateWithoutModuleInput = {
     lessonSequence?: Prisma.IntFieldUpdateOperationsInput | number;
     type?: Prisma.EnumLessonTypeEnumFieldUpdateOperationsInput | $Enums.LessonTypeEnum;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     material?: Prisma.MaterialUpdateOneWithoutLessonNestedInput;
     questions?: Prisma.QuestionUpdateManyWithoutLessonNestedInput;
     userProgress?: Prisma.UserProgressUpdateManyWithoutLessonNestedInput;
@@ -659,6 +703,7 @@ export type LessonUncheckedUpdateWithoutModuleInput = {
     lessonSequence?: Prisma.IntFieldUpdateOperationsInput | number;
     type?: Prisma.EnumLessonTypeEnumFieldUpdateOperationsInput | $Enums.LessonTypeEnum;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     material?: Prisma.MaterialUncheckedUpdateOneWithoutLessonNestedInput;
     questions?: Prisma.QuestionUncheckedUpdateManyWithoutLessonNestedInput;
     userProgress?: Prisma.UserProgressUncheckedUpdateManyWithoutLessonNestedInput;
@@ -669,6 +714,7 @@ export type LessonUncheckedUpdateManyWithoutModuleInput = {
     lessonSequence?: Prisma.IntFieldUpdateOperationsInput | number;
     type?: Prisma.EnumLessonTypeEnumFieldUpdateOperationsInput | $Enums.LessonTypeEnum;
     xpReward?: Prisma.IntFieldUpdateOperationsInput | number;
+    isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 };
 /**
  * Count Type LessonCountOutputType
@@ -709,6 +755,7 @@ export type LessonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     lessonSequence?: boolean;
     type?: boolean;
     xpReward?: boolean;
+    isPublished?: boolean;
     module?: boolean | Prisma.ModuleDefaultArgs<ExtArgs>;
     material?: boolean | Prisma.Lesson$materialArgs<ExtArgs>;
     questions?: boolean | Prisma.Lesson$questionsArgs<ExtArgs>;
@@ -722,6 +769,7 @@ export type LessonSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
     lessonSequence?: boolean;
     type?: boolean;
     xpReward?: boolean;
+    isPublished?: boolean;
     module?: boolean | Prisma.ModuleDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["lesson"]>;
 export type LessonSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -731,6 +779,7 @@ export type LessonSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
     lessonSequence?: boolean;
     type?: boolean;
     xpReward?: boolean;
+    isPublished?: boolean;
     module?: boolean | Prisma.ModuleDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["lesson"]>;
 export type LessonSelectScalar = {
@@ -740,8 +789,9 @@ export type LessonSelectScalar = {
     lessonSequence?: boolean;
     type?: boolean;
     xpReward?: boolean;
+    isPublished?: boolean;
 };
-export type LessonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "moduleId" | "title" | "lessonSequence" | "type" | "xpReward", ExtArgs["result"]["lesson"]>;
+export type LessonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "moduleId" | "title" | "lessonSequence" | "type" | "xpReward" | "isPublished", ExtArgs["result"]["lesson"]>;
 export type LessonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     module?: boolean | Prisma.ModuleDefaultArgs<ExtArgs>;
     material?: boolean | Prisma.Lesson$materialArgs<ExtArgs>;
@@ -770,6 +820,7 @@ export type $LessonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
         lessonSequence: number;
         type: $Enums.LessonTypeEnum;
         xpReward: number;
+        isPublished: boolean;
     }, ExtArgs["result"]["lesson"]>;
     composites: {};
 };
@@ -1134,6 +1185,7 @@ export interface LessonFieldRefs {
     readonly lessonSequence: Prisma.FieldRef<"Lesson", 'Int'>;
     readonly type: Prisma.FieldRef<"Lesson", 'LessonTypeEnum'>;
     readonly xpReward: Prisma.FieldRef<"Lesson", 'Int'>;
+    readonly isPublished: Prisma.FieldRef<"Lesson", 'Boolean'>;
 }
 /**
  * Lesson findUnique

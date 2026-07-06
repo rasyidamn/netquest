@@ -195,9 +195,8 @@ export class LessonService {
 		if (!lesson) {
 			throw new ApiError(StatusCodes.NOT_FOUND, "Lesson tidak ditemukan");
 		}
-
 		let question;
-		if ((validatedData.type === QuestionType.MATCHING || validatedData.type === QuestionType.SORTING || validatedData.type === QuestionType.IMAGE_LABELING) && validatedData.advancedOptions && validatedData.answerPattern) {
+		if ((validatedData.type === QuestionType.MATCHING || validatedData.type === QuestionType.SORTING) && validatedData.advancedOptions && validatedData.answerPattern) {
 			question = await prisma.$transaction(async (tx) => {
 				const created = await tx.question.create({
 					data: {
@@ -296,7 +295,7 @@ export class LessonService {
 				},
 			});
 
-			if ((validatedData.type === QuestionType.MATCHING || validatedData.type === QuestionType.SORTING || validatedData.type === QuestionType.IMAGE_LABELING) && validatedData.advancedOptions && validatedData.answerPattern) {
+			if ((validatedData.type === QuestionType.MATCHING || validatedData.type === QuestionType.SORTING) && validatedData.advancedOptions && validatedData.answerPattern) {
 				await tx.option.deleteMany({
 					where: { questionId: questionId },
 				});

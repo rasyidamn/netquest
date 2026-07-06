@@ -13,6 +13,7 @@ import { QuestionType } from "../types/gameplay.types";
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
+import { editorSchema } from "@/utils/editorSchema";
 
 interface TheoryViewerProps {
 	lessonId: string;
@@ -22,7 +23,13 @@ interface TheoryViewerProps {
 	questions?: Question[];
 }
 
-export function TheoryViewer({ lessonId, moduleId, title, material, questions }: TheoryViewerProps) {
+export function TheoryViewer({
+	lessonId,
+	moduleId,
+	title,
+	material,
+	questions,
+}: TheoryViewerProps) {
 	const navigate = useNavigate();
 	const { data: user } = useProfile();
 	const theoryDoneMutation = useTheoryDone();
@@ -32,7 +39,9 @@ export function TheoryViewer({ lessonId, moduleId, title, material, questions }:
 	const [readSeconds, setReadSeconds] = useState(0);
 	const [isPopQuizPassed, setIsPopQuizPassed] = useState(false);
 	// Bug Fix #1 & #2: Track selected answer and lock options after first click
-	const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
+	const [selectedOptionId, setSelectedOptionId] = useState<string | null>(
+		null,
+	);
 	const [hasAnswered, setHasAnswered] = useState(false);
 
 	const hasPopQuiz = questions && questions.length > 0;
@@ -48,7 +57,7 @@ export function TheoryViewer({ lessonId, moduleId, title, material, questions }:
 					{
 						type: "paragraph",
 						content: material.content,
-					}
+					},
 				];
 			}
 		}
@@ -57,9 +66,11 @@ export function TheoryViewer({ lessonId, moduleId, title, material, questions }:
 
 	const editor = useCreateBlockNote({
 		initialContent,
+		schema: editorSchema,
 	});
 
-	const goBack = () => navigate({ to: "/roadmap/$moduleId", params: { moduleId } });
+	const goBack = () =>
+		navigate({ to: "/roadmap/$moduleId", params: { moduleId } });
 
 	useEffect(() => {
 		const timer = setInterval(() => setReadSeconds((s) => s + 1), 1000);
@@ -75,14 +86,19 @@ export function TheoryViewer({ lessonId, moduleId, title, material, questions }:
 					goBack();
 				},
 				onError: (error: any) => {
-					const message: string = error?.response?.data?.message || error?.message || "";
-					const isAlreadyDone = message.includes("sudah menyels") || message.includes("sudah menyelesaikan");
+					const message: string =
+						error?.response?.data?.message || error?.message || "";
+					const isAlreadyDone =
+						message.includes("sudah menyels") ||
+						message.includes("sudah menyelesaikan");
 					if (isAlreadyDone) {
 						// Materi memang sudah dikerjakan sebelumnya, arahkan saja
 						toast.success("Materi sudah pernah diselesaikan.");
 					} else {
 						// Error sungguhan — tampilkan pesan asli ke user
-						toast.error(message || "Gagal menyimpan progres. Coba lagi.");
+						toast.error(
+							message || "Gagal menyimpan progres. Coba lagi.",
+						);
 					}
 					goBack();
 				},
@@ -100,7 +116,9 @@ export function TheoryViewer({ lessonId, moduleId, title, material, questions }:
 			{ lessonId, readDuration: readSeconds },
 			{
 				onSuccess: (data) => {
-					toast.success(`Nyawa pulih! Sisa kuota harian: ${data.remainingDailyQuota}`);
+					toast.success(
+						`Nyawa pulih! Sisa kuota harian: ${data.remainingDailyQuota}`,
+					);
 				},
 				onError: (error) => {
 					toast.error(error.message);
@@ -115,7 +133,9 @@ export function TheoryViewer({ lessonId, moduleId, title, material, questions }:
 		if (hasAnswered) return;
 
 		if (user && user.hearts <= 0) {
-			toast.error("Nyawa Anda habis! Silakan pulihkan nyawa terlebih dahulu.");
+			toast.error(
+				"Nyawa Anda habis! Silakan pulihkan nyawa terlebih dahulu.",
+			);
 			return;
 		}
 
@@ -131,10 +151,14 @@ export function TheoryViewer({ lessonId, moduleId, title, material, questions }:
 					if (data.isCorrect) {
 						// XP tidak disimpan dari submitQuiz — hanya dari theoryDone
 						// Tampilkan pesan sukses tanpa angka XP agar tidak menyesatkan
-						toast.success("Jawaban benar! Lanjutkan untuk menyelesaikan materi.");
+						toast.success(
+							"Jawaban benar! Lanjutkan untuk menyelesaikan materi.",
+						);
 						setIsPopQuizPassed(true);
 					} else {
-						toast.error(`Jawaban salah! Sisa Nyawa: ${data.heartsLeft}. Coba lagi.`);
+						toast.error(
+							`Jawaban salah! Sisa Nyawa: ${data.heartsLeft}. Coba lagi.`,
+						);
 						if (data.heartsLeft <= 0) {
 							goBack();
 							return;
@@ -149,8 +173,8 @@ export function TheoryViewer({ lessonId, moduleId, title, material, questions }:
 					// Jika API error, kembalikan state agar bisa dicoba lagi
 					setSelectedOptionId(null);
 					setHasAnswered(false);
-				}
-			}
+				},
+			},
 		);
 	};
 
@@ -170,11 +194,16 @@ export function TheoryViewer({ lessonId, moduleId, title, material, questions }:
 					<div className="flex flex-col gap-2">
 						<button
 							onClick={handleRecoverHeart}
-							disabled={recoverHeartMutation.isPending || readSeconds < 60}
+							disabled={
+								recoverHeartMutation.isPending ||
+								readSeconds < 60
+							}
 							className="btn btn-outline btn-error btn-sm sm:btn-md group relative overflow-hidden"
 						>
 							<HeartPulse className="w-4 h-4 group-hover:scale-110 transition-transform" />
-							{recoverHeartMutation.isPending ? "Memulihkan..." : "Pulihkan Nyawa"}
+							{recoverHeartMutation.isPending
+								? "Memulihkan..."
+								: "Pulihkan Nyawa"}
 						</button>
 						{readSeconds < 60 && (
 							<span className="text-xs text-error/80 text-center">
@@ -190,7 +219,9 @@ export function TheoryViewer({ lessonId, moduleId, title, material, questions }:
 				<BlockNoteView editor={editor} editable={false} theme="dark" />
 			</div>
 
-			<style dangerouslySetInnerHTML={{__html: `
+			<style
+				dangerouslySetInnerHTML={{
+					__html: `
 				/* Penyesuaian tema kustom agar menyatu dengan DaisyUI */
 				.blocknote-theme-container {
 					font-family: inherit;
@@ -203,7 +234,9 @@ export function TheoryViewer({ lessonId, moduleId, title, material, questions }:
 					--bn-colors-editor-text: oklch(var(--bc)) !important;
 					--bn-colors-editor-background: transparent !important;
 				}
-			`}} />
+			`,
+				}}
+			/>
 
 			{/* Pop Quiz Section */}
 			{hasPopQuiz && !isPopQuizPassed && (
@@ -211,23 +244,35 @@ export function TheoryViewer({ lessonId, moduleId, title, material, questions }:
 					<div className="flex items-center gap-3 mb-6">
 						<BrainCircuit className="w-8 h-8 text-primary" />
 						<div>
-							<h3 className="text-xl font-bold text-primary">Kuis Kejutan!</h3>
-							<p className="text-sm text-base-content/60">Jawab pertanyaan ini untuk menyelesaikan materi.</p>
+							<h3 className="text-xl font-bold text-primary">
+								Kuis Kejutan!
+							</h3>
+							<p className="text-sm text-base-content/60">
+								Jawab pertanyaan ini untuk menyelesaikan materi.
+							</p>
 						</div>
 					</div>
-					
+
 					<div className="bg-base-100 rounded-xl p-6 border border-base-200 shadow-sm">
-						<h4 className="text-lg font-bold mb-6">{popQuizQuestion.questionText}</h4>
-						
-						{popQuizQuestion.type === QuestionType.MULTIPLE_CHOICE ? (
+						<h4 className="text-lg font-bold mb-6">
+							{popQuizQuestion?.questionText}
+						</h4>
+
+						{popQuizQuestion?.type ===
+						QuestionType.MULTIPLE_CHOICE ? (
 							<QuestionMultipleChoice
 								options={popQuizQuestion.options || []}
 								selectedOptionId={selectedOptionId}
 								onSelect={handlePopQuizSubmit}
-								disabled={submitQuizMutation.isPending || hasAnswered}
+								disabled={
+									submitQuizMutation.isPending || hasAnswered
+								}
 							/>
 						) : (
-							<p className="text-error italic">Tipe kuis {popQuizQuestion.type} belum didukung di Pop-Quiz.</p>
+							<p className="text-error italic">
+								Tipe kuis {popQuizQuestion?.type} belum didukung
+								di Pop-Quiz.
+							</p>
 						)}
 					</div>
 				</div>

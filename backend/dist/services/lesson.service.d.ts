@@ -2,7 +2,7 @@ import { type CreateLessonRequest, type LessonResponse } from "../schemas/lesson
 import { type MaterialResponse, type UpdateMaterialRequest } from "../schemas/material.schema.js";
 import { type CreateQuestionWithOptionRequest, type QuestionOptionsResponse, type UpdateQuestioWithOptionsRequest } from "../schemas/question.schema.js";
 export declare class LessonService {
-    static getLessonByModule: (moduleId: string) => Promise<LessonResponse[]>;
+    static getLessonByModule: (moduleId: string, role?: string) => Promise<LessonResponse[]>;
     static getLessonDetail: (lessonId: string, role: string) => Promise<LessonResponse>;
     static createLesson: (moduleId: string, validatedData: CreateLessonRequest) => Promise<LessonResponse>;
     static updateLesson: (lessonId: string, validatedData: any) => Promise<{
@@ -12,6 +12,7 @@ export declare class LessonService {
         lessonSequence: number;
         type: "THEORY" | "QUIZ";
         xpReward: number;
+        isPublished: boolean;
     }>;
     static deleteLesson: (lessonId: string) => Promise<void>;
     static upsertMaterial: (lessonId: string, validatedData: UpdateMaterialRequest) => Promise<MaterialResponse>;
@@ -21,7 +22,7 @@ export declare class LessonService {
         lessonId: string;
         questionText: string;
         xpReward: number;
-        type: "MULTIPLE_CHOICE" | "CALCULATION_INPUT" | "COMMAND_TYPING" | "SORTING" | "MATCHING" | "IMAGE_LABELING";
+        type: "MULTIPLE_CHOICE" | "CALCULATION_INPUT" | "COMMAND_TYPING" | "SORTING" | "MATCHING" | "IMAGE_LABELING" | "TOPOLOGY";
         options: {
             id: string;
             questionId: string;

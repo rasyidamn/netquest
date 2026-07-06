@@ -26,6 +26,7 @@ export const QuestionType = {
     COMMAND_TYPING: 'COMMAND_TYPING',
     SORTING: 'SORTING',
     MATCHING: 'MATCHING',
-    IMAGE_LABELING: 'IMAGE_LABELING'
+    IMAGE_LABELING: 'IMAGE_LABELING',
+    TOPOLOGY: 'TOPOLOGY'
 };
 //# sourceMappingURL=enums.js.map

@@ -23,20 +23,26 @@ export class AuthService {
                     password: true,
                 },
             });
-            const firstLesson = await tx.lesson.findFirstOrThrow({
+            const firstLesson = await tx.lesson.findFirst({
+                where: {
+                    isPublished: true,
+                    module: { isPublished: true },
+                },
                 orderBy: [
                     { module: { sequence: "asc" } },
                     { lessonSequence: "asc" },
                 ],
             });
-            await tx.userProgress.create({
-                data: {
-                    userId: newUser.id,
-                    lessonId: firstLesson?.id,
-                    status: ProgressStatusEnum.ACTIVE,
-                    bestScore: 0,
-                },
-            });
+            if (firstLesson) {
+                await tx.userProgress.create({
+                    data: {
+                        userId: newUser.id,
+                        lessonId: firstLesson.id,
+                        status: ProgressStatusEnum.ACTIVE,
+                        bestScore: 0,
+                    },
+                });
+            }
             return newUser;
         });
         const responseData = UserSchema.REGISTER_RESPONSE.parse(result);

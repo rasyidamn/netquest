@@ -1,15 +1,16 @@
-export const QuestionType = {
-	MULTIPLE_CHOICE: "MULTIPLE_CHOICE",
-	CALCULATION_INPUT: "CALCULATION_INPUT",
-	COMMAND_TYPING: "COMMAND_TYPING",
-	SORTING: "SORTING",
-	MATCHING: "MATCHING",
-	IMAGE_LABELING: "IMAGE_LABELING",
-	TOPOLOGY: "TOPOLOGY",
-} as const;
+export enum QuestionType {
+	MULTIPLE_CHOICE = "MULTIPLE_CHOICE",
+	CALCULATION_INPUT = "CALCULATION_INPUT",
+	COMMAND_TYPING = "COMMAND_TYPING",
+	SORTING = "SORTING",
+	MATCHING = "MATCHING",
+	TOPOLOGY = "TOPOLOGY",
+	RAPID_TRUE_FALSE = "RAPID_TRUE_FALSE",
+	VISUAL_IDENTIFICATION = "VISUAL_IDENTIFICATION",
+}
 
 export interface TheoryDoneResponse {
-	xpGained: number;
+	addedXp: number;
 	currentTotalXp: number;
 }
 
@@ -29,7 +30,7 @@ export interface CompleteQuizResult {
 }
 
 export interface RecoverHeartResult {
-	hearts: number;
-	recoveryCount: number;
-	lastRecoveryDate: string;
+	recovered: number;
+	heartsLeft: number;
+	remainingDailyQuota: number;
 }

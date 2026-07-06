@@ -823,7 +823,9 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export declare const ModuleScalarFieldEnum: {
     readonly id: "id";
     readonly title: "title";
+    readonly description: "description";
     readonly sequence: "sequence";
+    readonly isPublished: "isPublished";
 };
 export type ModuleScalarFieldEnum = (typeof ModuleScalarFieldEnum)[keyof typeof ModuleScalarFieldEnum];
 export declare const LessonScalarFieldEnum: {
@@ -833,6 +835,7 @@ export declare const LessonScalarFieldEnum: {
     readonly lessonSequence: "lessonSequence";
     readonly type: "type";
     readonly xpReward: "xpReward";
+    readonly isPublished: "isPublished";
 };
 export type LessonScalarFieldEnum = (typeof LessonScalarFieldEnum)[keyof typeof LessonScalarFieldEnum];
 export declare const MaterialScalarFieldEnum: {
@@ -917,6 +920,10 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>;
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>;
+/**
  * Reference to a field of type 'LessonTypeEnum'
  */
 export type EnumLessonTypeEnumFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LessonTypeEnum'>;
@@ -932,10 +939,6 @@ export type EnumQuestionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
  * Reference to a field of type 'QuestionType[]'
  */
 export type ListEnumQuestionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QuestionType[]'>;
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>;
 /**
  * Reference to a field of type 'ProgressStatusEnum'
  */
