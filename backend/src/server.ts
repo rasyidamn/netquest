@@ -14,7 +14,7 @@ const start_server = async () => {
 		logger.info("Database berhasil terhubung");
 
 		app.get("/", (req, res) => {
-			res.json({ message: "Hello from Express on Vercel!" });
+			res.json({ message: "Selamat datang di API NetQuest" });
 		});
 
 		app.listen(port, () => {
@@ -26,8 +26,6 @@ const start_server = async () => {
 	}
 };
 
-if (process.env.NODE_ENV !== "production") {
-	start_server();
-}
+start_server();
 
 export default app;
