@@ -14,7 +14,7 @@ import { QuestionVisualIdentification } from "./QuestionVisualIdentification";
 import { QuestionType } from "../types/gameplay.types";
 import { useNavigate } from "@tanstack/react-router";
 import { Heart, XCircle } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
 interface QuizEngineProps {
@@ -23,11 +23,65 @@ interface QuizEngineProps {
 	questions: Question[];
 }
 
+const evaluateAnswerLocal = (question: Question, answerValue: string): boolean => {
+	switch (question.type) {
+		case QuestionType.MULTIPLE_CHOICE:
+		case QuestionType.RAPID_TRUE_FALSE:
+		case QuestionType.VISUAL_IDENTIFICATION:
+			return question.options?.find(opt => opt.id === answerValue)?.isCorrect ?? false;
+		
+		case QuestionType.COMMAND_TYPING: {
+			const correctOpt = question.options?.find(opt => opt.isCorrect);
+			if (!correctOpt) return false;
+			const expected = correctOpt.optionText.trim().toLowerCase();
+			const submitted = answerValue.trim().toLowerCase();
+			return expected === submitted;
+		}
+		
+		case QuestionType.SORTING:
+		case QuestionType.MATCHING: {
+			const correctOpt = question.options?.find(opt => opt.isCorrect);
+			if (!correctOpt) return false;
+			try {
+				const expectedArr = JSON.parse(correctOpt.optionText);
+				const submittedArr = JSON.parse(answerValue);
+				return JSON.stringify(expectedArr) === JSON.stringify(submittedArr);
+			} catch (e) {
+				return false;
+			}
+		}
+		
+		case QuestionType.TOPOLOGY: {
+			const correctOpt = question.options?.find(opt => opt.isCorrect);
+			if (!correctOpt) return false;
+			try {
+				const expectedArr = JSON.parse(correctOpt.optionText) as string[];
+				const submittedArr = JSON.parse(answerValue) as string[];
+				expectedArr.sort();
+				submittedArr.sort();
+				return JSON.stringify(expectedArr) === JSON.stringify(submittedArr);
+			} catch (e) {
+				return false;
+			}
+		}
+		
+		default:
+			return false;
+	}
+};
+
 export function QuizEngine({ lessonId, moduleId, questions }: QuizEngineProps) {
 	const navigate = useNavigate();
 	const { data: user } = useProfile();
 	const currentTotalXp = user?.xp || 0;
-	const currentHearts = user?.hearts ?? 3;
+	
+	const [localHearts, setLocalHearts] = useState(user?.hearts ?? 3);
+
+	useEffect(() => {
+		if (user?.hearts !== undefined) {
+			setLocalHearts(user.hearts);
+		}
+	}, [user?.hearts]);
 
 	const [currentAnswer, setCurrentAnswer] = useState<any>(null);
 	const [attemptKey, setAttemptKey] = useState(0);
@@ -45,46 +99,57 @@ export function QuizEngine({ lessonId, moduleId, questions }: QuizEngineProps) {
 	const currentQuestion = questions[currentQuestionIndex];
 
 	const handleAnswerSubmit = (answerValue: string) => {
-		if (currentHearts <= 0) {
+		if (localHearts <= 0) {
 			toast.error("Nyawa Anda habis! Silakan pulihkan nyawa terlebih dahulu.");
 			return;
 		}
 
 		setCurrentAnswer(answerValue);
 
-		submitQuizMutation.mutate(
-			{ lessonId, questionId: currentQuestion.id, answer: answerValue },
-			{
-				onSuccess: (data) => {
-					recordAnswer(currentQuestion.id, answerValue, data.isCorrect);
-					
-					if (data.isCorrect) {
-						toast.success("Jawaban benar!");
-						setCurrentAnswer(null); // Reset untuk soal berikutnya
-						
+		const isCorrect = evaluateAnswerLocal(currentQuestion, answerValue);
+
+		if (isCorrect) {
+			toast.success("Jawaban benar!");
+			setCurrentAnswer(null);
+
+			if (!isLastQuestion) {
+				setAttemptKey(0);
+				nextQuestion();
+			}
+
+			submitQuizMutation.mutate(
+				{ lessonId, questionId: currentQuestion.id, answer: answerValue },
+				{
+					onSuccess: (data) => {
+						recordAnswer(currentQuestion.id, answerValue, data.isCorrect);
+						setLocalHearts(data.heartsLeft);
 						if (isLastQuestion) {
 							handleCompleteQuiz();
-						} else {
-							setAttemptKey(0); // Reset attempt key untuk pertanyaan selanjutnya
-							nextQuestion();
 						}
-					} else {
-						toast.error(`Jawaban salah! Sisa Nyawa: ${data.heartsLeft}`);
-						setCurrentAnswer(null); // Reset agar bisa coba lagi
-						setAttemptKey(prev => prev + 1); // Reset card / timer
-						
-						if (data.heartsLeft <= 0) {
-							navigate({ to: "/roadmap/$moduleId", params: { moduleId } });
-						}
-					}
-				},
-				onError: (error) => {
-					toast.error(error.message);
-					setCurrentAnswer(null);
-					setAttemptKey(prev => prev + 1);
+					},
 				}
+			);
+		} else {
+			const newHearts = localHearts - 1;
+			setLocalHearts(newHearts);
+			toast.error(`Jawaban salah! Sisa Nyawa: ${newHearts}`);
+			setCurrentAnswer(null);
+			setAttemptKey((prev) => prev + 1);
+
+			if (newHearts <= 0) {
+				navigate({ to: "/roadmap/$moduleId", params: { moduleId } });
 			}
-		);
+
+			submitQuizMutation.mutate(
+				{ lessonId, questionId: currentQuestion.id, answer: answerValue },
+				{
+					onSuccess: (data) => {
+						recordAnswer(currentQuestion.id, answerValue, data.isCorrect);
+						setLocalHearts(data.heartsLeft);
+					},
+				}
+			);
+		}
 	};
 
 	const handleCompleteQuiz = () => {
@@ -129,7 +194,7 @@ export function QuizEngine({ lessonId, moduleId, questions }: QuizEngineProps) {
 
 				<div className="flex items-center gap-2 text-error font-bold text-lg">
 					<Heart fill="currentColor" className="w-6 h-6 animate-pulse" />
-					<span>{currentHearts}</span>
+					<span>{localHearts}</span>
 				</div>
 			</div>
 

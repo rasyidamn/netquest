@@ -86,3 +86,22 @@
 		/* box-shadow: none !important; */
 	}
 }
+
+/* Memperbaiki masalah Loader / loading-spinner yang tidak berputar (statis) */
+@theme {
+	--animate-spin: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.animate-spin,
+.loading-spinner {
+	animation: var(--animate-spin) !important;
+}

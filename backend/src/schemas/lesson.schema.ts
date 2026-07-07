@@ -88,7 +88,7 @@ export class LessonSchema {
 				questions: z.array(
 					QuestionSchema.QUESTION_MODEL.extend({
 						options: z.array(
-							OptionSchema.OPTION_MODEL.omit({ isCorrect: true }),
+							OptionSchema.OPTION_MODEL,
 						),
 					}),
 				).optional(),
@@ -98,7 +98,7 @@ export class LessonSchema {
 				questions: z.array(
 					QuestionSchema.QUESTION_MODEL.extend({
 						options: z.array(
-							OptionSchema.OPTION_MODEL.omit({ isCorrect: true }),
+							OptionSchema.OPTION_MODEL,
 						),
 					}),
 				),
