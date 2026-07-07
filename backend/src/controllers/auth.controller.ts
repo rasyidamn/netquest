@@ -38,10 +38,11 @@ export class AuthController {
 		};
 		const maxAge = maxAgeMap[jwtExpiresIn] || 7 * 24 * 60 * 60 * 1000;
 
+		const isProduction = process.env.NODE_ENV === "production";
 		res.cookie("access_token", token, {
 			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
-			sameSite: "lax",
+			secure: isProduction,
+			sameSite: isProduction ? "none" : "lax",
 			maxAge,
 		});
 
@@ -49,10 +50,11 @@ export class AuthController {
 	});
 
 	static logout = catchAsync(async (_req: Request, res: Response) => {
+		const isProduction = process.env.NODE_ENV === "production";
 		res.clearCookie("access_token", {
 			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
-			sameSite: "lax",
+			secure: isProduction,
+			sameSite: isProduction ? "none" : "lax",
 		});
 		sendSuccess(res, StatusCodes.OK, "Berhasil logout!", null);
 	});
