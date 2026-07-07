@@ -22,4 +22,8 @@ const start_server = async () => {
 	}
 };
 
-start_server();
+if (process.env.NODE_ENV !== "production") {
+	start_server();
+}
+
+export default app;
