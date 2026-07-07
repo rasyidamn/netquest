@@ -7,10 +7,11 @@
 		"seed": "tsx prisma/seed.ts"
 	},
 	"scripts": {
-		"build": "tsc",
-		"start": "node dist/server.js",
-		"dev": "tsx watch src/server.ts"
-	},
+      "build": "tsc",
+      "start": "node dist/server.js",
+      "dev": "tsx watch src/server.ts",
+      "postinstall": "prisma generate"
+   },
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
