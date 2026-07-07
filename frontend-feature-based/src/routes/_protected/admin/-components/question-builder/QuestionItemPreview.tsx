@@ -70,7 +70,7 @@ export const QuestionItemPreview = ({
 						<div className="flex items-center gap-2 mb-2">
 							<div className="badge badge-primary gap-1">
 								{getTypeIcon(q.type)}
-								Soal {idx + 1}
+								Soal {q.questionSequence || idx + 1}
 							</div>
 							<div className="badge badge-ghost text-xs">
 								{q.type}
@@ -115,9 +115,9 @@ export const QuestionItemPreview = ({
 									<div className="w-6 h-6 shrink-0 rounded-full bg-base-100 flex items-center justify-center text-xs font-bold shadow-sm">
 										{String.fromCharCode(65 + oIdx)}
 									</div>
-									<span className="flex-1">
-										{opt.optionText}
-									</span>
+									<div className="flex-1">
+										<PreviewTextOrImage text={opt.optionText} />
+									</div>
 									{opt.isCorrect && (
 										<CheckCircle2 className="w-4 h-4 text-success shrink-0" />
 									)}
@@ -164,6 +164,42 @@ export const QuestionItemPreview = ({
 								return null;
 							})()}
 						</div>
+					) : q.type === "SORTING" ? (
+						<div className="flex flex-col gap-2 bg-base-200/30 p-2 rounded-lg border border-base-200">
+							{(() => {
+								const answerKeyOpt = q.options?.find(
+									(opt: any) => opt.isCorrect,
+								);
+								if (answerKeyOpt) {
+									try {
+										const pattern = JSON.parse(
+											answerKeyOpt.optionText,
+										);
+										return pattern.map(
+											(id: string, i: number) => {
+												const opt = q.options.find(
+													(o: any) => o.id === id,
+												);
+												return (
+													<div
+														key={i}
+														className="flex items-center gap-3 p-2 rounded-md bg-base-100 border shadow-sm text-sm"
+													>
+														<div className="w-6 h-6 rounded-md bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">
+															{i + 1}
+														</div>
+														<div className="flex-1 font-medium">
+															<PreviewTextOrImage text={opt?.optionText || ""} />
+														</div>
+													</div>
+												);
+											},
+										);
+									} catch (e) {}
+								}
+								return null;
+							})()}
+						</div>
 					) : q.type === "TOPOLOGY" || q.type === "VISUAL_IDENTIFICATION" ? (
 						<div className="p-3 rounded-lg border bg-info/10 border-info/30 text-info-content text-sm flex items-center gap-2">
 							<div className="badge badge-info badge-sm">
@@ -177,10 +213,10 @@ export const QuestionItemPreview = ({
 					) : (
 						// Untuk COMMAND_TYPING / CALCULATION_INPUT (Tipe Isian) dsb
 						<div className="p-3 rounded-lg border bg-success/10 border-success/30 text-success-content text-sm flex items-center gap-2">
-							<div className="badge badge-success badge-sm">
+							<div className="badge badge-success badge-sm font-bold">
 								Kunci Jawaban
 							</div>
-							<span className="flex-1 font-mono">
+							<span className="flex-1 font-mono text-base-content">
 								{q.options?.[0]?.optionText || "-"}
 							</span>
 							<CheckCircle2 className="w-4 h-4 shrink-0" />

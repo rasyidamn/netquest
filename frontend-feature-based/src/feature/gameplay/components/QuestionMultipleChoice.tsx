@@ -9,6 +9,29 @@ interface QuestionMultipleChoiceProps {
 	disabled?: boolean;
 }
 
+function MultipleChoiceContentRenderer({ text }: { text: string }) {
+	const imgMatch = text.match(/!\[(.*?)\]\((.*?)\)/);
+	if (imgMatch) {
+		const [, alt, url] = imgMatch;
+		const remainingText = text.replace(imgMatch[0], "").trim();
+		return (
+			<div className="flex flex-col gap-3 w-full">
+				<img
+					src={url}
+					alt={alt || "Option image"}
+					className="w-full max-h-48 object-contain rounded-lg shadow-sm border border-base-300 bg-base-200/50"
+				/>
+				{remainingText && (
+					<span className="font-medium text-lg leading-snug">
+						{remainingText}
+					</span>
+				)}
+			</div>
+		);
+	}
+	return <span className="font-medium text-lg leading-snug">{text}</span>;
+}
+
 export function QuestionMultipleChoice({
 	options,
 	selectedOptionId,
@@ -28,7 +51,7 @@ export function QuestionMultipleChoice({
 						className={clsx(
 							"relative p-4 rounded-xl border-2 text-left transition-all duration-200",
 							"hover:border-primary/50 hover:bg-primary/5 active:scale-95",
-							"flex items-center gap-4 group",
+							"flex items-start gap-4 group w-full",
 							isSelected
 								? "border-primary bg-primary/10 shadow-sm shadow-primary/20"
 								: "border-base-300 bg-base-100",
@@ -36,7 +59,7 @@ export function QuestionMultipleChoice({
 						)}
 					>
 						<div className={clsx(
-							"shrink-0 transition-colors",
+							"shrink-0 transition-colors mt-0.5",
 							isSelected ? "text-primary" : "text-base-content/30 group-hover:text-primary/50"
 						)}>
 							{isSelected ? (
@@ -45,12 +68,12 @@ export function QuestionMultipleChoice({
 								<Circle className="w-6 h-6" />
 							)}
 						</div>
-						<span className={clsx(
-							"font-medium text-lg leading-snug",
+						<div className={clsx(
+							"flex-1 w-full overflow-hidden",
 							isSelected ? "text-primary" : "text-base-content"
 						)}>
-							{option.optionText}
-						</span>
+							<MultipleChoiceContentRenderer text={option.optionText} />
+						</div>
 					</button>
 				);
 			})}

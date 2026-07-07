@@ -6,6 +6,7 @@ import { TopologyFormInput } from "./inputs/TopologyFormInput";
 import { ShortAnswerInput } from "./inputs/ShortAnswerInput";
 import { RapidTrueFalseInput } from "./inputs/RapidTrueFalseInput";
 import { VisualIdentificationInput } from "./inputs/VisualIdentificationInput";
+import clsx from "clsx";
 
 interface QuestionFormModalProps {
 	isModalOpen: boolean;
@@ -101,6 +102,29 @@ export const QuestionFormModal = ({
 								<option value="VISUAL_IDENTIFICATION">Hotspot (Titik Gambar)</option>
 							</select>
 						</div>
+						
+						<div className="form-control w-1/4">
+							<label className="label">
+								<span className="label-text font-bold text-base-content">
+									Urutan Soal
+								</span>
+							</label>
+							<input
+								type="number"
+								min="1"
+								{...register("questionSequence", { valueAsNumber: true })}
+								className={clsx(
+									"input input-bordered w-full bg-base-200/50",
+									errors.questionSequence && "input-error"
+								)}
+								placeholder="Misal: 1"
+							/>
+							{errors.questionSequence && (
+								<span className="text-error text-xs mt-1">
+									{errors.questionSequence.message}
+								</span>
+							)}
+						</div>
 					</div>
 
 					<div className="form-control flex flex-col">
@@ -129,6 +153,9 @@ export const QuestionFormModal = ({
 						<MultipleChoiceInput
 							register={register}
 							errors={errors}
+							setValue={setValue}
+							getValues={getValues}
+							control={control}
 							optionFields={optionFields}
 							appendOption={appendOption}
 							removeOption={removeOption}
@@ -149,6 +176,9 @@ export const QuestionFormModal = ({
 						<SortingInput
 							register={register}
 							errors={errors}
+							setValue={setValue}
+							getValues={getValues}
+							control={control}
 							labelTitle={selectedType === "SORTING" ? "Daftar Jawaban (Urutan Benar)" : "Pasangan Label (Kiri = Pertanyaan, Kanan = Jawaban)"}
 							labelFields={labelFields}
 							appendLabel={appendLabel}

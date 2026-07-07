@@ -80,6 +80,9 @@ export class LessonService {
 				module:true,
 				material: true,
 				questions: {
+					orderBy: {
+						questionSequence: "asc",
+					},
 					include: {
 						options: true,
 					},
@@ -204,6 +207,7 @@ export class LessonService {
 						questionText: validatedData.questionText,
 						xpReward: validatedData.xpReward ?? 15,
 						type: validatedData.type,
+						questionSequence: validatedData.questionSequence,
 					},
 				});
 
@@ -251,6 +255,7 @@ export class LessonService {
 					questionText: validatedData.questionText,
 					xpReward: validatedData.xpReward ?? 15,
 					type: validatedData.type ?? QuestionType.MULTIPLE_CHOICE,
+					questionSequence: validatedData.questionSequence,
 					options: {
 						createMany: {
 							data: validatedData.options || [],
@@ -281,9 +286,9 @@ export class LessonService {
 		const updatePayload: Prisma.QuestionUpdateInput = {
 			questionText:
 				validatedData.questionText ?? existingQuestion.questionText,
-			// Pastikan properti Prisma Anda adalah xp_reward sesuai skema database
 			xpReward: validatedData.xpReward ?? existingQuestion.xpReward,
 			type: validatedData.type ?? existingQuestion.type,
+			questionSequence: validatedData.questionSequence ?? existingQuestion.questionSequence,
 		};
 
 		const updatedQuestion = await prisma.$transaction(async (tx) => {

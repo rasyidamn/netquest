@@ -12,7 +12,7 @@ export const ShortAnswerInput = ({
 	return (
 		<div className="bg-success/5 p-4 rounded-xl border border-success/20">
 			<label className="label pt-0">
-				<span className="label-text font-bold text-success-content">
+				<span className="label-text font-bold text-base-content">
 					Kunci Jawaban Tepat
 				</span>
 			</label>
@@ -31,7 +31,8 @@ export const ShortAnswerInput = ({
 				</span>
 			)}
 			<p className="text-xs text-base-content/50 mt-2">
-				*Jawaban mahasiswa harus sama persis (huruf besar/kecil diabaikan)
+				*Jawaban mahasiswa harus sama persis (huruf besar/kecil
+				diabaikan)
 			</p>
 		</div>
 	);

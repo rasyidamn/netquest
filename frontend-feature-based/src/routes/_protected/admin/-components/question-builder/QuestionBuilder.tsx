@@ -139,10 +139,21 @@ export const QuestionBuilder = ({ lessonId, questions = [] }: QuestionBuilderPro
 		onError: () => toast.error("Gagal menghapus soal"),
 	});
 
+	const usedSequences = questions.map((q) => q.questionSequence || 1);
+
 	const onSubmit = (data: QuestionFormValues) => {
+		const isDuplicate = usedSequences.includes(data.questionSequence) &&
+			(!editingId || questions.find((q) => q.id === editingId)?.questionSequence !== data.questionSequence);
+
+		if (isDuplicate) {
+			toast.error("Urutan soal sudah digunakan. Pilih urutan lain.");
+			return;
+		}
+
 		let payload: any = {
 			questionText: data.questionText,
 			type: data.type,
+			questionSequence: data.questionSequence,
 			xpReward: 0,
 		};
 
@@ -254,13 +265,11 @@ export const QuestionBuilder = ({ lessonId, questions = [] }: QuestionBuilderPro
 				if (answerKeyOpt) {
 					try {
 						const pattern = JSON.parse(answerKeyOpt.optionText);
-						imageLabels = pattern.map((i: number) => {
+						imageLabels = pattern.map((id: string) => {
 							const opt = question.options.find(
-								(o: any) => o.id === question.advancedOptions[i] || o.optionText === question.advancedOptions[i]
+								(o: any) => o.id === id
 							);
-							// Fallback to advancedOptions if option is not found
-							const val = opt?.optionText || (question.advancedOptions && question.advancedOptions[i]) || "";
-							return { value: val };
+							return { value: opt?.optionText || "" };
 						});
 					} catch (e) {}
 				}
@@ -325,6 +334,7 @@ export const QuestionBuilder = ({ lessonId, questions = [] }: QuestionBuilderPro
 
 			reset({
 				type: question.type,
+				questionSequence: question.questionSequence || 1,
 				questionText: question.questionText,
 				options:
 					question.type === "MULTIPLE_CHOICE" ||
@@ -341,9 +351,11 @@ export const QuestionBuilder = ({ lessonId, questions = [] }: QuestionBuilderPro
 				hotspots,
 			});
 		} else {
+			const nextSequence = questions.length > 0 ? Math.max(...questions.map((q: any) => q.questionSequence || 1)) + 1 : 1;
 			setEditingId(null);
 			reset({
 				type: "MULTIPLE_CHOICE",
+				questionSequence: nextSequence,
 				questionText: "",
 				options: [
 					{ optionText: "", isCorrect: true },

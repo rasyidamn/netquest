@@ -107,6 +107,7 @@ model Material {
 model Question {
   id           String       @id @default(uuid()) @db.Uuid
   lessonId     String       @map("lesson_id") @db.Uuid
+  questionSequence Int      @default(1) @map("question_sequence")
   questionText String       @map("question_text") @db.Text
   xpReward     Int          @default(15) @map("xp_reward")
   type         QuestionType @default(MULTIPLE_CHOICE)

@@ -143,9 +143,11 @@ export function QuizEngine({ lessonId, moduleId, questions }: QuizEngineProps) {
 					</span>
 				</div>
 
-				<h2 className="text-2xl sm:text-3xl font-bold text-base-content leading-tight mb-8">
-					{currentQuestion.questionText}
-				</h2>
+				{currentQuestion.type !== QuestionType.RAPID_TRUE_FALSE && (
+					<h2 className="text-2xl sm:text-3xl font-bold text-base-content leading-tight mb-8">
+						{currentQuestion.questionText}
+					</h2>
+				)}
 
 				{/* Dynamic Question Rendering based on Type */}
 				{currentQuestion.type === QuestionType.MULTIPLE_CHOICE && (

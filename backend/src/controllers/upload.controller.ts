@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { cloudinary } from "../configs/cloudinary.config.js";
 import { StatusCodes } from "http-status-codes";
+import crypto from "crypto";
 
 export const uploadImage = async (
 	req: Request,
@@ -15,12 +16,17 @@ export const uploadImage = async (
 			return;
 		}
 
+		// Hitung hash (sidik jari unik) dari isi file untuk mencegah duplikasi di Cloudinary
+		const fileHash = crypto.createHash('md5').update(req.file.buffer).digest('hex');
+
 		// Karena kita menggunakan multer memoryStorage, file ada di req.file.buffer
 		// Kita perlu mengonversinya ke stream agar bisa di-upload ke Cloudinary
 		const uploadStream = cloudinary.uploader.upload_stream(
 			{
 				folder: "netquest", // Folder di Cloudinary
 				resource_type: "image",
+				public_id: fileHash, // Gunakan hash sebagai nama unik file
+				overwrite: true,     // Jika hash sama, timpa gambar lama
 			},
 			(error, result) => {
 				if (error) {

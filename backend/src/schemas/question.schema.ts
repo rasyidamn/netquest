@@ -22,6 +22,11 @@ export class QuestionSchema {
 			.int()
 			.nonnegative("XP tidak boleh negatif")
 			.openapi({ example: 15 }),
+		questionSequence: z
+			.number()
+			.int()
+			.positive("Urutan harus positif")
+			.openapi({ example: 1 }),
 		type: z.enum(QuestionType).openapi({ example: "MULTIPLE_CHOICE" }),
 	});
 
@@ -33,6 +38,7 @@ export class QuestionSchema {
 		questionText: true,
 		xpReward: true,
 		type: true,
+		questionSequence: true,
 	}).extend({
 		options: z.array(
 			OptionSchema.OPTION_MODEL.pick({
@@ -50,7 +56,7 @@ export class QuestionSchema {
 				if (data.type === "MULTIPLE_CHOICE" && (!data.options || data.options.length < 2)) {
 					return false;
 				}
-				if ((data.type === "MATCHING" || data.type === "SORTING" || data.type === "IMAGE_LABELING") && (!data.advancedOptions || !data.answerPattern)) {
+				if ((data.type === "MATCHING" || data.type === "SORTING") && (!data.advancedOptions || !data.answerPattern)) {
 					return false;
 				}
 				return true;

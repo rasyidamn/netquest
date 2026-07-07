@@ -267,24 +267,24 @@ function ModuleAccordion({ module, usedSequences }: { module: any, usedSequences
             ) : (
               <>
                 {lessons.map((lesson: any) => (
-                  <div key={lesson.id} className="flex items-center justify-between p-3 bg-base-100 border border-base-200 rounded-lg hover:border-primary/30 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <div className="w-6 h-6 rounded bg-base-200 flex items-center justify-center text-xs font-bold text-base-content/70">
+                  <div key={lesson.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-base-100 border border-base-200 rounded-lg hover:border-primary/30 transition-colors gap-3">
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <div className="w-6 h-6 rounded bg-base-200 flex items-center justify-center text-xs font-bold text-base-content/70 shrink-0">
                         {lesson.lessonSequence}
                       </div>
-                      <FileText className={clsx("w-4 h-4", lesson.type === 'QUIZ' ? "text-secondary" : "text-info")} />
-                      <span className="font-medium text-sm">{lesson.title}</span>
-                      <span className="badge badge-ghost badge-sm text-[10px] uppercase">{lesson.type}</span>
-                      <span className="badge badge-outline badge-sm text-[10px] gap-1 border-warning/50 text-warning">
-                        <Star className="w-3 h-3 fill-warning" />
+                      <FileText className={clsx("w-4 h-4 shrink-0", lesson.type === 'QUIZ' ? "text-secondary" : "text-info")} />
+                      <span className="font-medium text-sm truncate">{lesson.title}</span>
+                      <span className="badge badge-ghost badge-sm text-[10px] uppercase shrink-0">{lesson.type}</span>
+                      <span className="badge badge-outline badge-sm text-[10px] gap-1 border-warning/50 text-warning shrink-0 whitespace-nowrap px-2">
+                        <Star className="w-3 h-3 fill-warning shrink-0" />
                         {lesson.xpReward} XP
                       </span>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 shrink-0">
                       {lesson.isPublished ? (
-                         <span className="badge badge-success badge-xs">Pub</span>
+                         <span className="badge badge-success badge-sm shrink-0">Pub</span>
                       ) : (
-                         <span className="badge badge-warning badge-xs">Draf</span>
+                         <span className="badge badge-warning badge-sm shrink-0">Draf</span>
                       )}
                       <button 
                         className="btn btn-xs btn-ghost text-base-content/60 hover:text-primary px-2"

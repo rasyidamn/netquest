@@ -1,7 +1,7 @@
 import { useProfile } from "@/feature/auth/hooks";
 import type { MaterialType } from "@/feature/module/schema/material.schema";
 import type { Question } from "@/feature/module/schema/question.schema";
-import { ChevronRight, HeartPulse, BrainCircuit } from "lucide-react";
+import { ChevronRight, HeartPulse, BrainCircuit, BookOpen } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useTheoryDone } from "../hooks/useTheoryDone";
 import { useRecoverHeart } from "../hooks/useRecoverHeart";
@@ -181,17 +181,32 @@ export function TheoryViewer({
 	return (
 		<div className="w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
 			{/* Top Bar: Navigation & Progress Indicator */}
-			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-base-100 p-6 rounded-2xl shadow-sm border border-base-200">
-				<div>
-					<h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-						{title}
-					</h1>
-					<p className="text-base-content/60 mt-1">
-						Pahami materi ini dengan saksama.
-					</p>
+			<div className="relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-6 bg-gradient-to-br from-base-100 to-base-200 p-6 sm:p-8 rounded-3xl shadow-sm border border-base-200/60">
+				{/* Decorative Background Elements */}
+				<div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+				<div className="absolute bottom-0 left-0 w-48 h-48 bg-secondary/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3 pointer-events-none" />
+
+				<div className="flex items-start sm:items-center gap-4 sm:gap-5 relative z-10">
+					<div className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-primary/10 text-primary shadow-inner shrink-0">
+						<BookOpen className="w-6 h-6 sm:w-7 sm:h-7" />
+					</div>
+					<div>
+						<div className="flex items-center gap-2 mb-1.5">
+							<span className="badge badge-primary badge-sm font-bold uppercase tracking-wider text-[10px] border-none bg-primary/20 text-primary">
+								Materi Pembelajaran
+							</span>
+						</div>
+						<h1 className="text-2xl sm:text-5xl font-extrabold text-base-content tracking-tight">
+							{title}
+						</h1>
+						<p className="text-base-content/60 mt-1 text-sm sm:text-base font-medium">
+							Pahami materi ini dengan saksama sebelum lanjut ke misi berikutnya.
+						</p>
+					</div>
 				</div>
+				
 				{user && user.hearts < 3 && (
-					<div className="flex flex-col gap-2">
+					<div className="flex flex-col gap-2 relative z-10 shrink-0">
 						<button
 							onClick={handleRecoverHeart}
 							disabled={
