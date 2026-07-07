@@ -13,8 +13,22 @@ function LessonPage() {
 
 	if (isLoading) {
 		return (
-			<div className="flex items-center justify-center min-h-[60vh]">
-				<span className="loading loading-spinner loading-lg text-primary" />
+			<div className="flex flex-col items-center justify-center min-h-[80vh] gap-8">
+				<div className="relative">
+					{/* Glow Effect (Pulse) */}
+					<div className="absolute inset-0 bg-primary/30 blur-2xl rounded-full animate-pulse" />
+					
+					{/* Bouncing Container with Infinity Loader */}
+					<div className="relative bg-base-100 p-6 rounded-3xl border-2 border-primary/20 shadow-2xl animate-bounce">
+						<span className="loading loading-infinity w-16 h-16 text-primary" />
+					</div>
+				</div>
+				
+				<div className="flex flex-col items-center gap-2">
+					<h3 className="text-xl md:text-2xl font-bold text-base-content/80 tracking-wide animate-pulse">
+						Memuat konten...
+					</h3>
+				</div>
 			</div>
 		);
 	}
