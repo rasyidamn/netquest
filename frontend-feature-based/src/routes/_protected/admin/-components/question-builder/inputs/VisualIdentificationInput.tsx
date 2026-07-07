@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useWatch } from "react-hook-form";
-import { Loader2, Image as ImageIcon, MapPin, X, CheckCircle2 } from "lucide-react";
+import { Loader2, Image as ImageIcon, X, CheckCircle2 } from "lucide-react";
 import { uploadApi } from "@/core/api/upload.api";
 import toast from "react-hot-toast";
 

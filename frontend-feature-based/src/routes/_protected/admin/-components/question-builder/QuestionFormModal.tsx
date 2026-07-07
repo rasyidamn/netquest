@@ -1,4 +1,4 @@
-import { HelpCircle, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { MultipleChoiceInput } from "./inputs/MultipleChoiceInput";
 import { MatchingInputGroup } from "./inputs/MatchingInput";
 import { SortingInput } from "./inputs/SortingInput";
@@ -193,7 +193,6 @@ export const QuestionFormModal = ({
 						/>
 					) : selectedType === "RAPID_TRUE_FALSE" ? (
 						<RapidTrueFalseInput
-							register={register}
 							errors={errors}
 							optionFields={optionFields}
 							setCorrectAnswer={setCorrectAnswer}

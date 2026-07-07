@@ -16,8 +16,6 @@ import { useNavigate } from "@tanstack/react-router";
 import { Heart, XCircle } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { ReactFlow } from "@xyflow/react";
-import { ReactFlowExample } from "./ReactFlowExample";
 
 interface QuizEngineProps {
 	lessonId: string;
@@ -36,7 +34,6 @@ export function QuizEngine({ lessonId, moduleId, questions }: QuizEngineProps) {
 
 	const {
 		currentQuestionIndex,
-		answers,
 		recordAnswer,
 		nextQuestion,
 		isLastQuestion,
@@ -68,6 +65,7 @@ export function QuizEngine({ lessonId, moduleId, questions }: QuizEngineProps) {
 						if (isLastQuestion) {
 							handleCompleteQuiz();
 						} else {
+							setAttemptKey(0); // Reset attempt key untuk pertanyaan selanjutnya
 							nextQuestion();
 						}
 					} else {
@@ -100,7 +98,7 @@ export function QuizEngine({ lessonId, moduleId, questions }: QuizEngineProps) {
 					}
 					navigate({ to: "/roadmap/$moduleId", params: { moduleId } });
 				},
-				onError: (error) => {
+				onError: () => {
 					toast.error("Gagal menyimpan hasil kuis.");
 				}
 			}
@@ -195,10 +193,9 @@ export function QuizEngine({ lessonId, moduleId, questions }: QuizEngineProps) {
 
 				{currentQuestion.type === QuestionType.TOPOLOGY && (
 					<QuestionTopology
-						questionText={currentQuestion.questionText}
 						nodes={currentQuestion.options || []}
 						onSubmit={(answerStr) => handleAnswerSubmit(answerStr)}
-						disabled={isPending}
+						disabled={currentAnswer !== null}
 					/>
 				)}
 
@@ -215,10 +212,9 @@ export function QuizEngine({ lessonId, moduleId, questions }: QuizEngineProps) {
 				{currentQuestion.type === QuestionType.VISUAL_IDENTIFICATION && (
 					<QuestionVisualIdentification
 						key={`${currentQuestion.id}-${attemptKey}`}
-						questionText={currentQuestion.questionText}
 						options={currentQuestion.options || []}
 						onAnswer={(optionIds) => handleAnswerSubmit(optionIds[0])}
-						disabled={isPending}
+						disabled={currentAnswer !== null}
 					/>
 				)}
 

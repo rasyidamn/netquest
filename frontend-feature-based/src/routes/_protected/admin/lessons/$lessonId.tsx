@@ -1,13 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { lessonApi } from "@/feature/module/api/lessonApi";
 import { ChevronLeft, FileEdit, HelpCircle } from "lucide-react";
 import { LessonEditor } from "../-components/LessonEditor";
 import { QuestionBuilder } from "../-components/question-builder/QuestionBuilder";
 import { useState, useEffect } from "react";
 import clsx from "clsx";
 import { useLessonDetail } from "@/feature/module/hooks/useLessonDetail";
-import { useModules } from "@/feature/module/hooks/useModules";
 
 export const Route = createFileRoute("/_protected/admin/lessons/$lessonId")({
 	component: AdminLessonEditorPage,

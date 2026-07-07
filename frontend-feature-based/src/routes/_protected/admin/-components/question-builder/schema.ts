@@ -13,7 +13,7 @@ export const questionFormSchema = z
 			"RAPID_TRUE_FALSE",
 			"VISUAL_IDENTIFICATION",
 		]),
-		questionSequence: z.number({ invalid_type_error: "Urutan harus berupa angka" })
+		questionSequence: z.number({ message: "Urutan harus berupa angka" })
 			.int()
 			.positive("Urutan harus positif"),
 		questionText: z.string().min(5, "Pertanyaan terlalu pendek"),

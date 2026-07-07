@@ -22,7 +22,7 @@ export function ModuleModal({ isOpen, onClose, onSave, initialData, isPending, u
     return z.object({
       title: z.string().min(3, "Judul modul minimal 3 karakter").max(255),
       description: z.string().optional(),
-      sequence: z.number({ invalid_type_error: "Urutan harus berupa angka" }).int().positive("Urutan modul harus dimulai dari 1").refine((val) => {
+      sequence: z.number({ message: "Urutan harus berupa angka" }).int().positive("Urutan modul harus dimulai dari 1").refine((val) => {
         // Jika sedang edit, abaikan sequence miliknya sendiri
         if (initialData && initialData.sequence === val) return true;
         return !usedSequences.includes(val);

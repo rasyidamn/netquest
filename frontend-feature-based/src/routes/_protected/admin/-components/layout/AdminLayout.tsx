@@ -8,7 +8,6 @@ import {
 	LogOut,
 } from "lucide-react";
 import clsx from "clsx";
-import { useAuthStore } from "@/feature/auth/stores/useAuthStore";
 import { useLogout } from "@/feature/auth/hooks/useLogout";
 import { useProfile } from "@/feature/auth/hooks";
 

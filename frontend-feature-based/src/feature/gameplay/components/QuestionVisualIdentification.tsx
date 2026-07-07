@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -9,14 +9,12 @@ interface Option {
 }
 
 interface QuestionVisualIdentificationProps {
-	questionText: string;
 	options: Option[];
 	onAnswer: (optionIds: string[]) => void;
 	disabled?: boolean;
 }
 
 export const QuestionVisualIdentification = ({
-	questionText,
 	options,
 	onAnswer,
 	disabled = false,

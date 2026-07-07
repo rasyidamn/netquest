@@ -1,14 +1,10 @@
-import React from "react";
-
 interface RapidTrueFalseInputProps {
-	register: any;
 	errors: any;
 	optionFields: any[];
 	setCorrectAnswer: (index: number) => void;
 }
 
 export const RapidTrueFalseInput = ({
-	register,
 	errors,
 	optionFields,
 	setCorrectAnswer,

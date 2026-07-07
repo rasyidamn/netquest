@@ -1,4 +1,4 @@
-import { CheckCircle2, Edit2, Link as LinkIcon, Network, Trash2, Calculator, Image, ListChecks, ListOrdered, Terminal, Type, Zap, MapPin } from "lucide-react";
+import { CheckCircle2, Edit2, Link as LinkIcon, Network, Trash2, Calculator, ListChecks, ListOrdered, Terminal, Type, Zap, MapPin } from "lucide-react";
 
 export const PreviewTextOrImage = ({ text }: { text: string }) => {
 	if (!text) return <span>?</span>;

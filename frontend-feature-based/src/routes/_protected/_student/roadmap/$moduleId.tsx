@@ -3,6 +3,7 @@ import { useRoadmap } from "./-hooks/useRoadmap";
 import { Book, Play, ArrowLeft, CheckCircle2, Lock, Sparkles, Star } from "lucide-react";
 import clsx from "clsx";
 import { motion } from "framer-motion";
+import type { Variants } from "framer-motion";
 
 export const Route = createFileRoute(
 	"/_protected/_student/roadmap/$moduleId",
@@ -10,7 +11,7 @@ export const Route = createFileRoute(
 	component: ModuleDetailPage,
 });
 
-const containerVariants = {
+const containerVariants: Variants = {
 	hidden: { opacity: 0 },
 	show: {
 		opacity: 1,
@@ -18,9 +19,13 @@ const containerVariants = {
 	},
 };
 
-const itemVariants = {
-	hidden: { opacity: 0, y: 30 },
-	show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } },
+const itemVariants: Variants = {
+	hidden: { opacity: 0, y: 20 },
+	show: {
+		opacity: 1,
+		y: 0,
+		transition: { type: "spring" as const, stiffness: 300, damping: 24 },
+	},
 };
 
 function ModuleDetailPage() {

@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, useAnimation, useMotionValue, useTransform } from "framer-motion";
 import { Check, X, Timer } from "lucide-react";
 
 interface Option {
 	id: string;
 	optionText: string;
-	isCorrect: boolean;
 }
 
 interface QuestionRapidTrueFalseProps {
@@ -80,7 +79,7 @@ export const QuestionRapidTrueFalse = ({
 		onAnswer([selectedOption.id]);
 	};
 
-	const handleDragEnd = async (e: any, info: any) => {
+	const handleDragEnd = async (_e: any, info: any) => {
 		if (isAnswered) return;
 		
 		const offset = info.offset.x;

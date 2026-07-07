@@ -13,7 +13,7 @@ export const YoutubeEmbedBlock = createReactBlockSpec(
   },
   {
     render: (props) => {
-      const getVideoId = (url) => {
+      const getVideoId = (url: string) => {
         const match = url.match(
           /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?/]+)/
         );
@@ -48,7 +48,7 @@ export const YoutubeEmbedBlock = createReactBlockSpec(
   }
 );
 
-export const insertYoutubeEmbed = (editor) => ({
+export const insertYoutubeEmbed = (editor: any) => ({
   title: "YouTube Embed",
   subtext: "Sisipkan video dari YouTube",
   aliases: ["youtube", "video", "embed", "yt"],

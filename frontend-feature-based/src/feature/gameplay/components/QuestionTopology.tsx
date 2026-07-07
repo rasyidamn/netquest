@@ -20,14 +20,12 @@ const nodeTypes = {
 };
 
 interface QuestionTopologyProps {
-	questionText: string;
 	nodes: any;
 	onSubmit?: (answer: string) => void;
 	disabled?: boolean;
 }
 
 export function QuestionTopology({
-	questionText,
 	nodes: initialNodes,
 	onSubmit,
 	disabled,

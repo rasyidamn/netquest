@@ -7,7 +7,9 @@ export const QuestionType = z.enum([
 	"SORTING",
 	"MATCHING",
 	"IMAGE_LABELING",
-	"TOPOLOGY"
+	"TOPOLOGY",
+	"RAPID_TRUE_FALSE",
+	"VISUAL_IDENTIFICATION",
 ]);
 
 export const OptionModel = z.object({

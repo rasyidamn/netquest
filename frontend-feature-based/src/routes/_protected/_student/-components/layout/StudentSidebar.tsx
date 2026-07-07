@@ -1,11 +1,10 @@
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import type { ComponentType } from "react";
 import { getCurrentRank } from "@/utils/rank.util";
 import { useLogout } from "@/feature/auth/hooks/useLogout";
 import NetQuestLogo from "@/public/netquest-logo.svg?react";
 import { useProfile } from "@/feature/auth/hooks/useProfile";
 import {
-	HistoryIcon,
 	LayoutDashboard,
 	LogOut,
 	MapIcon,
@@ -25,7 +24,6 @@ const MAIN_MENUS: NavigationItem[] = [
 ];
 
 export function StudentSidebar() {
-	const router = useRouter();
 	const { mutate: logout } = useLogout();
 	const { data: user } = useProfile();
 

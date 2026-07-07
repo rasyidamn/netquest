@@ -24,7 +24,7 @@ export function useLogout() {
          return { toastId };
       },
       // onSettled dieksekusi terakhir, entah API berhasil (onSuccess) atau gagal (onError)
-      onSettled: async (data, error, variables, context) => {
+      onSettled: async (_data, error, _variables, context) => {
          // 1. BERSIHKAN STATE DULU (Mencegah bentrok dengan Router Guard)
          clearAuthStore();
          queryClient.clear();
@@ -42,6 +42,6 @@ export function useLogout() {
          
          // Catatan: setLoggingOut(false) mungkin perlu dipanggil jika komponen tidak di-unmount
          setLoggingOut(false); 
-      },
+      }
    });
 }

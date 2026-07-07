@@ -15,7 +15,6 @@ interface SortingInputProps {
 }
 
 const AdminSortingOption = ({
-	field,
 	index,
 	register,
 	errors,

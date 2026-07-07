@@ -20,12 +20,12 @@ export function LessonModal({ isOpen, onClose, onSave, initialData, isPending, u
   const lessonSchema = useMemo(() => {
     return z.object({
       title: z.string().min(3, "Judul misi minimal 3 karakter").max(255),
-      lessonSequence: z.number({ invalid_type_error: "Urutan harus berupa angka" }).int().positive("Urutan harus dimulai dari 1").refine((val) => {
+      lessonSequence: z.number({ message: "Urutan harus berupa angka" }).int().positive("Urutan harus dimulai dari 1").refine((val) => {
         if (initialData && initialData.lessonSequence === val) return true;
         return !usedSequences.includes(val);
       }, { message: "Urutan misi ini sudah digunakan dalam modul ini" }),
       type: z.enum(["THEORY", "QUIZ"]),
-      xpReward: z.number().int().nonnegative("XP tidak boleh negatif"),
+      xpReward: z.number({ message: "XP harus berupa angka" }).int().nonnegative("XP tidak boleh negatif"),
       isPublished: z.boolean(),
     });
   }, [usedSequences, initialData]);
@@ -55,7 +55,7 @@ export function LessonModal({ isOpen, onClose, onSave, initialData, isPending, u
         reset({
           title: initialData.title,
           lessonSequence: initialData.lessonSequence,
-          type: initialData.type,
+          type: initialData.type as "THEORY" | "QUIZ",
           xpReward: initialData.xpReward,
           isPublished: initialData.isPublished,
         });

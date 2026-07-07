@@ -7,21 +7,14 @@ import {
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import React from "react";
-import { Save, AlertCircle } from "lucide-react";
+import { Save } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { lessonApi } from "@/feature/module/api/lessonApi";
 import toast from "react-hot-toast";
 import type { LessonDetailType } from "@/feature/module/schema/lesson.schema";
 import { uploadApi } from "@/core/api/upload.api";
-import {
-	BlockNoteSchema,
-	defaultBlockSpecs,
-	filterSuggestionItems,
-} from "@blocknote/core";
-import {
-	insertYoutubeEmbed,
-	YoutubeEmbedBlock,
-} from "@/utils/YoutubeEmbedBlock";
+import { filterSuggestionItems } from "@blocknote/core";
+import { insertYoutubeEmbed } from "@/utils/YoutubeEmbedBlock";
 import { CustomFormattingToolbar } from "@/utils/CustomFormattingToolbar";
 import { editorSchema } from "@/utils/editorSchema";
 
