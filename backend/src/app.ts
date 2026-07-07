@@ -6,7 +6,7 @@ import { errorMiddleware } from "./middlewares/error.middleware.js";
 import { apiRouter } from "./routes/index.routes.js";
 import { setupSwagger } from "./configs/swagger.config.js";
 
-const app = express();
+export const app = express();
 
 app.use(
 	cors({
@@ -23,5 +23,3 @@ setupSwagger(app);
 app.use("/api", apiRouter);
 
 app.use(errorMiddleware);
-
-export default app;
