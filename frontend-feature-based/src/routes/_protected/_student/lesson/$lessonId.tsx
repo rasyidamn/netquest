@@ -18,9 +18,11 @@ function LessonPage() {
 					{/* Glow Effect (Pulse) */}
 					<div className="absolute inset-0 bg-primary/30 blur-2xl rounded-full animate-pulse" />
 					
-					{/* Bouncing Container with Infinity Loader */}
-					<div className="relative bg-base-100 p-6 rounded-3xl border-2 border-primary/20 shadow-2xl animate-bounce">
-						<span className="loading loading-infinity w-16 h-16 text-primary" />
+					{/* Bouncing Container with Logo Text */}
+					<div className="relative bg-base-100 px-8 py-4 rounded-3xl border-2 border-primary/20 shadow-2xl animate-bounce">
+						<h1 className="text-3xl md:text-4xl font-black text-primary tracking-tighter uppercase" style={{ fontFamily: 'var(--font-oxanium)' }}>
+							Net<span className="text-base-content">Quest</span>
+						</h1>
 					</div>
 				</div>
 				
