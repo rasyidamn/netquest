@@ -72,78 +72,121 @@ export const QuestionFormModal = ({
 }: QuestionFormModalProps) => {
 	if (!isModalOpen) return null;
 
+	const getGuidelines = (type: string) => {
+		switch (type) {
+			case "MULTIPLE_CHOICE":
+				return "Tulis pertanyaan dan tambahkan opsi jawaban. Jangan lupa memilih salah satu opsi sebagai jawaban yang benar menggunakan tombol radio.";
+			case "COMMAND_TYPING":
+				return "Siswa akan diminta mengetik perintah CLI (Command Line Interface). Masukkan sintaks perintah yang benar persis seperti yang harus diketikkan.";
+			case "CALCULATION_INPUT":
+				return "Siswa akan diminta memasukkan jawaban berupa angka atau hasil perhitungan (misal: Subnet mask, jumlah host). Masukkan nilai yang tepat.";
+			case "MATCHING":
+				return "Tambahkan pasangan (Pasangan A dan Pasangan B) yang berhubungan. Sistem akan mengacak urutan secara otomatis saat kuis berlangsung.";
+			case "SORTING":
+				return "Masukkan daftar langkah atau item dalam urutan yang BENAR dari atas ke bawah. Sistem akan mengacaknya secara otomatis untuk siswa.";
+			case "TOPOLOGY":
+				return "Rancang topologi jaringan di kanvas. Tambahkan perangkat dan hubungkan kabel sebagai 'Kunci Jawaban' yang harus ditiru atau dibuat oleh siswa.";
+			case "RAPID_TRUE_FALSE":
+				return "Tambahkan sebuah pernyataan pada opsi. Tentukan apakah pernyataan tersebut bernilai 'Benar' (True) atau 'Salah' (False).";
+			case "VISUAL_IDENTIFICATION":
+				return "Unggah gambar (via URL atau sistem), lalu klik pada gambar untuk menentukan titik koordinat yang benar (Hotspot) yang harus ditebak oleh siswa.";
+			default:
+				return "Silakan lengkapi pengaturan soal ini.";
+		}
+	};
+
 	return (
 		<div className="modal modal-open">
-			<div className="modal-box max-w-3xl bg-base-100">
-				<h3 className="font-black text-xl mb-4 pb-2 border-b border-base-200 text-base-content">
-					{editingId ? "Edit Soal" : "Tambah Soal Baru"}
-				</h3>
+			<div className="modal-box max-w-4xl bg-base-100 shadow-2xl p-0 overflow-hidden">
+				{/* Modal Header */}
+				<div className="bg-base-200/50 px-6 py-4 border-b border-base-200 flex items-center justify-between">
+					<h3 className="font-black text-xl text-base-content">
+						{editingId ? "Edit Soal" : "Tambah Soal Baru"}
+					</h3>
+					<button onClick={closeModal} className="btn btn-sm btn-circle btn-ghost">✕</button>
+				</div>
 
-				<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-						<div className="form-control">
-							<label className="label">
-								<span className="label-text font-bold text-base-content">
-									Tipe Soal
-								</span>
-							</label>
-							<select
-								className="select select-bordered w-full bg-base-200"
-								value={selectedType}
-								onChange={handleTypeChange}
-							>
-								<option value="MULTIPLE_CHOICE">Pilihan Ganda</option>
-								<option value="COMMAND_TYPING">Ketik Perintah (CLI)</option>
-								<option value="CALCULATION_INPUT">Input Kalkulasi/Angka</option>
-								<option value="MATCHING">Menjodohkan (Matching)</option>
-								<option value="SORTING">Urutkan Item (Sorting)</option>
-								<option value="TOPOLOGY">Topologi Jaringan (Canvas)</option>
-								<option value="RAPID_TRUE_FALSE">Swift Card (Benar/Salah)</option>
-								<option value="VISUAL_IDENTIFICATION">Hotspot (Titik Gambar)</option>
-							</select>
-						</div>
+				{/* Modal Body */}
+				<div className="p-6 overflow-y-auto max-h-[calc(100vh-12rem)] custom-scrollbar">
+					<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
 						
-						<div className="form-control w-1/4">
+						{/* Baris Pertama: Tipe Soal & Urutan */}
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-base-200/30 p-4 rounded-xl border border-base-200">
+							<div className="form-control md:col-span-2">
+								<label className="label pt-0">
+									<span className="label-text font-bold text-base-content">
+										Tipe Kuis
+									</span>
+								</label>
+								<select
+									className="select select-bordered w-full bg-base-100 font-medium"
+									value={selectedType}
+									onChange={handleTypeChange}
+								>
+									<option value="MULTIPLE_CHOICE">Pilihan Ganda</option>
+									<option value="COMMAND_TYPING">Ketik Perintah (CLI)</option>
+									<option value="CALCULATION_INPUT">Input Kalkulasi/Angka</option>
+									<option value="MATCHING">Menjodohkan (Matching)</option>
+									<option value="SORTING">Urutkan Item (Sorting)</option>
+									<option value="TOPOLOGY">Topologi Jaringan (Canvas)</option>
+									<option value="RAPID_TRUE_FALSE">Swift Card (Benar/Salah)</option>
+									<option value="VISUAL_IDENTIFICATION">Hotspot (Titik Gambar)</option>
+								</select>
+							</div>
+							
+							<div className="form-control">
+								<label className="label pt-0">
+									<span className="label-text font-bold text-base-content">
+										No. Urut
+									</span>
+								</label>
+								<input
+									type="number"
+									min="1"
+									{...register("questionSequence", { valueAsNumber: true })}
+									className={clsx(
+										"input input-bordered w-full bg-base-100",
+										errors.questionSequence && "input-error"
+									)}
+									placeholder="Misal: 1"
+								/>
+								{errors.questionSequence && (
+									<span className="text-error text-xs mt-1">
+										{errors.questionSequence.message}
+									</span>
+								)}
+							</div>
+						</div>
+
+						{/* Guidelines / Petunjuk Khusus Tipe Soal */}
+						<div className="alert bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 rounded-xl p-4 flex gap-3 shadow-sm">
+							<div className="bg-blue-500/20 p-2 rounded-full shrink-0">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-current shrink-0 w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+							</div>
+							<div>
+								<h4 className="font-bold text-sm mb-1">Petunjuk Admin</h4>
+								<p className="text-sm opacity-90 leading-relaxed">{getGuidelines(selectedType)}</p>
+							</div>
+						</div>
+
+						{/* Input Pertanyaan */}
+						<div className="form-control flex flex-col">
 							<label className="label">
 								<span className="label-text font-bold text-base-content">
-									Urutan Soal
+									Teks Pertanyaan / Instruksi Soal
 								</span>
 							</label>
-							<input
-								type="number"
-								min="1"
-								{...register("questionSequence", { valueAsNumber: true })}
-								className={clsx(
-									"input input-bordered w-full bg-base-200/50",
-									errors.questionSequence && "input-error"
-								)}
-								placeholder="Misal: 1"
+							<textarea
+								{...register("questionText")}
+								className="textarea textarea-bordered w-full h-28 bg-base-100 resize-none font-medium text-base focus:border-primary"
+								placeholder="Tuliskan konteks studi kasus, instruksi soal, atau pertanyaan utama di sini..."
 							/>
-							{errors.questionSequence && (
+							{errors.questionText && (
 								<span className="text-error text-xs mt-1">
-									{errors.questionSequence.message}
+									{errors.questionText.message}
 								</span>
 							)}
 						</div>
-					</div>
-
-					<div className="form-control flex flex-col">
-						<label className="label">
-							<span className="label-text font-bold text-base-content">
-								Pertanyaan
-							</span>
-						</label>
-						<textarea
-							{...register("questionText")}
-							className="textarea textarea-bordered h-24 bg-base-200/50"
-							placeholder="Tulis pertanyaan di sini..."
-						/>
-						{errors.questionText && (
-							<span className="text-error text-xs mt-1">
-								{errors.questionText.message}
-							</span>
-						)}
-					</div>
 
 					<div className="divider text-sm font-bold text-base-content/40">
 						Jawaban & Opsi
@@ -243,6 +286,7 @@ export const QuestionFormModal = ({
 						</button>
 					</div>
 				</form>
+				</div>
 			</div>
 			
 			<form method="dialog" className="modal-backdrop">

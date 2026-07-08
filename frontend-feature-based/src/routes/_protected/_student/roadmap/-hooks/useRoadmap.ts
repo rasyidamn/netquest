@@ -3,12 +3,15 @@ import { useQueries } from "@tanstack/react-query";
 import { useModules } from "@/feature/module/hooks/useModules";
 import { useMyProgress } from "@/feature/progress/hooks/useMyProgress";
 import { moduleApi } from "@/feature/module/api/moduleApi";
+import { useProfile } from "@/feature/auth/hooks/useProfile";
 import type { RoadmapItem, RoadmapStatus } from "../-types/roadmap.type";
 
 
 export function useRoadmap() {
 	const modulesQuery = useModules();
 	const progressQuery = useMyProgress();
+	const { data: user } = useProfile();
+	const isGodMode = user?.nim === "messiugoat";
 
 	const lessonQueries = useQueries({
 		queries: (modulesQuery.data ?? []).map((mod) => ({
@@ -43,6 +46,9 @@ export function useRoadmap() {
 		}
 
 		const getStatusInfo = (index: number, moduleId: string): { status: RoadmapStatus, currentLessonId: string } => {
+			// God Mode Bypass
+			if (isGodMode) return { status: "COMPLETED", currentLessonId: "" };
+
 			// 1. Cek status dari backend progress (sumber kebenaran)
 			const backendData = progressByModuleId.get(moduleId);
 			if (backendData?.status === "COMPLETED") return { status: "COMPLETED", currentLessonId: backendData.currentLessonId };

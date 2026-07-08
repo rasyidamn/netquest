@@ -31,7 +31,7 @@ export const NetworkNode = memo(({ id, data, selected }: NodeProps) => {
 
 	const [isEditing, setIsEditing] = useState(false);
 	const [editValue, setEditValue] = useState(label);
-	const { setNodes } = useReactFlow();
+	const { setNodes, deleteElements } = useReactFlow();
 
 	const handleDoubleClick = () => {
 		if (!isReadOnly) {
@@ -59,6 +59,13 @@ export const NetworkNode = memo(({ id, data, selected }: NodeProps) => {
 		}
 	};
 
+	const handleDelete = (e: React.MouseEvent) => {
+		e.stopPropagation(); // Mencegah deselect node
+		if (!isReadOnly) {
+			deleteElements({ nodes: [{ id }] });
+		}
+	};
+
 	return (
 		<div
 			className={`
@@ -71,6 +78,22 @@ export const NetworkNode = memo(({ id, data, selected }: NodeProps) => {
 		}
       `}
 		>
+			{/* Delete Button (hanya muncul saat dipilih dan mode edit) */}
+			{selected && !isReadOnly && (
+				<button
+					type="button"
+					onClick={handleDelete}
+					className="absolute -top-3 -right-3 p-1.5 bg-rose-500 text-white rounded-full shadow-lg hover:bg-rose-600 hover:scale-110 transition-all z-20 group"
+					title="Hapus Perangkat"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+						<path d="M3 6h18"></path>
+						<path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+						<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+					</svg>
+				</button>
+			)}
+
 			{/* Handles untuk 4 sisi agar lebih luwes */}
 			<Handle type="target" position={Position.Left} id="left-target" />
 			<Handle type="source" position={Position.Left} id="left-source" />

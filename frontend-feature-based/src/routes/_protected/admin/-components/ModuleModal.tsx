@@ -94,14 +94,14 @@ export function ModuleModal({ isOpen, onClose, onSave, initialData, isPending, u
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-base-100 rounded-2xl w-full max-w-md shadow-xl border border-base-200 overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="modal modal-open">
+      <div className="modal-box max-w-md bg-base-100 shadow-2xl p-0 overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-base-200 bg-base-200/30 shrink-0">
+        <div className="bg-base-200/50 px-6 py-4 border-b border-base-200 flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-black text-base-content">
+            <h3 className="font-black text-xl text-base-content">
               {initialData ? "Edit Modul" : "Tambah Modul Baru"}
-            </h2>
+            </h3>
             <p className="text-xs text-base-content/50 mt-0.5">
               {initialData ? "Perbarui informasi modul" : "Isi detail untuk modul baru"}
             </p>
@@ -111,8 +111,9 @@ export function ModuleModal({ isOpen, onClose, onSave, initialData, isPending, u
           </button>
         </div>
 
-        <div className="overflow-y-auto">
-          <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="p-6 space-y-5">
+        {/* Body */}
+        <div className="p-6 overflow-y-auto max-h-[calc(100vh-12rem)] custom-scrollbar">
+          <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-5">
             {/* Judul */}
             <div className="form-control">
               <label className="label pb-1">
@@ -171,18 +172,21 @@ export function ModuleModal({ isOpen, onClose, onSave, initialData, isPending, u
             </div>
 
             {/* Actions */}
-            <div className="flex gap-3 pt-2">
-              <button type="button" onClick={onClose} className="btn flex-1">
+            <div className="modal-action mt-6 pt-4 border-t border-base-200">
+              <button type="button" onClick={onClose} className="btn btn-ghost">
                 Batal
               </button>
-              <button type="submit" className="btn btn-primary flex-1" disabled={isPending}>
-                {isPending && <span className="loading loading-spinner loading-xs" />}
+              <button type="submit" className="btn btn-primary min-w-[120px]" disabled={isPending}>
+                {isPending && <span className="loading loading-spinner loading-xs mr-2" />}
                 Simpan Modul
               </button>
             </div>
           </form>
         </div>
       </div>
+      <form method="dialog" className="modal-backdrop">
+        <button type="button" onClick={onClose}>close</button>
+      </form>
     </div>
   );
 }
