@@ -76,6 +76,7 @@ export function QuestionTopology({
 				label: n.data?.label || n.label || `Device ${index + 1}`,
 				deviceType: n.data?.deviceType || n.deviceType || "default",
 				...n.data,
+				isReadOnly: true, // Paksa mahasiswa tidak bisa edit nama
 			},
 			position: n.position || {
 				x: Math.random() * 300 + 50,
