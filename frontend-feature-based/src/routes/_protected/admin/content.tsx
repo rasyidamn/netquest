@@ -143,9 +143,10 @@ function ModuleAccordion({ module, usedSequences }: { module: any, usedSequences
 
   const updateLessonMutation = useMutation({
     mutationFn: ({ id, data }: { id: string, data: any }) => lessonApi.updateLesson({ id, data }),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['admin-lessons', module.id] })
-      toast.success("Misi diperbarui!")
+      queryClient.invalidateQueries({ queryKey: ['lesson', variables.id] })
+      toast.success("Misi berhasil diperbarui!")
       setIsLessonModalOpen(false)
       setSelectedLesson(null)
     },
