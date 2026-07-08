@@ -42,6 +42,6 @@ apiClient.interceptors.response.use(
 		}
 
 		// 🔥 WAJIB: Teruskan error agar TanStack Query di komponen UI bisa menangkapnya!
-		return Promise.reject(error);
+		return Promise.reject(error || new Error("Terjadi kesalahan yang tidak diketahui."));
 	},
 );

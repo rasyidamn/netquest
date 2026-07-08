@@ -14,7 +14,6 @@ import { Route as ProtectedAdminRouteRouteImport } from './routes/_protected/adm
 import { Route as ProtectedStudentRouteRouteImport } from './routes/_protected/_student/route'
 import { Route as GuestAuthRouteRouteImport } from './routes/_guest.auth/route'
 import { Route as ProtectedAdminIndexRouteImport } from './routes/_protected/admin/index'
-import { Route as GuestAuthIndexRouteImport } from './routes/_guest.auth/index'
 import { Route as ProtectedAdminUsersRouteImport } from './routes/_protected/admin/users'
 import { Route as ProtectedAdminReportsRouteImport } from './routes/_protected/admin/reports'
 import { Route as ProtectedAdminContentRouteImport } from './routes/_protected/admin/content'
@@ -51,11 +50,6 @@ const ProtectedAdminIndexRoute = ProtectedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => ProtectedAdminRouteRoute,
-} as any)
-const GuestAuthIndexRoute = GuestAuthIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => GuestAuthRouteRoute,
 } as any)
 const ProtectedAdminUsersRoute = ProtectedAdminUsersRouteImport.update({
   id: '/users',
@@ -134,7 +128,6 @@ export interface FileRoutesByFullPath {
   '/admin/content': typeof ProtectedAdminContentRoute
   '/admin/reports': typeof ProtectedAdminReportsRoute
   '/admin/users': typeof ProtectedAdminUsersRoute
-  '/auth/': typeof GuestAuthIndexRoute
   '/admin/': typeof ProtectedAdminIndexRoute
   '/lesson/$lessonId': typeof ProtectedStudentLessonLessonIdRoute
   '/roadmap/$moduleId': typeof ProtectedStudentRoadmapModuleIdRoute
@@ -146,12 +139,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof GuestAuthRouteRouteWithChildren
   '/auth/login': typeof GuestAuthLoginRoute
   '/auth/register': typeof GuestAuthRegisterRoute
   '/admin/content': typeof ProtectedAdminContentRoute
   '/admin/reports': typeof ProtectedAdminReportsRoute
   '/admin/users': typeof ProtectedAdminUsersRoute
-  '/auth': typeof GuestAuthIndexRoute
   '/admin': typeof ProtectedAdminIndexRoute
   '/lesson/$lessonId': typeof ProtectedStudentLessonLessonIdRoute
   '/roadmap/$moduleId': typeof ProtectedStudentRoadmapModuleIdRoute
@@ -172,7 +165,6 @@ export interface FileRoutesById {
   '/_protected/admin/content': typeof ProtectedAdminContentRoute
   '/_protected/admin/reports': typeof ProtectedAdminReportsRoute
   '/_protected/admin/users': typeof ProtectedAdminUsersRoute
-  '/_guest/auth/': typeof GuestAuthIndexRoute
   '/_protected/admin/': typeof ProtectedAdminIndexRoute
   '/_protected/_student/lesson/$lessonId': typeof ProtectedStudentLessonLessonIdRoute
   '/_protected/_student/roadmap/$moduleId': typeof ProtectedStudentRoadmapModuleIdRoute
@@ -193,7 +185,6 @@ export interface FileRouteTypes {
     | '/admin/content'
     | '/admin/reports'
     | '/admin/users'
-    | '/auth/'
     | '/admin/'
     | '/lesson/$lessonId'
     | '/roadmap/$moduleId'
@@ -205,12 +196,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/auth/login'
     | '/auth/register'
     | '/admin/content'
     | '/admin/reports'
     | '/admin/users'
-    | '/auth'
     | '/admin'
     | '/lesson/$lessonId'
     | '/roadmap/$moduleId'
@@ -230,7 +221,6 @@ export interface FileRouteTypes {
     | '/_protected/admin/content'
     | '/_protected/admin/reports'
     | '/_protected/admin/users'
-    | '/_guest/auth/'
     | '/_protected/admin/'
     | '/_protected/_student/lesson/$lessonId'
     | '/_protected/_student/roadmap/$moduleId'
@@ -284,13 +274,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof ProtectedAdminIndexRouteImport
       parentRoute: typeof ProtectedAdminRouteRoute
-    }
-    '/_guest/auth/': {
-      id: '/_guest/auth/'
-      path: '/'
-      fullPath: '/auth/'
-      preLoaderRoute: typeof GuestAuthIndexRouteImport
-      parentRoute: typeof GuestAuthRouteRoute
     }
     '/_protected/admin/users': {
       id: '/_protected/admin/users'
@@ -382,13 +365,11 @@ declare module '@tanstack/react-router' {
 interface GuestAuthRouteRouteChildren {
   GuestAuthLoginRoute: typeof GuestAuthLoginRoute
   GuestAuthRegisterRoute: typeof GuestAuthRegisterRoute
-  GuestAuthIndexRoute: typeof GuestAuthIndexRoute
 }
 
 const GuestAuthRouteRouteChildren: GuestAuthRouteRouteChildren = {
   GuestAuthLoginRoute: GuestAuthLoginRoute,
   GuestAuthRegisterRoute: GuestAuthRegisterRoute,
-  GuestAuthIndexRoute: GuestAuthIndexRoute,
 }
 
 const GuestAuthRouteRouteWithChildren = GuestAuthRouteRoute._addFileChildren(

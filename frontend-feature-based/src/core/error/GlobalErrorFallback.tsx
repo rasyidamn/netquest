@@ -13,6 +13,9 @@ export const GlobalErrorFallback = ({
 }: GlobalErrorFallbackProps) => {
 	const router = useRouter();
 
+	// Fallback aman jika error ternyata undefined
+	const safeError = error || new Error("Unknown Error (Undefined ditangkap)");
+
 	const handleReset = () => {
 		// 1. Invalidate router untuk memaksa pemuatan ulang rute dan loader
 		router.invalidate();
@@ -41,10 +44,14 @@ export const GlobalErrorFallback = ({
 					lagi.
 				</p>
 
-				{/* Hanya tampilkan detail error di mode Development (Vite) */}
-				{import.meta.env.VITE_DEV && (
+				{/* Tampilkan detail error */}
+				{import.meta.env.VITE_DEV ? (
 					<pre className="mb-6 max-h-32 overflow-auto rounded-lg bg-gray-200 p-3 text-left text-sm text-gray-800">
-						{error.message}
+						{safeError.message || JSON.stringify(safeError)}
+					</pre>
+				) : (
+					<pre className="mb-6 max-h-32 overflow-auto rounded-lg bg-gray-200 p-3 text-left text-sm text-gray-800">
+						ERROR (Production): {safeError.message || JSON.stringify(safeError)}
 					</pre>
 				)}
 

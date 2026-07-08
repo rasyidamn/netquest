@@ -1,14 +1,18 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import type { MyRouterContext } from "./__root";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { useAuthStore } from "@/feature/auth/stores/useAuthStore";
 
 export const Route = createFileRoute("/")({
-	beforeLoad: ({ context }: { context: MyRouterContext }) => {
-		const store = context.auth.getState();
-		if (!store.isAuthenticated) {
-			throw redirect({ to: "/auth" });
-		}
-		if (store.role === "ADMIN") throw redirect({ to: "/admin" });
-		throw redirect({ to: "/dashboard" });
-	},
-	component: () => null,
+	component: IndexPage,
 });
+
+function IndexPage() {
+	const store = useAuthStore();
+
+	if (!store.isAuthenticated) {
+		return <Navigate to="/auth/login" replace />;
+	}
+	if (store.role === "ADMIN") {
+		return <Navigate to="/admin" replace />;
+	}
+	return <Navigate to="/dashboard" replace />;
+}
