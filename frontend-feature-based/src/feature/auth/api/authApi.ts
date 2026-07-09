@@ -31,4 +31,12 @@ export const authApi = {
 		const response = await apiClient.get("/auth/profile");
 		return response.data;
 	},
+
+	updateProfile: async (data: {
+		name?: string;
+		password?: string;
+	}): Promise<ApiResponse<UserWithoutPassword>> => {
+		const response = await apiClient.put("/auth/profile", data);
+		return response.data;
+	},
 };

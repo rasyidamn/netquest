@@ -20,6 +20,7 @@ import { Route as ProtectedAdminContentRouteImport } from './routes/_protected/a
 import { Route as GuestAuthRegisterRouteImport } from './routes/_guest.auth/register'
 import { Route as GuestAuthLoginRouteImport } from './routes/_guest.auth/login'
 import { Route as ProtectedStudentRoadmapIndexRouteImport } from './routes/_protected/_student/roadmap/index'
+import { Route as ProtectedStudentProfileIndexRouteImport } from './routes/_protected/_student/profile/index'
 import { Route as ProtectedStudentLeaderboardIndexRouteImport } from './routes/_protected/_student/leaderboard/index'
 import { Route as ProtectedStudentHistoryIndexRouteImport } from './routes/_protected/_student/history/index'
 import { Route as ProtectedStudentDashboardIndexRouteImport } from './routes/_protected/_student/dashboard/index'
@@ -82,6 +83,12 @@ const ProtectedStudentRoadmapIndexRoute =
     path: '/roadmap/',
     getParentRoute: () => ProtectedStudentRouteRoute,
   } as any)
+const ProtectedStudentProfileIndexRoute =
+  ProtectedStudentProfileIndexRouteImport.update({
+    id: '/profile/',
+    path: '/profile/',
+    getParentRoute: () => ProtectedStudentRouteRoute,
+  } as any)
 const ProtectedStudentLeaderboardIndexRoute =
   ProtectedStudentLeaderboardIndexRouteImport.update({
     id: '/leaderboard/',
@@ -135,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof ProtectedStudentDashboardIndexRoute
   '/history/': typeof ProtectedStudentHistoryIndexRoute
   '/leaderboard/': typeof ProtectedStudentLeaderboardIndexRoute
+  '/profile/': typeof ProtectedStudentProfileIndexRoute
   '/roadmap/': typeof ProtectedStudentRoadmapIndexRoute
 }
 export interface FileRoutesByTo {
@@ -152,6 +160,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof ProtectedStudentDashboardIndexRoute
   '/history': typeof ProtectedStudentHistoryIndexRoute
   '/leaderboard': typeof ProtectedStudentLeaderboardIndexRoute
+  '/profile': typeof ProtectedStudentProfileIndexRoute
   '/roadmap': typeof ProtectedStudentRoadmapIndexRoute
 }
 export interface FileRoutesById {
@@ -172,6 +181,7 @@ export interface FileRoutesById {
   '/_protected/_student/dashboard/': typeof ProtectedStudentDashboardIndexRoute
   '/_protected/_student/history/': typeof ProtectedStudentHistoryIndexRoute
   '/_protected/_student/leaderboard/': typeof ProtectedStudentLeaderboardIndexRoute
+  '/_protected/_student/profile/': typeof ProtectedStudentProfileIndexRoute
   '/_protected/_student/roadmap/': typeof ProtectedStudentRoadmapIndexRoute
 }
 export interface FileRouteTypes {
@@ -192,6 +202,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/history/'
     | '/leaderboard/'
+    | '/profile/'
     | '/roadmap/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -209,6 +220,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/history'
     | '/leaderboard'
+    | '/profile'
     | '/roadmap'
   id:
     | '__root__'
@@ -228,6 +240,7 @@ export interface FileRouteTypes {
     | '/_protected/_student/dashboard/'
     | '/_protected/_student/history/'
     | '/_protected/_student/leaderboard/'
+    | '/_protected/_student/profile/'
     | '/_protected/_student/roadmap/'
   fileRoutesById: FileRoutesById
 }
@@ -317,6 +330,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedStudentRoadmapIndexRouteImport
       parentRoute: typeof ProtectedStudentRouteRoute
     }
+    '/_protected/_student/profile/': {
+      id: '/_protected/_student/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof ProtectedStudentProfileIndexRouteImport
+      parentRoute: typeof ProtectedStudentRouteRoute
+    }
     '/_protected/_student/leaderboard/': {
       id: '/_protected/_student/leaderboard/'
       path: '/leaderboard'
@@ -382,6 +402,7 @@ interface ProtectedStudentRouteRouteChildren {
   ProtectedStudentDashboardIndexRoute: typeof ProtectedStudentDashboardIndexRoute
   ProtectedStudentHistoryIndexRoute: typeof ProtectedStudentHistoryIndexRoute
   ProtectedStudentLeaderboardIndexRoute: typeof ProtectedStudentLeaderboardIndexRoute
+  ProtectedStudentProfileIndexRoute: typeof ProtectedStudentProfileIndexRoute
   ProtectedStudentRoadmapIndexRoute: typeof ProtectedStudentRoadmapIndexRoute
 }
 
@@ -391,6 +412,7 @@ const ProtectedStudentRouteRouteChildren: ProtectedStudentRouteRouteChildren = {
   ProtectedStudentDashboardIndexRoute: ProtectedStudentDashboardIndexRoute,
   ProtectedStudentHistoryIndexRoute: ProtectedStudentHistoryIndexRoute,
   ProtectedStudentLeaderboardIndexRoute: ProtectedStudentLeaderboardIndexRoute,
+  ProtectedStudentProfileIndexRoute: ProtectedStudentProfileIndexRoute,
   ProtectedStudentRoadmapIndexRoute: ProtectedStudentRoadmapIndexRoute,
 }
 

@@ -111,4 +111,31 @@ export class AuthService {
 		const responseData = UserSchema.GET_PROFILE_RESPONSE.parse(user);
 		return responseData;
 	};
+
+	static updateProfile = async (
+		userId: string,
+		data: { name?: string; password?: string }
+	) => {
+		const user = await prisma.user.findUnique({
+			where: { id: userId },
+		});
+
+		if (!user) {
+			throw new ApiError(StatusCodes.NOT_FOUND, "User tidak ditemukan!");
+		}
+
+		const updateData: any = {};
+		if (data.name) updateData.name = data.name;
+		
+		if (data.password && data.password.trim() !== "") {
+			updateData.password = await bcrypt.hash(data.password, 10);
+		}
+
+		const updatedUser = await prisma.user.update({
+			where: { id: userId },
+			data: updateData,
+		});
+
+		return UserSchema.GET_PROFILE_RESPONSE.parse(updatedUser);
+	};
 }

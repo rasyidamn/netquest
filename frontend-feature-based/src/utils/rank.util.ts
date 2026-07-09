@@ -26,15 +26,17 @@ export const RANKS: RankTier[] = [
 	{ level: 8, title: "Cloud Commander", colorClass: "text-accent" },
 	{ level: 9, title: "Protocol Master", colorClass: "text-info" },
 	{ level: 10, title: "Internet Legend", colorClass: "text-warning" },
+	{ level: 11, title: "GOAT 🐐", colorClass: "text-error drop-shadow-[0_0_10px_rgba(255,0,0,0.8)]" },
 ];
 
 /**
  * Mendapatkan Pangkat saat ini berdasarkan total XP — level dihitung via rumus backend
  */
 export const getCurrentRank = (totalXp: number): RankTier => {
-	const level = Math.floor(Math.sqrt(totalXp / 100)) + 1;
+	if (totalXp >= 9999) return RANKS[10];
+	const level = Math.floor(Math.sqrt(totalXp / 30)) + 1;
 	// Cari rank terdekat yang levelnya <= level hasil perhitungan
-	const rankIndex = Math.min(level - 1, RANKS.length - 1);
+	const rankIndex = Math.min(level - 1, 9);
 	return RANKS[rankIndex];
 };
 
@@ -50,8 +52,9 @@ export const getRankProgress = (totalXp: number): RankProgress => {
 
 	// Gunakan rumus backend untuk threshold XP
 	const getThresholdForLevel = (level: number): number => {
+		if (level >= 11) return 9999;
 		if (level <= 1) return 0;
-		return Math.pow(level - 1, 2) * 100;
+		return Math.pow(level - 1, 2) * 30;
 	};
 
 	const currentThreshold = getThresholdForLevel(currentRank.level);

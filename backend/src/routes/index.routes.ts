@@ -6,6 +6,8 @@ import { gameplayRouter } from "./gameplay.routes.js";
 import { progressRouter } from "./progress.routes.js";
 import { leaderboardRouter } from "./leaderboard.routes.js";
 import { uploadRouter } from "./upload.routes.js";
+import { userRouter } from "./user.routes.js";
+import adminDashboardRouter from "./admin-dashboard.routes.js";
 
 export const apiRouter = Router();
 
@@ -16,3 +18,5 @@ apiRouter.use("/gameplay", gameplayRouter);
 apiRouter.use("/progress", progressRouter);
 apiRouter.use("/leaderboard", leaderboardRouter);
 apiRouter.use("/upload", uploadRouter);
+apiRouter.use("/users", userRouter);
+apiRouter.use("/admin-dashboard", adminDashboardRouter);

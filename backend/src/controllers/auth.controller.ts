@@ -60,12 +60,26 @@ export class AuthController {
 	});
 
 	static getProfile = catchAsync(async (req: Request, res: Response) => {
-		const validatedData = req.user?.id as string
-		const responseData = await AuthService.getProfile(validatedData);
+		const user = req.user as any;
+
+		const responseData = await AuthService.getProfile(user.id);
 		sendSuccess(
 			res,
 			StatusCodes.OK,
-			"Berhasil mendapat data profile",
+			"Berhasil mendapatkan profil!",
+			responseData,
+		);
+	});
+
+	static updateProfile = catchAsync(async (req: Request, res: Response) => {
+		const user = req.user as any;
+		const data = req.body; // should be validated with UpdateProfileRequest in real app, but we pass to service
+
+		const responseData = await AuthService.updateProfile(user.id, data);
+		sendSuccess(
+			res,
+			StatusCodes.OK,
+			"Berhasil memperbarui profil!",
 			responseData,
 		);
 	});

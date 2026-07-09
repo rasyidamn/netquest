@@ -42,7 +42,13 @@ export class UserSchema {
 	static readonly GET_PROFILE_RESPONSE = this.USER_MODEL.omit({
 		password: true,
 	});
+	static readonly UPDATE_PROFILE_REQUEST = z.object({
+		name: z.string().min(3).optional(),
+		password: z.string().min(8).optional().or(z.literal("")),
+	});
 }
+
+export type UpdateProfileRequest = z.infer<typeof UserSchema.UPDATE_PROFILE_REQUEST>;
 
 export type RegisterRequest = z.infer<typeof UserSchema.REGISTER_REQUEST>;
 export type RegisterResponse = z.infer<typeof UserSchema.REGISTER_RESPONSE>;

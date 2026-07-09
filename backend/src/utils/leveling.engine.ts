@@ -7,13 +7,16 @@ type GetProgressStatsType = {
 };
 
 export class LevelingEngine {
-	private static readonly BASE_EXP = 100;
+	private static readonly BASE_EXP = 30;
 
 	static calculateLevel = (totalXp: number): number => {
-		return Math.floor(Math.sqrt(totalXp / this.BASE_EXP)) + 1;
+		if (totalXp >= 9999) return 11;
+		const level = Math.floor(Math.sqrt(totalXp / this.BASE_EXP)) + 1;
+		return Math.min(level, 10);
 	};
 
 	static getXpThresholdForLevel = (level: number): number => {
+		if (level >= 11) return 9999;
 		if (level <= 1) return 0;
 		return Math.pow(level - 1, 2) * this.BASE_EXP;
 	};

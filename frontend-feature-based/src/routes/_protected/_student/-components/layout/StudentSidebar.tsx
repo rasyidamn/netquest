@@ -85,10 +85,10 @@ export function StudentSidebar() {
 				<ul className="menu mt-auto w-full border-t border-white/5 pb-4 pt-4 px-3 relative z-10 bg-gradient-to-t from-base-300/30 to-transparent">
 					<li className="mb-2">
 						<Link
-							to="/auth"
+							to="/profile"
 							activeProps={{
 								className:
-									"bg-base-100/50 border-white/10 shadow-sm",
+									"bg-base-100/50 border-white/10 shadow-sm pointer-events-none",
 							}}
 							className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex items-center is-drawer-close:justify-center is-drawer-open:justify-start gap-x-4 py-3 px-3 rounded-2xl border border-transparent hover:bg-base-100/30 hover:border-white/5 transition-all duration-300"
 							data-tip="Identitas Pemain"
