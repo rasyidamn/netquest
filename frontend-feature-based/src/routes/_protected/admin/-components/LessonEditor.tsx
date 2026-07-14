@@ -17,8 +17,11 @@ import { filterSuggestionItems } from "@blocknote/core";
 import { insertYoutubeEmbed } from "@/utils/YoutubeEmbedBlock";
 import { CustomFormattingToolbar } from "@/utils/CustomFormattingToolbar";
 import { editorSchema } from "@/utils/editorSchema";
+import { useThemeStore } from "@/core/store/useThemeStore";
 
 export function LessonEditor({ lesson }: { lesson: LessonDetailType }) {
+	const { theme } = useThemeStore();
+	const bnTheme = theme === "dark" ? "dark" : "light";
 	const queryClient = useQueryClient();
 
 	const initialContent = React.useMemo(() => {
@@ -109,7 +112,7 @@ export function LessonEditor({ lesson }: { lesson: LessonDetailType }) {
 					<BlockNoteView
 						editor={editor}
 						slashMenu={false}
-						theme={"dark"}
+						theme={bnTheme}
 						formattingToolbar={false}
 					>
 						<SuggestionMenuController
@@ -142,6 +145,10 @@ export function LessonEditor({ lesson }: { lesson: LessonDetailType }) {
 					background-color: transparent !important;
 				}
 				.bn-container[data-theme="dark"] {
+					--bn-colors-editor-text: oklch(var(--bc)) !important;
+					--bn-colors-editor-background: transparent !important;
+				}
+				.bn-container[data-theme="light"] {
 					--bn-colors-editor-text: oklch(var(--bc)) !important;
 					--bn-colors-editor-background: transparent !important;
 				}

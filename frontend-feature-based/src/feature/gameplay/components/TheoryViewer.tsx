@@ -14,6 +14,7 @@ import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import { editorSchema } from "@/utils/editorSchema";
+import { useThemeStore } from "@/core/store/useThemeStore";
 
 interface TheoryViewerProps {
 	lessonId: string;
@@ -32,6 +33,8 @@ export function TheoryViewer({
 }: TheoryViewerProps) {
 	const navigate = useNavigate();
 	const { data: user } = useProfile();
+	const { theme } = useThemeStore();
+	const bnTheme = theme === "dark" ? "dark" : "light";
 	const theoryDoneMutation = useTheoryDone();
 	const recoverHeartMutation = useRecoverHeart();
 	const submitQuizMutation = useSubmitQuiz();
@@ -231,7 +234,7 @@ export function TheoryViewer({
 
 			{/* Content Area */}
 			<div className="bg-base-100 p-6 sm:p-8 rounded-2xl shadow-sm border border-base-200 blocknote-theme-container">
-				<BlockNoteView editor={editor} editable={false} theme="dark" />
+				<BlockNoteView editor={editor} editable={false} theme={bnTheme} />
 			</div>
 
 			<style
@@ -246,6 +249,10 @@ export function TheoryViewer({
 					padding-inline: 0 !important;
 				}
 				.bn-container[data-theme="dark"] {
+					--bn-colors-editor-text: oklch(var(--bc)) !important;
+					--bn-colors-editor-background: transparent !important;
+				}
+				.bn-container[data-theme="light"] {
 					--bn-colors-editor-text: oklch(var(--bc)) !important;
 					--bn-colors-editor-background: transparent !important;
 				}

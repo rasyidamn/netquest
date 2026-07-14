@@ -10,6 +10,7 @@ import {
 import clsx from "clsx";
 import { useLogout } from "@/feature/auth/hooks/useLogout";
 import { useProfile } from "@/feature/auth/hooks";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 const ADMIN_MENUS = [
 	{
@@ -61,6 +62,9 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
 					</div>
 					<div className="flex-1 px-2 mx-2 font-bold text-xl text-primary">
 						Admin Panel
+					</div>
+					<div className="flex-none">
+						<ThemeToggle />
 					</div>
 				</div>
 
@@ -120,6 +124,11 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
 
 					{/* Sidebar Footer (Profile / Logout) */}
 					<div className="mt-8 border-t border-base-200 pt-6 px-2 space-y-4">
+						{/* Theme Toggle Row */}
+						<div className="flex items-center justify-between px-2">
+							<span className="text-xs font-bold text-base-content/50 uppercase tracking-wider">Tampilan</span>
+							<ThemeToggle />
+						</div>
 						<div className="flex items-center gap-3 px-2">
 							<div className="avatar placeholder">
 								<div className="bg-neutral text-neutral-content rounded-full w-10">
