@@ -6,6 +6,7 @@ import {
 	ProgressStatusEnum,
 	QuestionType,
 } from "../generated/prisma/enums.js";
+import { isDemoUser } from "../utils/demo-mode.util.js";
 import type {
 	CompleteQuizRequest,
 	RecoverHeartRequest,
@@ -117,19 +118,20 @@ export class GameplayService {
 			});
 			if (!user) throw new ApiError(StatusCodes.UNAUTHORIZED, "Sesi tidak valid. Silakan login kembali.");
 
-			const newTotalXp = user.xp + lesson.xpReward;
+			// Demo Mode: akun demo tidak mendapatkan XP
+			const isDemo = isDemoUser(user.nim);
+			const xpToAdd = isDemo ? 0 : lesson.xpReward;
+			const newTotalXp = user.xp + xpToAdd;
 
-			await tx.user.update({
-				where: {
-					id: userId,
-				},
-				data: {
-					xp: newTotalXp,
-				},
-			});
+			if (!isDemo) {
+				await tx.user.update({
+					where: { id: userId },
+					data: { xp: newTotalXp },
+				});
+			}
 
 			return {
-				addedXp: lesson.xpReward,
+				addedXp: xpToAdd,
 				currentTotalXp: newTotalXp,
 			};
 		});
@@ -275,12 +277,13 @@ export class GameplayService {
 			let addedXp = 0;
 			let currentHearts = currentUser.hearts;
 
+			const isDemo = isDemoUser(currentUser.nim);
+
 			if (isAnswerCorrect) {
-				// Frontend akan menyimpan XP ini sementara di memory (Zustand)
-				// Tetap kembalikan addedXp = 0 jika kuis sudah completed (anti farming)
-				addedXp = isAlreadyCompleted ? 0 : question.xpReward;
+				// Demo mode: tidak ada XP. Normal: 0 jika sudah completed (anti farming)
+				addedXp = (isAlreadyCompleted || isDemo) ? 0 : question.xpReward;
 			} else {
-				// Jika salah dan belum completed, langsung kurangi nyawa di database
+				// Jika salah, belum completed: kurangi nyawa (berlaku untuk demo maupun normal)
 				if (!isAlreadyCompleted) {
 					currentHearts = Math.max(0, currentUser.hearts - 1);
 					await tx.user.update({
@@ -289,8 +292,8 @@ export class GameplayService {
 							hearts: currentHearts,
 							heartsUpdatedAt:
 								currentUser.hearts === 3
-									? new Date() // Mulai timer dari detik ini jika sebelumnya penuh
-									: currentUser.heartsUpdatedAt, // Lanjutkan progress timer jika sudah berjalan
+									? new Date()
+									: currentUser.heartsUpdatedAt,
 						},
 					});
 				}
@@ -347,8 +350,9 @@ export class GameplayService {
 			const isAlreadyCompleted = currentProgress?.status === ProgressStatusEnum.COMPLETED;
 			let addedXp = 0;
 
-			// 3. INJEKSI XP KE PROFIL (Hanya jika belum pernah selesai)
-			if (!isAlreadyCompleted) {
+			// 3. INJEKSI XP KE PROFIL (Hanya jika belum selesai dan bukan akun demo)
+			const isDemo = isDemoUser(currentUser.nim);
+			if (!isAlreadyCompleted && !isDemo) {
 				addedXp = lesson.xpReward;
 				await tx.user.update({
 					where: { id: userId },

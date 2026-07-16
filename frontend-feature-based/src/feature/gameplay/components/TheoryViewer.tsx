@@ -6,7 +6,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useTheoryDone } from "../hooks/useTheoryDone";
 import { useRecoverHeart } from "../hooks/useRecoverHeart";
 import { useSubmitQuiz } from "../hooks/useSubmitQuiz";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import toast from "react-hot-toast";
 import { QuestionMultipleChoice } from "./QuestionMultipleChoice";
 import { QuestionType } from "../types/gameplay.types";
@@ -39,7 +39,6 @@ export function TheoryViewer({
 	const recoverHeartMutation = useRecoverHeart();
 	const submitQuizMutation = useSubmitQuiz();
 
-	const [readSeconds, setReadSeconds] = useState(0);
 	const [isPopQuizPassed, setIsPopQuizPassed] = useState(false);
 	// Bug Fix #1 & #2: Track selected answer and lock options after first click
 	const [selectedOptionId, setSelectedOptionId] = useState<string | null>(
@@ -75,10 +74,6 @@ export function TheoryViewer({
 	const goBack = () =>
 		navigate({ to: "/roadmap/$moduleId", params: { moduleId } });
 
-	useEffect(() => {
-		const timer = setInterval(() => setReadSeconds((s) => s + 1), 1000);
-		return () => clearInterval(timer);
-	}, []);
 
 	const handleComplete = () => {
 		theoryDoneMutation.mutate(
@@ -110,13 +105,8 @@ export function TheoryViewer({
 	};
 
 	const handleRecoverHeart = () => {
-		if (readSeconds < 60) {
-			toast.error("Baca materi minimal 60 detik untuk memulihkan nyawa.");
-			return;
-		}
-
 		recoverHeartMutation.mutate(
-			{ lessonId, readDuration: readSeconds },
+			{ lessonId, readDuration: 0 },
 			{
 				onSuccess: (data) => {
 					toast.success(
@@ -212,10 +202,7 @@ export function TheoryViewer({
 					<div className="flex flex-col gap-2 relative z-10 shrink-0">
 						<button
 							onClick={handleRecoverHeart}
-							disabled={
-								recoverHeartMutation.isPending ||
-								readSeconds < 60
-							}
+							disabled={recoverHeartMutation.isPending}
 							className="btn btn-outline btn-error btn-sm sm:btn-md group relative overflow-hidden"
 						>
 							<HeartPulse className="w-4 h-4 group-hover:scale-110 transition-transform" />
@@ -223,11 +210,6 @@ export function TheoryViewer({
 								? "Memulihkan..."
 								: "Pulihkan Nyawa"}
 						</button>
-						{readSeconds < 60 && (
-							<span className="text-xs text-error/80 text-center">
-								Tunggu {60 - readSeconds}s lagi
-							</span>
-						)}
 					</div>
 				)}
 			</div>
@@ -306,7 +288,7 @@ export function TheoryViewer({
 					<button
 						onClick={handleComplete}
 						disabled={theoryDoneMutation.isPending}
-						className="btn btn-primary btn-lg rounded-full px-8 shadow-lg shadow-primary/20 hover:scale-105 transition-all animate-in fade-in zoom-in duration-300"
+						className="btn btn-primary btn-lg font-bold text-base gap-2 hover:scale-[1.02] active:scale-100 transition-transform disabled:opacity-50"
 					>
 						{theoryDoneMutation.isPending ? (
 							<span className="loading loading-spinner" />

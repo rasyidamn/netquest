@@ -13,9 +13,10 @@ import { QuestionRapidTrueFalse } from "./QuestionRapidTrueFalse";
 import { QuestionVisualIdentification } from "./QuestionVisualIdentification";
 import { QuestionType } from "../types/gameplay.types";
 import { useNavigate } from "@tanstack/react-router";
-import { Heart, XCircle } from "lucide-react";
+import { Heart, XCircle, Zap } from "lucide-react";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import { isDemoUser } from "@/utils/demoMode";
 
 interface QuizEngineProps {
 	lessonId: string;
@@ -74,6 +75,7 @@ export function QuizEngine({ lessonId, moduleId, questions }: QuizEngineProps) {
 	const navigate = useNavigate();
 	const { data: user } = useProfile();
 	const currentTotalXp = user?.xp || 0;
+	const isDemo = isDemoUser(user?.nim);
 	
 	const [localHearts, setLocalHearts] = useState(user?.hearts ?? 3);
 
@@ -130,25 +132,45 @@ export function QuizEngine({ lessonId, moduleId, questions }: QuizEngineProps) {
 				}
 			);
 		} else {
-			const newHearts = localHearts - 1;
-			setLocalHearts(newHearts);
-			toast.error(`Jawaban salah! Sisa Nyawa: ${newHearts}`);
+			// Kita serahkan perhitungan nyawa sebenarnya ke backend, karena backend tahu apakah quiz ini sudah 'completed' atau belum.
 			setCurrentAnswer(null);
 			setAttemptKey((prev) => prev + 1);
-
-			if (newHearts <= 0) {
-				navigate({ to: "/roadmap/$moduleId", params: { moduleId } });
-			}
 
 			submitQuizMutation.mutate(
 				{ lessonId, questionId: currentQuestion.id, answer: answerValue },
 				{
 					onSuccess: (data) => {
 						recordAnswer(currentQuestion.id, answerValue, data.isCorrect);
+						
+						if (data.heartsLeft < localHearts) {
+							toast.error(`Jawaban salah! Sisa Nyawa: ${data.heartsLeft}`);
+						} else {
+							toast.error(`Jawaban salah! (Nyawa aman karena kuis sudah selesai)`);
+						}
+
 						setLocalHearts(data.heartsLeft);
+
+						if (data.heartsLeft <= 0 && !isDemo) {
+							navigate({ to: "/roadmap/$moduleId", params: { moduleId } });
+						}
 					},
+					onError: () => {
+						toast.error("Jawaban salah!");
+					}
 				}
 			);
+		}
+	};
+
+	// Demo Mode: skip soal tanpa mengurangi nyawa, tanpa XP
+	const handleSkip = () => {
+		recordAnswer(currentQuestion.id, "__skipped__", false);
+		if (isLastQuestion) {
+			handleCompleteQuiz();
+		} else {
+			setAttemptKey(0);
+			setCurrentAnswer(null);
+			nextQuestion();
 		}
 	};
 
@@ -192,10 +214,17 @@ export function QuizEngine({ lessonId, moduleId, questions }: QuizEngineProps) {
 					/>
 				</div>
 
-				<div className="flex items-center gap-2 text-error font-bold text-lg">
-					<Heart fill="currentColor" className="w-6 h-6 animate-pulse" />
-					<span>{localHearts}</span>
-				</div>
+				{isDemo ? (
+					<div className="flex items-center gap-2 text-warning font-bold text-sm badge badge-warning badge-outline px-3 py-2">
+						<Zap className="w-4 h-4" fill="currentColor" />
+						<span>Demo</span>
+					</div>
+				) : (
+					<div className="flex items-center gap-2 text-error font-bold text-lg">
+						<Heart fill="currentColor" className="w-6 h-6 animate-pulse" />
+						<span>{localHearts}</span>
+					</div>
+				)}
 			</div>
 
 			{/* Question Card */}
@@ -283,7 +312,21 @@ export function QuizEngine({ lessonId, moduleId, questions }: QuizEngineProps) {
 					/>
 				)}
 
-				{isPending && (
+				{/* Skip Button — khusus akun demo */}
+			{isDemo && (
+				<div className="flex justify-end">
+					<button
+						onClick={handleSkip}
+						disabled={completeQuizMutation.isPending}
+						className="btn btn-warning btn-outline btn-sm gap-2 opacity-70 hover:opacity-100 transition-opacity"
+					>
+						<Zap className="w-3.5 h-3.5" />
+						{isLastQuestion ? "Skip & Selesaikan" : "Skip Soal Ini"}
+					</button>
+				</div>
+			)}
+
+			{isPending && (
 					<div className="mt-8 flex justify-center">
 						<span className="loading loading-dots loading-lg text-primary" />
 					</div>
