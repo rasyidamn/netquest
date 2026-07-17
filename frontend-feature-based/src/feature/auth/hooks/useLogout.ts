@@ -37,8 +37,8 @@ export function useLogout() {
          }
 
          // 3. NAVIGASI PALING AKHIR
-         // Karena state Zustand sudah bersih, guard requireGuest akan mengizinkan masuk ke /auth/login
-         await router.navigate({ to: "/auth/login", replace: true });
+         // Karena state Zustand sudah bersih, guard requireGuest akan mengizinkan masuk ke /
+         await router.navigate({ to: "/", replace: true });
          
          // Catatan: setLoggingOut(false) mungkin perlu dipanggil jika komponen tidak di-unmount
          setLoggingOut(false); 

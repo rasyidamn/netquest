@@ -168,7 +168,7 @@ export function RoadmapTimeline() {
 										{/* Label Atas & Badge */}
 										<div className="flex flex-wrap items-center gap-3 mb-4 justify-start">
 											<span className="text-sm font-bold tracking-[0.2em] text-base-content/40 uppercase">
-												Tahap {item.module.sequence}
+												Chapter {item.module.sequence}
 											</span>
 											{isActive && (
 												<span className="badge badge-primary badge-sm px-3 py-2.5 font-bold shadow-[0_0_10px_rgba(var(--color-primary),0.4)]">

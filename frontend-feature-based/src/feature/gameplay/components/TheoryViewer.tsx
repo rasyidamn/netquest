@@ -6,7 +6,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useTheoryDone } from "../hooks/useTheoryDone";
 import { useRecoverHeart } from "../hooks/useRecoverHeart";
 import { useSubmitQuiz } from "../hooks/useSubmitQuiz";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import toast from "react-hot-toast";
 import { QuestionMultipleChoice } from "./QuestionMultipleChoice";
 import { QuestionType } from "../types/gameplay.types";
@@ -45,6 +45,17 @@ export function TheoryViewer({
 		null,
 	);
 	const [hasAnswered, setHasAnswered] = useState(false);
+	
+	// Timer untuk pemulihan nyawa
+	const [timeLeft, setTimeLeft] = useState(60);
+
+	useEffect(() => {
+		if (timeLeft <= 0) return;
+		const timer = setInterval(() => {
+			setTimeLeft((prev) => prev - 1);
+		}, 1000);
+		return () => clearInterval(timer);
+	}, [timeLeft]);
 
 	const hasPopQuiz = questions && questions.length > 0;
 	const popQuizQuestion = hasPopQuiz ? questions[0] : null;
@@ -106,7 +117,7 @@ export function TheoryViewer({
 
 	const handleRecoverHeart = () => {
 		recoverHeartMutation.mutate(
-			{ lessonId, readDuration: 0 },
+			{ lessonId, readDuration: 60 },
 			{
 				onSuccess: (data) => {
 					toast.success(
@@ -202,12 +213,14 @@ export function TheoryViewer({
 					<div className="flex flex-col gap-2 relative z-10 shrink-0">
 						<button
 							onClick={handleRecoverHeart}
-							disabled={recoverHeartMutation.isPending}
-							className="btn btn-outline btn-error btn-sm sm:btn-md group relative overflow-hidden"
+							disabled={recoverHeartMutation.isPending || timeLeft > 0}
+							className={`btn btn-sm sm:btn-md group relative overflow-hidden ${timeLeft > 0 ? 'btn-disabled opacity-50' : 'btn-outline btn-error'}`}
 						>
-							<HeartPulse className="w-4 h-4 group-hover:scale-110 transition-transform" />
+							<HeartPulse className={`w-4 h-4 ${timeLeft <= 0 ? 'group-hover:scale-110 transition-transform' : ''}`} />
 							{recoverHeartMutation.isPending
 								? "Memulihkan..."
+								: timeLeft > 0
+								? `Tunggu ${timeLeft}s`
 								: "Pulihkan Nyawa"}
 						</button>
 					</div>

@@ -20,7 +20,7 @@ export const requireAuth = ({ context }: { context: MyRouterContext }) => {
    const store = context.auth.getState();
    
    if (!store.isAuthenticated) {
-      throw redirect({ to: "/auth/login" }); // Sesuaikan dengan path halaman login Anda
+      throw redirect({ to: "/" });
    }
 };
 
@@ -30,7 +30,7 @@ export const requireStudent = ({ context }: { context: MyRouterContext }) => {
    
    // Pastikan login dulu
    if (!store.isAuthenticated) {
-      throw redirect({ to: "/auth/login" });
+      throw redirect({ to: "/" });
    }
    
    // Jika ternyata dia Admin, usir ke dashboard Admin
@@ -45,7 +45,7 @@ export const requireAdmin = ({ context }: { context: MyRouterContext }) => {
    
    // Pastikan login dulu
    if (!store.isAuthenticated) {
-      throw redirect({ to: "/auth/login" });
+      throw redirect({ to: "/" });
    }
    
    // Jika role-nya bukan Admin (misal: MAHASISWA), usir ke dashboard Mahasiswa

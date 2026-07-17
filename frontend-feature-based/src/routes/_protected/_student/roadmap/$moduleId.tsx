@@ -114,7 +114,7 @@ function ModuleDetailPage() {
 							<div className="flex flex-wrap items-center gap-3">
 								<span className="px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-black tracking-widest uppercase flex items-center gap-2 shadow-[0_0_15px_rgba(var(--color-primary),0.2)]">
 									<Sparkles className="w-4 h-4" />
-									Tahap {module.sequence}
+									Chapter {module.sequence}
 								</span>
 								{status === "COMPLETED" && (
 									<span className="px-4 py-1.5 rounded-full bg-success/10 border border-success/30 text-success text-sm font-black tracking-widest uppercase flex items-center gap-2">

@@ -312,9 +312,9 @@ export function QuizEngine({ lessonId, moduleId, questions }: QuizEngineProps) {
 					/>
 				)}
 
-				{/* Skip Button — khusus akun demo */}
+			{/* Skip Button — khusus akun demo */}
 			{isDemo && (
-				<div className="flex justify-end">
+				<div className="flex justify-end mt-8">
 					<button
 						onClick={handleSkip}
 						disabled={completeQuizMutation.isPending}

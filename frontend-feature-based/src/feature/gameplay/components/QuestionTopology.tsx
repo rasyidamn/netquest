@@ -105,6 +105,11 @@ export function QuestionTopology({
 		[],
 	);
 
+	const onEdgeDoubleClick = useCallback((_event: React.MouseEvent, edge: Edge) => {
+		if (disabled) return;
+		setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+	}, [disabled]);
+
 	const handleFinalSubmit = () => {
 		if (onSubmit) {
 			const formattedEdges = edges.map((e) => {
@@ -120,9 +125,19 @@ export function QuestionTopology({
 
 	return (
 		<div className="w-full">
-			<div className="text-base-content/80 text-sm mb-4 bg-info/10 p-4 rounded-xl border border-info/20">
-				Tarik (Drag) perangkat untuk merapikan, dan hubungkan antar
-				perangkat.
+			<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 bg-info/10 p-4 rounded-xl border border-info/20">
+				<div className="text-base-content/80 text-sm">
+					Tarik (Drag) perangkat untuk merapikan, dan hubungkan antar perangkat.
+					<br />
+					<strong className="text-info">Tips:</strong> Klik dua kali pada garis koneksi untuk menghapusnya.
+				</div>
+				<button
+					onClick={() => setEdges([])}
+					disabled={disabled || edges.length === 0}
+					className="btn btn-error btn-outline btn-sm shrink-0"
+				>
+					Reset Koneksi
+				</button>
 			</div>
 
 			<div
@@ -141,6 +156,7 @@ export function QuestionTopology({
 					onNodesChange={disabled ? undefined : onNodesChange}
 					onEdgesChange={disabled ? undefined : onEdgesChange}
 					onConnect={disabled ? undefined : onConnect}
+					onEdgeDoubleClick={disabled ? undefined : onEdgeDoubleClick}
 					fitView
 				>
 					<Background />
