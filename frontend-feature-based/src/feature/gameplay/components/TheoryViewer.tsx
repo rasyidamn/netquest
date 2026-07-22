@@ -15,6 +15,7 @@ import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import { editorSchema } from "@/utils/editorSchema";
 import { useThemeStore } from "@/core/store/useThemeStore";
+import { ItalicTitle } from "@/components/ui/ItalicTitle";
 
 interface TheoryViewerProps {
 	lessonId: string;
@@ -201,7 +202,7 @@ export function TheoryViewer({
 							</span>
 						</div>
 						<h1 className="text-2xl sm:text-5xl font-extrabold text-base-content tracking-tight">
-							{title}
+							<ItalicTitle text={title} />
 						</h1>
 						<p className="text-base-content/60 mt-1 text-sm sm:text-base font-medium">
 							Pahami materi ini dengan saksama sebelum lanjut ke misi berikutnya.

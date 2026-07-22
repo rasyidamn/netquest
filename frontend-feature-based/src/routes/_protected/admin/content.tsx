@@ -7,6 +7,7 @@ import { useState, useMemo } from 'react'
 import clsx from 'clsx'
 import { ModuleModal } from './-components/ModuleModal'
 import { LessonModal } from './-components/LessonModal'
+import { ItalicTitle } from '@/components/ui/ItalicTitle'
 import toast from 'react-hot-toast'
 
 export const Route = createFileRoute('/_protected/admin/content')({
@@ -210,7 +211,7 @@ function ModuleAccordion({ module, usedSequences }: { module: any, usedSequences
             {module.sequence}
           </div>
           <div>
-            <h3 className="font-bold text-lg">{module.title}</h3>
+            <h3 className="font-bold text-lg"><ItalicTitle text={module.title} /></h3>
             {module.description && (
               <p className="text-sm text-base-content/70 mt-1 max-w-xl truncate" title={module.description}>
                 {module.description}
@@ -274,7 +275,7 @@ function ModuleAccordion({ module, usedSequences }: { module: any, usedSequences
                         {lesson.lessonSequence}
                       </div>
                       <FileText className={clsx("w-4 h-4 shrink-0", lesson.type === 'QUIZ' ? "text-secondary" : "text-info")} />
-                      <span className="font-medium text-sm truncate">{lesson.title}</span>
+                      <span className="font-medium text-sm truncate"><ItalicTitle text={lesson.title} /></span>
                       <span className="badge badge-ghost badge-sm text-[10px] uppercase shrink-0">{lesson.type}</span>
                       <span className="badge badge-outline badge-sm text-[10px] gap-1 border-warning/50 text-warning shrink-0 whitespace-nowrap px-2">
                         <Star className="w-3 h-3 fill-warning shrink-0" />

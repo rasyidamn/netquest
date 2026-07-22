@@ -126,6 +126,9 @@ export function LessonModal({ isOpen, onClose, onSave, initialData, isPending, u
               placeholder="Contoh: Pengenalan Topologi Jaringan"
               {...register("title")}
             />
+            <span className="label-text-alt mt-1.5 text-base-content/70">
+              <span className="text-info font-medium">Tips:</span> Tambahkan bintang <code className="bg-base-200 px-1 py-0.5 rounded">*</code> di sekitar kata untuk membuatnya <em>miring</em> (contoh: <code className="bg-base-200 px-1 py-0.5 rounded">Pengantar *Network*</code>).
+            </span>
             {errors.title && <span className="text-error text-xs mt-1">{errors.title.message}</span>}
           </div>
 

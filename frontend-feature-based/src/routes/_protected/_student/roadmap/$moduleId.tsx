@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useRoadmap } from "./-hooks/useRoadmap";
-import { Book, Play, ArrowLeft, CheckCircle2, Lock, Sparkles, Star } from "lucide-react";
+import { Book, Play, ArrowLeft, CheckCircle2, Lock, Sparkles, Star, RotateCcw } from "lucide-react";
+import { ItalicTitle } from "@/components/ui/ItalicTitle";
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
@@ -124,7 +125,7 @@ function ModuleDetailPage() {
 								)}
 							</div>
 							<h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-base-content to-base-content/60 leading-tight tracking-tight drop-shadow-sm">
-								{module.title}
+								<ItalicTitle text={module.title} />
 							</h1>
 							<p className="text-base-content/70 text-lg sm:text-xl max-w-2xl leading-relaxed font-medium">
 								{module.description}
@@ -263,7 +264,7 @@ function ModuleDetailPage() {
 														"font-black text-xl sm:text-2xl transition-colors tracking-tight",
 														lessonStatus === "LOCKED" ? "text-base-content/50" : "text-base-content"
 													)}>
-														{lesson.title}
+														<ItalicTitle text={lesson.title} />
 													</h3>
 													<div className="flex items-center gap-3">
 														<span className={clsx(
@@ -296,9 +297,15 @@ function ModuleDetailPage() {
 													)}
 												>
 													<span className="hidden sm:inline-block font-bold text-base tracking-wide">
-														{lessonStatus === "COMPLETED" ? "Ulangi Misi" : "Mulai Misi"}
+														{lessonStatus === "COMPLETED" ? "Ulangi Misi" : lessonStatus === "LOCKED" ? "Terkunci" : "Mulai Misi"}
 													</span>
-													<Play className="w-5 h-5 fill-current" />
+													{lessonStatus === "COMPLETED" ? (
+														<RotateCcw className="w-5 h-5" />
+													) : lessonStatus === "LOCKED" ? (
+														<Lock className="w-5 h-5" />
+													) : (
+														<Play className="w-5 h-5 fill-current" />
+													)}
 												</button>
 											</div>
 										</motion.div>

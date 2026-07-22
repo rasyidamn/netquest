@@ -3,7 +3,6 @@ import {
 	LayoutDashboard,
 	BookOpen,
 	Users,
-	BarChart,
 	Menu,
 	LogOut,
 } from "lucide-react";
@@ -27,11 +26,6 @@ const ADMIN_MENUS = [
 		title: "Manajemen Pengguna",
 		icon: <Users className="w-5 h-5" />,
 		path: "/admin/users",
-	},
-	{
-		title: "Laporan & Analitik",
-		icon: <BarChart className="w-5 h-5" />,
-		path: "/admin/reports",
 	},
 ];
 
@@ -69,7 +63,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
 				</div>
 
 				{/* Main Content Area */}
-				<main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
+				<main className="flex-1 p-4 sm:p-6 lg:p-8 min-w-0 w-full overflow-x-hidden">{children}</main>
 			</div>
 
 			{/* Sidebar Area */}

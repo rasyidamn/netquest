@@ -8,6 +8,7 @@ import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import React from "react";
 import { Save } from "lucide-react";
+import { ItalicTitle } from "@/components/ui/ItalicTitle";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { lessonApi } from "@/feature/module/api/lessonApi";
 import toast from "react-hot-toast";
@@ -86,7 +87,7 @@ export function LessonEditor({ lesson }: { lesson: LessonDetailType }) {
 			{/* Toolbar Editor */}
 			<div className="flex justify-between items-center p-4 border-b border-base-200 bg-base-200/30">
 				<div>
-					<h3 className="font-bold text-lg">{lesson.title}</h3>
+					<h3 className="font-bold text-lg"><ItalicTitle text={lesson.title} /></h3>
 					<p className="text-sm text-base-content/60">
 						Tipe: Teori (Block-Based Editor)
 					</p>

@@ -1,5 +1,6 @@
 import { useRouter } from "@tanstack/react-router";
 import { ArrowRightIcon, PlayIcon, TargetIcon } from "lucide-react";
+import { ItalicTitle } from "@/components/ui/ItalicTitle";
 
 interface ContinueLearningCardProps {
 	isLoading?: boolean;
@@ -80,7 +81,7 @@ export function ContinueLearningCard({
 					</div>
 
 					<h3 className="text-xl sm:text-2xl font-black text-base-content tracking-tight drop-shadow-sm line-clamp-2">
-						{activeModule.title || "Modul Belajar Selanjutnya"}
+						<ItalicTitle text={activeModule.title || "Modul Belajar Selanjutnya"} />
 					</h3>
 
 					<p className="mt-1.5 text-sm font-medium text-base-content/60 flex items-center gap-1.5">

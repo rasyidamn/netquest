@@ -125,6 +125,11 @@ export function ModuleModal({ isOpen, onClose, onSave, initialData, isPending, u
                 placeholder="Contoh: Pengenalan Jaringan Komputer"
                 {...register("title")}
               />
+              <span className="label-text-alt mt-1.5 text-base-content/70 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0">
+                <span><span className="text-info font-medium">Tips:</span> Tambahkan bintang <code className="bg-base-200 px-1 py-0.5 rounded">*</code> di sekitar kata untuk membuatnya <em>miring</em></span>
+                <span className="hidden sm:inline mx-1">-</span>
+                <span>(contoh: <code className="bg-base-200 px-1 py-0.5 rounded">Pengantar *Network*</code>).</span>
+              </span>
               {errors.title && <span className="text-error text-xs mt-1">{errors.title.message}</span>}
             </div>
 

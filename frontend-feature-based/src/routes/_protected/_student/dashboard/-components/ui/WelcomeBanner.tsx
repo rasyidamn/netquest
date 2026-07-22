@@ -66,7 +66,7 @@ export function WelcomeBanner({ isLoading, name }: WelcomeBannerProps) {
             </div>
 
             {/* Dekorasi Kosmetik Kanan (Hanya Muncul di Desktop) */}
-            <div className="hidden md:flex shrink-0 items-center justify-center relative">
+            <div className="hidden shrink-0 items-center justify-center relative">
                <div className="absolute inset-0 bg-linear-to-tr from-primary/20 to-secondary/20 blur-xl rounded-full" />
                <div className="h-28 w-28 rounded-full border-[6px] border-base-300/30 border-t-primary border-r-secondary animate-[spin_8s_linear_infinite] shadow-[0_0_30px_rgba(var(--color-primary),0.2)]" />
                <div className="absolute h-20 w-20 rounded-full border-4 border-base-300/30 border-b-accent border-l-primary animate-[spin_6s_linear_infinite_reverse]" />

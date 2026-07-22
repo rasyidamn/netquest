@@ -1,6 +1,7 @@
 import type { ModuleType } from "@/schemas/module.schema";
 import { cn } from "@/utils/cn";
 import { useRouter } from "@tanstack/react-router";
+import { ItalicTitle } from "@/components/ui/ItalicTitle";
 import {
 	ArrowRightIcon,
 	CheckIcon,
@@ -166,7 +167,7 @@ export function RoadmapPreview({
 														: "text-base-content/40",
 											)}
 										>
-											{mod.title}
+											<ItalicTitle text={mod.title} />
 										</p>
 										{isActive && (
 											<p className="text-[10px] uppercase tracking-wider font-bold text-primary/70 mt-0.5">

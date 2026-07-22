@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import type { RoadmapStatus } from "../../-types/roadmap.type";
 import { useRoadmap } from "../../-hooks/useRoadmap";
+import { ItalicTitle } from "@/components/ui/ItalicTitle";
 import { useRouter } from "@tanstack/react-router";
 
 function TimelineSkeleton() {
@@ -188,7 +189,7 @@ export function RoadmapTimeline() {
 										<h3
 											className={`card-title text-2xl md:text-3xl font-black tracking-tight leading-snug mb-2 ${isActive ? "text-primary drop-shadow-sm" : "text-base-content/90"}`}
 										>
-											{item.module.title}
+											<ItalicTitle text={item.module.title} />
 										</h3>
 
 										{/* Info Pelajaran */}

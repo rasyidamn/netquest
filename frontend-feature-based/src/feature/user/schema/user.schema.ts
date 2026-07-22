@@ -21,3 +21,12 @@ export const UpdateUserSchema = z.object({
 });
 
 export type UpdateUserType = z.infer<typeof UpdateUserSchema>;
+
+export const CreateUserSchema = z.object({
+	nim: z.string().min(5, "NIM minimal 5 karakter"),
+	name: z.string().min(3, "Nama minimal 3 karakter"),
+	role: RoleEnum,
+	password: z.string().optional(),
+});
+
+export type CreateUserType = z.infer<typeof CreateUserSchema>;
