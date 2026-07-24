@@ -1,7 +1,7 @@
 import { type ReactNode } from "react";
 import { useAuthStore } from "@/feature/auth/stores/useAuthStore";
 import { StudentNavbar } from "./StudentNavbar";
-import { StudentSidebar } from "./StudentSidebar";
+import { StudentSidebar, LogoutConfirmDialog } from "./StudentSidebar";
 
 
 
@@ -65,6 +65,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 			</div>
 
 			<StudentSidebar />
+			<LogoutConfirmDialog />
 		</div>
 	);
 }

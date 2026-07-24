@@ -6,7 +6,7 @@ extendZodWithOpenApi(z);
 export class ModuleSchema {
 	static readonly MODULE_MODEL = z.object({
 		id: z
-			.uuid()
+			.uuid("Format ID tidak valid")
 			.openapi({ example: "550e8400-e29b-41d4-a716-446655440000" }),
 		title: z
 			.string()

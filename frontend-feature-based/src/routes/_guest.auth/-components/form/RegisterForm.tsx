@@ -40,11 +40,11 @@ export default function RegisterForm() {
 
 			{/* Nama */}
 			<FormInput
-				label="Nama"
+				label="Nama Lengkap"
 				registration={form.register("name")}
 				error={form.formState.errors.name?.message}
 				type="text"
-				placeholder="Masukkan Nama"
+				placeholder="Masukkan Nama Lengkap"
 			/>
 
 			{/* Grup Password (Kiri-Kanan di layar lebar, Atas-Bawah di HP) */}

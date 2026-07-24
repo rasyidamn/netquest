@@ -3,6 +3,8 @@ import { catchAsync } from "../utils/catch-async.util.js";
 import { UserService } from "../services/user.service.js";
 import { sendSuccess } from "../utils/response-formatter.util.js";
 import { StatusCodes } from "http-status-codes";
+import { z } from "zod";
+import { UserSchema } from "../schemas/user.schema.js";
 
 export class UserController {
    static getAllUsers = catchAsync(async (req: Request, res: Response) => {
@@ -16,8 +18,8 @@ export class UserController {
    });
 
    static createUser = catchAsync(async (req: Request, res: Response) => {
-      const { nim, name, role, password } = req.body;
-      const responseData = await UserService.createUser({ nim, name, role, password });
+      const validatedData = UserSchema.CREATE_USER_ADMIN_REQUEST.parse(req.body);
+      const responseData = await UserService.createUser(validatedData as any);
       sendSuccess(res, StatusCodes.CREATED, "Berhasil menambahkan pengguna baru", responseData);
    });
 
@@ -34,9 +36,9 @@ export class UserController {
    });
 
    static updateUser = catchAsync(async (req: Request, res: Response) => {
-      const userId = req.params.id as string;
-      const data = req.body;
-      const responseData = await UserService.updateUser(userId, data);
+      const params = z.object({ id: z.string().uuid("ID pengguna tidak valid") }).parse(req.params);
+      const validatedData = UserSchema.UPDATE_USER_ADMIN_REQUEST.parse(req.body);
+      const responseData = await UserService.updateUser(params.id, validatedData as any);
       sendSuccess(res, StatusCodes.OK, "Berhasil memperbarui data pengguna", responseData);
    });
 

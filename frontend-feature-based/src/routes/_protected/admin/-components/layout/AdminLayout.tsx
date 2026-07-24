@@ -32,7 +32,6 @@ const ADMIN_MENUS = [
 export function AdminLayout({ children }: { children: React.ReactNode }) {
 	const location = useLocation();
 	const { data: user } = useProfile();
-	const { mutate: logout } = useLogout();
 
 	return (
 		<div className="drawer lg:drawer-open min-h-screen bg-base-200">
@@ -141,7 +140,10 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
 							</div>
 						</div>
 						<button
-							onClick={() => logout()}
+							onClick={() => {
+								const dialog = document.getElementById("admin-logout-dialog") as HTMLDialogElement;
+								dialog?.showModal();
+							}}
 							className="btn btn-outline btn-error btn-sm w-full rounded-lg"
 						>
 							<LogOut className="w-4 h-4 mr-2" />
@@ -151,5 +153,39 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
 				</div>
 			</div>
 		</div>
+	);
+}
+
+// Dialog Konfirmasi Logout Admin
+export function AdminLogoutConfirmDialog() {
+	const { mutate: logout } = useLogout();
+	return (
+		<dialog id="admin-logout-dialog" className="modal modal-bottom sm:modal-middle">
+			<div className="modal-box bg-base-100 border border-base-300/60 shadow-2xl">
+				<div className="flex flex-col items-center gap-4 py-2">
+					<div className="w-16 h-16 rounded-full bg-error/10 flex items-center justify-center">
+						<LogOut className="w-7 h-7 text-error" />
+					</div>
+					<div className="text-center">
+						<h3 className="font-black text-lg">Keluar dari Admin Panel?</h3>
+						<p className="text-sm text-base-content/60 mt-1">Sesi admin Anda akan diakhiri dan Anda akan diarahkan ke halaman login.</p>
+					</div>
+				</div>
+				<div className="modal-action flex gap-3 mt-6">
+					<form method="dialog" className="flex-1">
+						<button className="btn btn-ghost w-full rounded-xl">Batal</button>
+					</form>
+					<button
+						className="btn btn-error flex-1 rounded-xl"
+						onClick={() => logout()}
+					>
+						Ya, Logout
+					</button>
+				</div>
+			</div>
+			<form method="dialog" className="modal-backdrop">
+				<button>tutup</button>
+			</form>
+		</dialog>
 	);
 }

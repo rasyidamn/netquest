@@ -11,7 +11,7 @@ extendZodWithOpenApi(z);
 export class LessonSchema {
 	static readonly LESSON_MODEL = z.object({
 		id: z
-			.uuid()
+			.uuid("Format ID tidak valid")
 			.openapi({ example: "11111111-2222-3333-4444-555555555555" }),
 		moduleId: z
 			.uuid("Format Module ID tidak valid")

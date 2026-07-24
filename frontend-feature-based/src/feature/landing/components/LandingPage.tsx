@@ -1,8 +1,8 @@
 import { LandingNav } from "./LandingNav";
 import { HeroSection } from "./HeroSection";
+import { CpmkSection } from "./CpmkSection";
 import { FeaturesSection } from "./FeaturesSection";
 import { ModulesSection } from "./ModulesSection";
-import { StatsSection } from "./StatsSection";
 import { CTASection } from "./CTASection";
 
 export function LandingPage() {
@@ -11,9 +11,10 @@ export function LandingPage() {
 			<LandingNav />
 			<main>
 				<HeroSection />
+				<CpmkSection />
 				<FeaturesSection />
 				<ModulesSection />
-				<StatsSection />
+				
 				<CTASection />
 			</main>
 			

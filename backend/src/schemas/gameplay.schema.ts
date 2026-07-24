@@ -3,8 +3,8 @@ import z from "zod";
 export class GameplaySchema {
 	static readonly SUBMIT_ANSWER_REQUEST = z
 		.object({
-			lessonId: z.uuid(),
-			questionId: z.uuid(),
+			lessonId: z.string().uuid("Format Lesson ID tidak valid"),
+			questionId: z.string().uuid("Format Question ID tidak valid"),
 			// 'answer' bisa berupa UUID, teks "ping 8.8.8.8", atau stringified JSON '["A", "B"]'
 			answer: z.string().min(1, "Jawaban tidak boleh kosong"),
 		})
@@ -24,7 +24,7 @@ export class GameplaySchema {
 
 	static readonly COMPLETE_QUIZ_REQUEST = z
 		.object({
-			lessonId: z.string().uuid(),
+			lessonId: z.string().uuid("Format Lesson ID tidak valid"),
 		})
 		.strict();
 }

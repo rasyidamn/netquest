@@ -8,10 +8,10 @@ extendZodWithOpenApi(z);
 export class QuestionSchema {
 	static readonly QUESTION_MODEL = z.object({
 		id: z
-			.uuid()
+			.uuid("Format ID tidak valid")
 			.openapi({ example: "33333333-4444-5555-6666-777777777777" }),
 		lessonId: z
-			.string()
+			.string().uuid("Format Lesson ID tidak valid")
 			.openapi({ example: "11111111-2222-3333-4444-555555555555" }),
 		questionText: z.string().min(5, "Pertanyaan harus jelas").openapi({
 			example:

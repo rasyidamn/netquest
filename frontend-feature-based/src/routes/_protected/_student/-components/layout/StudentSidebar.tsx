@@ -24,7 +24,6 @@ const MAIN_MENUS: NavigationItem[] = [
 ];
 
 export function StudentSidebar() {
-	const { mutate: logout } = useLogout();
 	const { data: user } = useProfile();
 
 	const getInitials = (name?: string) => {
@@ -33,7 +32,8 @@ export function StudentSidebar() {
 	};
 
 	const handleLogout = () => {
-		logout();
+		const dialog = document.getElementById("student-logout-dialog") as HTMLDialogElement;
+		dialog?.showModal();
 	};
 
 	return (
@@ -138,5 +138,43 @@ export function StudentSidebar() {
 				</ul>
 			</div>
 		</div>
+	);
+
+	// Dialog Konfirmasi Logout
+	// Dirender di luar drawer agar tidak terpotong
+}
+
+export function LogoutConfirmDialog() {
+	const { mutate: logout } = useLogout();
+	return (
+		<dialog id="student-logout-dialog" className="modal modal-bottom sm:modal-middle">
+			<div className="modal-box bg-base-100 border border-base-300/60 shadow-2xl">
+				<div className="flex flex-col items-center gap-4 py-2">
+					<div className="w-16 h-16 rounded-full bg-error/10 flex items-center justify-center">
+						<svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-error" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+							<path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+						</svg>
+					</div>
+					<div className="text-center">
+						<h3 className="font-black text-lg">Keluar dari Sistem?</h3>
+						<p className="text-sm text-base-content/60 mt-1">Sesi belajar kamu akan diakhiri. Progres yang sudah disimpan tetap aman.</p>
+					</div>
+				</div>
+				<div className="modal-action flex gap-3 mt-6">
+					<form method="dialog" className="flex-1">
+						<button className="btn btn-ghost w-full rounded-xl">Batal</button>
+					</form>
+					<button
+						className="btn btn-error flex-1 rounded-xl"
+						onClick={() => logout()}
+					>
+						Ya, Keluar
+					</button>
+				</div>
+			</div>
+			<form method="dialog" className="modal-backdrop">
+				<button>tutup</button>
+			</form>
+		</dialog>
 	);
 }

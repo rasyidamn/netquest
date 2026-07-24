@@ -73,9 +73,9 @@ export class AuthController {
 
 	static updateProfile = catchAsync(async (req: Request, res: Response) => {
 		const user = req.user as any;
-		const data = req.body; // should be validated with UpdateProfileRequest in real app, but we pass to service
+		const validatedData = UserSchema.UPDATE_PROFILE_REQUEST.parse(req.body);
 
-		const responseData = await AuthService.updateProfile(user.id, data);
+		const responseData = await AuthService.updateProfile(user.id, validatedData as any);
 		sendSuccess(
 			res,
 			StatusCodes.OK,

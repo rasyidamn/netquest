@@ -4,17 +4,17 @@ export const RoleEnum = z.enum(["MAHASISWA", "ADMIN"]);
 export type RoleEnumType = z.infer<typeof RoleEnum>;
 
 export const UserModel = z.object({
-	id: z.uuid(),
-	nim: z.string().length(10),
-	name: z.string().min(3),
-	password: z.string().min(8),
+	id: z.uuid("Format ID tidak valid"),
+	nim: z.string({ message: "NIM wajib diisi" }).length(10, "NIM harus tepat 10 karakter"),
+	name: z.string({ message: "Nama wajib diisi" }).min(3, "Nama minimal 3 karakter").regex(/^[a-zA-Z\s.'-]+$/, "Nama hanya boleh mengandung huruf dan spasi"),
+	password: z.string({ message: "Password wajib diisi" }).min(8, "Password minimal 8 karakter"),
 	role: RoleEnum.optional(),
-	xp: z.number().int(),
-	hearts: z.number().int(),
-	heartsUpdatedAt: z.date(),
-	recoveryCount: z.number().int(),
-	lastRecoveryDate: z.date(),
-	createdAt: z.date(),
+	xp: z.number().int("XP harus berupa angka bulat"),
+	hearts: z.number().int("Hearts harus berupa angka bulat"),
+	heartsUpdatedAt: z.date({ message: "Format tanggal tidak valid" }),
+	recoveryCount: z.number().int("Recovery count harus berupa angka bulat"),
+	lastRecoveryDate: z.date({ message: "Format tanggal tidak valid" }),
+	createdAt: z.date({ message: "Format tanggal tidak valid" }),
 });
 
 export const loginSchema = UserModel.pick({
@@ -27,11 +27,11 @@ export const registerSchema = UserModel.pick({
 	name: true,
 })
 	.extend({
-		password: z.string().min(8),
-		passwordConfirm: z.string(),
+		password: z.string({ message: "Password wajib diisi" }).min(8, "Password minimal 8 karakter"),
+		passwordConfirm: z.string({ message: "Konfirmasi password wajib diisi" }),
 	})
 	.refine((data) => data.password === data.passwordConfirm, {
-		error: "Password tidak cocok!",
+		message: "Password tidak cocok!",
 		path: ["passwordConfirm"],
 	});
 

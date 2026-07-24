@@ -9,7 +9,7 @@ export class UserProgressSchema {
 	// 1. Model Dasar
 	static readonly USER_PROGRESS_MODEL = z.object({
 		id: z
-			.uuid()
+			.uuid("Format ID tidak valid")
 			.openapi({ example: "55555555-6666-7777-8888-999999999999" }),
 		userId: z
 			.uuid("Format User ID tidak valid")

@@ -8,7 +8,7 @@ import { GameplaySchema } from "../schemas/gameplay.schema.js";
 
 export class GameplayController {
 	static theoryDone = catchAsync(async (req: Request, res: Response) => {
-		const { lessonId } = req.body;
+		const { lessonId } = GameplaySchema.COMPLETE_QUIZ_REQUEST.parse(req.body);
 		const userId = req.user?.id;
 		const responseData = await GameplayService.theoryDone(
 			userId as string,

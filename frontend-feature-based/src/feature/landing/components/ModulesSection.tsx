@@ -4,25 +4,25 @@ export function ModulesSection() {
 	const modules = [
 		{
 			id: 1,
-			title: "Module 1: Communication in a Connected World",
+			title: "Chapter 1: Communication in a Connected World",
 			icon: <BookOpen className="w-6 h-6 text-primary" />,
 			desc: "Pahami gambaran besar mengapa jaringan menjadi tulang punggung kehidupan modern dan dasar bagaimana perangkat saling berkomunikasi.",
 		},
 		{
 			id: 2,
-			title: "Module 2: Network Components, Types, and Connections",
+			title: "Chapter 2: Network Components, Types, and Connections",
 			icon: <Server className="w-6 h-6 text-secondary" />,
 			desc: "Kenali perangkat keras penyusun jaringan seperti router dan switch, serta pelajari perbedaan jenis jaringan mulai dari LAN hingga WAN.",
 		},
 		{
 			id: 3,
-			title: "Module 3: Wireless and Mobile Networks",
+			title: "Chapter 3: Wireless and Mobile Networks",
 			icon: <Wifi className="w-6 h-6 text-accent" />,
 			desc: "Bebaskan dirimu dari kabel! Temukan rahasia di balik sinyal Wi-Fi dan jaringan seluler yang membuatmu tetap terhubung di mana saja.",
 		},
 		{
 			id: 4,
-			title: "Module 4: Build a Home Network",
+			title: "Chapter 4: Build a Home Network",
 			icon: <Home className="w-6 h-6 text-success" />,
 			desc: "Praktikkan pengetahuanmu dengan membangun dan mengonfigurasi jaringan rumah skala kecil secara aman dan efisien.",
 		},

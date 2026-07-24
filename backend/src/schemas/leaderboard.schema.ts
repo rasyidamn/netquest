@@ -12,9 +12,9 @@ export class LeaderboardSchema {
 	});
 
 	static readonly LEADERBOARD_ITEM = z.object({
-		rank: z.number().int(),
-		name: z.string(),
-		xp: z.number().int(),
+		rank: z.number().int("Peringkat harus berupa angka bulat"),
+		name: z.string({ message: "Nama wajib diisi" }),
+		xp: z.number().int("XP harus berupa angka bulat"),
 	});
 
 	static readonly LEADERBOARD_RESPONSE = z.array(this.LEADERBOARD_ITEM);

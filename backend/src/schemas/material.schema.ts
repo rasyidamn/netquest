@@ -6,10 +6,10 @@ extendZodWithOpenApi(z);
 export class MaterialSchema {
 	static readonly MATERIAL_MODEL = z.object({
 		id: z
-			.uuid()
+			.uuid("Format ID tidak valid")
 			.openapi({ example: "22222222-3333-4444-5555-666666666666" }),
 		lessonId: z
-			.string()
+			.string().uuid("Format Lesson ID tidak valid")
 			.openapi({ example: "11111111-2222-3333-4444-555555555555" }),
 		content: z
 			.string()
