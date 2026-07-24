@@ -161,9 +161,15 @@ export function TheoryViewer({
 						);
 						setIsPopQuizPassed(true);
 					} else {
-						toast.error(
-							`Jawaban salah! Sisa Nyawa: ${data.heartsLeft}. Coba lagi.`,
-						);
+						if (user && data.heartsLeft < user.hearts) {
+							toast.error(
+								`Jawaban salah! Sisa Nyawa: ${data.heartsLeft}. Coba lagi.`,
+							);
+						} else {
+							toast.error(
+								`Jawaban salah! (Nyawa aman karena materi sudah selesai). Coba lagi.`
+							);
+						}
 						if (data.heartsLeft <= 0) {
 							goBack();
 							return;
