@@ -283,8 +283,8 @@ export class GameplayService {
 				// Demo mode: tidak ada XP. Normal: 0 jika sudah completed (anti farming)
 				addedXp = (isAlreadyCompleted || isDemo) ? 0 : question.xpReward;
 			} else {
-				// Jika salah, belum completed: kurangi nyawa (berlaku untuk demo maupun normal)
-				if (!isAlreadyCompleted) {
+				// Jika salah, belum completed: kurangi nyawa (berlaku untuk demo maupun normal -> sekarang demo kebal)
+				if (!isAlreadyCompleted && !isDemo) {
 					currentHearts = Math.max(0, currentUser.hearts - 1);
 					await tx.user.update({
 						where: { id: userId },
